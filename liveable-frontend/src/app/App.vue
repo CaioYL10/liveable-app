@@ -1,11 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import TheDetails from '@/modules/properties/views/propertyDetails.vue'; // 'T' maiúsculo
+  import TheNav from '@/modules/properties/components/TheNav.vue';
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <TheDetails />
 </template>
-
-<style scoped></style>
