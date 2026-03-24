@@ -58,6 +58,7 @@
         display: flex;
         flex-direction: column;
         font-family: "Poppins", sans-serif;
+        gap: 20px;
     }
 
     .home-title {
@@ -68,6 +69,10 @@
         align-items: center;
         justify-content: flex-start;
         font-size: clamp(1.6rem, 3vw, 2.8rem);
+    }
+
+    .home-title p {
+        margin: 0;
     }
 
     .home-details {

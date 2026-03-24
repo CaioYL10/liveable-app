@@ -15,6 +15,7 @@
     }
 
     /* Lógica pro input do tipo de propriedade agora */
+    
     const tipoProp = ref<string | null>(null)
 
     function toggleTipo(tipo: string) {
@@ -212,6 +213,7 @@
 
     .all {
         position: fixed;
+        z-index: 999;
         top: 0;
         right: 0;
         height: 100%;

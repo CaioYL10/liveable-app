@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import TheDetails from '@/modules/properties/views/propertyDetails.vue'; // 'T' maiúsculo
-  import TheNav from '@/modules/properties/components/TheNav.vue';
+  // isso vai sair quando o router for arrumado, está forma de import esta aqui só para testes
+  import baseLayout from '@/shared/layouts/baseLayout.vue';
 </script>
 
 <template>
-  <TheDetails />
+  <baseLayout />
 </template>
