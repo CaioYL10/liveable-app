@@ -11,7 +11,7 @@
                     <p class="subtitle opacity">R$300,00 p/ noites • ★ 5</p>
                     <p class="subtitle">
                         Mais de 70 mil cliques!
-                        <PhFire weight="fill" class="fire" :size="12" />
+                        <PhFire weight="fill" class="fire" :size="15" />
                     </p>
                 </div>
             </div>
