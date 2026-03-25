@@ -7,36 +7,102 @@
         <div class="informs">
             <div class="informs-texts">
                 <h3>Casa de frente ao mar</h3>
-                <p>R$300,00 p/ noites ★ 5</p>
-                <p>
-                    Mais de 70 mil cliques!
-                    <PhFire :size="20" />
-                </p>
+                <div class="subs">
+                    <p class="subtitle opacity">R$300,00 p/ noites • ★ 5</p>
+                    <p class="subtitle">
+                        Mais de 70 mil cliques!
+                        <PhFire weight="fill" class="fire" :size="12" />
+                    </p>
+                </div>
             </div>
 
             <button>
-                <PhArrowRight :size="32" />
+                <PhArrowRight weight="bold" :size="26" />
             </button>
         </div>
     </div>
 </template>
 
 <style scoped>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
     .all {
-        width: 25vw;
+        width: clamp(25rem, 25vw, 40rem);
         min-height: 350px;
         background-color: purple;
-        border-radius: 22px;
+        border-radius: 30px;
         display: flex;
         align-items: flex-end;
+        contain: paint;
+        font-family: "Poppins", sans-serif;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.300);
+        color: white;
+        background-image: url(https://italicohomes.com/wp-content/uploads/2024/01/interiores-casa-moderna-13.jpg);
+        background-size: cover;
+        background-position: center;
     }
 
     .informs {
         width: 100%;
-        min-height: 100px;
-        background-color: rgb(12, 34, 236);
+        min-height: 120px;
+        background: rgba(39, 21, 238, 0.2); 
+        backdrop-filter: blur(2px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
-        padding: 0 20px;
+        padding: 0 25px;
+        align-items: center;
+        border-radius: 22px;
+    }
+
+    .informs-texts {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 18px;
+    }
+
+    .informs-texts p, h3 {
+        margin: 0;
+    }
+
+    .informs-texts .fire {
+        color: blue;
+    }
+
+    .subs {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    button {
+        width: 4rem; 
+        max-height: 4rem;
+        aspect-ratio: 1 / 1; 
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        background-color: blue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: background-color 0.5s;
+    }
+
+    button:hover {
+        background-color: rgb(0, 81, 255);
+    }
+
+
+    .opacity {
+        opacity: 0.7;
+        font-weight: 600;
     }
 </style>
