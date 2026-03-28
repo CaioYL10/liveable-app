@@ -3,7 +3,7 @@
     import propertyDetails from '@/modules/properties/views/propertyDetails.vue';
 
     import TheNav from '../components/TheNav.vue';
-import TheFooter from '../components/TheFooter.vue';
+    import TheFooter from '../components/TheFooter.vue';
 </script>
 
 <template>
