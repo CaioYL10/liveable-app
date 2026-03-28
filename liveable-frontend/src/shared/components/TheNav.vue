@@ -73,20 +73,20 @@
     nav {
         width: 95%;
         height: 100px;
-        background-color: white;
+        background-color: var(--color-bg-secondary);
         border-radius: 30px;
         display: flex;
         justify-content: space-around;
         align-items: center;
         font-family: "Poppins", sans-serif;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
     }
 
     nav ul {
         gap: 20px;
         list-style: none;
         display: flex;
-        color: black;
+        color: var(--color-black-text);
     }
 
     nav ul li {
@@ -117,8 +117,8 @@
         width: 100%;
         margin-top: 5px;
         background-image: 
-            linear-gradient(blue, blue),
-            linear-gradient(blue, blue);
+            linear-gradient(var(--color-primary), var(--color-primary)),
+            linear-gradient(var(--color-primary), var(--color-primary));
         background-repeat: no-repeat;
         background-size: 75% 100%, 15% 100%;
         background-position: left center, right center;
@@ -152,13 +152,14 @@
         font-family: "Poppins", sans-serif;
         padding-left: 40px;
         padding-right: 40px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         transition: box-shadow 0.3s;
+        background-color: var(--input-color);
     }
 
     .pesquisar input:focus {
         outline: none;
-        box-shadow: 0 4px 10px rgba(16, 37, 226, 0.486);
+        box-shadow: var(--shadow-hover-blue);
     }
 
     .icons {
@@ -194,12 +195,13 @@
         justify-content: center;
         align-items: center;
         font-size: 18px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--shadow-sm);
         cursor: pointer;
         transition: box-shadow 0.5s;
+        background-color: var(--input-color);
     }
 
     .circle:hover {
-        box-shadow: 0 4px 10px rgba(16, 37, 226, 0.486);
+        box-shadow: var(--shadow-hover-blue);
     }
 </style>

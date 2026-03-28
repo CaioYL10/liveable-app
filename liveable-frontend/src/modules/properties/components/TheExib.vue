@@ -69,6 +69,7 @@
         align-items: center;
         justify-content: flex-start;
         font-size: clamp(1.6rem, 3vw, 2.8rem);
+        color: var(--color-black-text);
     }
 
     .home-title p {
@@ -88,7 +89,7 @@
         aspect-ratio: 16 / 9;
         height: auto;
         border-radius: 30px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         background-image: url(https://projetaronline.com/wp-content/uploads/2025/04/P451-FOTOS_16-Foto.jpg);
         background-size: cover;
         background-position: center;
@@ -101,10 +102,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         box-sizing: border-box;
         padding: 40px;
         gap: 30px;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-black-text);
     }
 
     .home-informations .ende {
@@ -123,22 +126,22 @@
         width: 3rem;
         height: 3rem;
         aspect-ratio: 1 / 1;
-        background-color: white;
+        background-color: var(--color-bg);
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         transition: box-shadow 0.3s;
         cursor: pointer;
     }
 
     .fav:hover {
-        box-shadow: 0 4px 10px rgba(16, 37, 226, 0.486);
+        box-shadow: var(--shadow-hover-blue);
     }
 
     .icon-fav {
-        color: #D9D9D9;
+        color: var(--color-icon-inactive);
         width: clamp(35px, 2.5vw, 40px);
         height: clamp(35px, 2.5vw, 40px);
     }
@@ -162,7 +165,7 @@
         padding: 10px;
         box-sizing: border-box;
         font-weight: 600;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         font-size: clamp(0.9rem, 0.8vw, 1.6rem);
     }
 
@@ -171,7 +174,7 @@
         flex-shrink: 0;
         border-radius: 20px;
         width: 1px;
-        background-color: black;
+        background-color: var(--color-border-black);
     }
 
     .home-informations .simulation {
@@ -190,20 +193,20 @@
     }
 
     :deep(.vue-slider-process){
-        background: #2563eb;
+        background: var(--color-primary);
     }
 
     :deep(.vue-slider-rail){
-        background: #D9D9D9;
+        background: var(--vue-slider-trilha-color);
     }
 
     :deep(.vue-slider-dot-tooltip-inner){
         background-color: transparent;
-        color: black;
+        color: var(--color-black-text);
     }
 
     :deep(.vue-slider-dot-tooltip-inner-bottom::after){
-        border-bottom-color: #2563eb;
+        border-bottom-color: var(--color-primary);
     }
 
     .juntar {
@@ -248,7 +251,7 @@
         font-size: clamp(1.1rem, 1.05vw, 1.6rem);
         font-weight: 500;
         border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
     }
 
     .card-contato .img {
@@ -274,7 +277,7 @@
     .home-informations button {
         width: 100%;
         min-height: 65px;
-        background-color: blue;
+        background-color: var(--color-primary);
         border-radius: 20px;
         border: none;
         color: white;
@@ -286,7 +289,7 @@
     }
 
     .home-informations button:hover {
-        background-color: rgb(0, 132, 255);
+        background-color: var(--color-primary-hover);
     }
 
     @media (max-width: 768px) {

@@ -219,7 +219,7 @@
         height: 100%;
         width: 100%;
         max-width: 600px;
-        background-color: white;
+        background-color: var(--color-bg-secondary);
         overflow-y: auto;
         box-sizing: border-box;
         padding: 2rem;
@@ -227,7 +227,8 @@
         flex-direction: column;
         align-items: center;
         gap: 3rem;
-        box-shadow: -10px 0 100px rgba(0, 0, 0, 0.363);
+        box-shadow: var(--shadow-md);
+        color: var(--color-black-text);
     }
 
     .voltar {
@@ -241,7 +242,7 @@
 
     .circle-editor {
         aspect-ratio: 1/1;
-        border: 1px solid black;
+        border: 1px solid var(--color-border-black);
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -277,8 +278,8 @@
     .valores-card {
         width: 30%;
         min-height: 150px;
-        background-color: white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        background-color: var(--color-bg);
+        box-shadow: var(--shadow-sm);
 
         display: flex;
         flex-direction: column;
@@ -294,7 +295,7 @@
         flex-shrink: 0;
         display: flex;
         justify-content: space-around;
-        border-bottom: 1px solid #D9D9D9;
+        border-bottom: 1px solid var(--color-border);
         font-size: 0.9rem;
         align-items: center;
         cursor: pointer;
@@ -334,7 +335,7 @@
     .categoria-card {
         width: 30%;
         min-height: 60px;
-        background-color: white;
+        background-color: var(--color-bg);
 
         display: flex;
         justify-content: space-around;
@@ -342,13 +343,13 @@
         flex-direction: row; 
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         cursor: pointer;
     }
 
     .circle-categoria {
         aspect-ratio: 1/1;
-        border: 0.5px solid black;
+        border: 0.5px solid var(--color-border-black);
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -397,16 +398,18 @@
         border: 0;
         box-sizing: border-box;
         padding: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
+        background-color: var(--input-color);
     }
 
     .info-gerais-input p {
         position: absolute;
         right: 10px;
         top: 25%;
-        border-left: 1px solid black;
+        border-left: 1px solid var(--color-perm-black-text);
         padding-left: 20px;
         font-weight: 500;
+        color: var(--color-perm-black-text);
     }
 
 
@@ -439,8 +442,8 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        background-color: white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        background-color: var(--color-bg);
+        box-shadow: var(--shadow-sm);
     }
 
     .detalhes-card button {
@@ -514,5 +517,9 @@
     .subtitulo {
         opacity: 0.6;
         font-weight: 500;
+    }
+
+    button {
+        color: var(--color-black-text);
     }
 </style>

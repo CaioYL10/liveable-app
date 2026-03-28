@@ -29,14 +29,13 @@
     .all {
         width: clamp(25rem, 25vw, 40rem);
         min-height: 350px;
-        background-color: purple;
         border-radius: 30px;
         display: flex;
         align-items: flex-end;
         contain: paint;
         font-family: "Poppins", sans-serif;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.300);
-        color: white;
+        color: var(--color-primary-text);
         background-image: url(https://italicohomes.com/wp-content/uploads/2024/01/interiores-casa-moderna-13.jpg);
         background-size: cover;
         background-position: center;
@@ -45,7 +44,7 @@
     .informs {
         width: 100%;
         min-height: 120px;
-        background: rgba(39, 21, 238, 0.2); 
+        background: var(--color-overlay); 
         backdrop-filter: blur(2px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
@@ -67,7 +66,7 @@
     }
 
     .informs-texts .fire {
-        color: blue;
+        color: var(--color-primary);
     }
 
     .subs {
@@ -88,16 +87,16 @@
         border-radius: 50%;
         border: none;
         cursor: pointer;
-        background-color: blue;
+        background-color: var(--color-primary);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: var(--color-primary-text);
         transition: background-color 0.5s;
     }
 
     button:hover {
-        background-color: rgb(0, 81, 255);
+        background-color: var(--color-primary-hover);
     }
 
 

@@ -32,7 +32,7 @@
         width: 20%;
         max-width: 320px;
         min-width: 300px;
-        background-color: white;
+        background-color: var(--color-bg-secondary);
         height: 440px;
         border-radius: 30px;
         display: flex;
@@ -40,7 +40,8 @@
         align-items: center;
         flex-direction: column;
         font-family: "Poppins", sans-serif;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
+        color: var(--color-black-text);
     }
 
     .card .cima {
@@ -67,21 +68,21 @@
         width: 12%;
         height: 35px;
         aspect-ratio: 1 / 1;
-        background-color: white;
+        background-color: var(--color-bg);
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.300);
+        box-shadow: var(--shadow-sm);
         transition: box-shadow 0.3s;
     }
 
     .fav:hover {
-        box-shadow: 0 4px 10px rgba(16, 37, 226, 0.486);
+        box-shadow: var(--shadow-hover-blue);
     }
 
     .icon-fav {
-        color: #D9D9D9;
+        color: var(--color-icon-inactive);
     }
 
     .card .baixo {
@@ -111,13 +112,13 @@
         font-family: "Poppins", sans-serif;
         font-weight: 500;
         font-size: 14px;
-        background-color: blue;
-        color: white;
+        background-color: var(--color-primary);
+        color: var(--color-primary-text);
         transition: background-color 0.5s;
     }
 
     .button button:hover {
-        background-color: rgb(0, 132, 255);
+        background-color: var(--color-primary-hover);
     }
 
     .baixo .textos {
