@@ -12,6 +12,7 @@
 
   /* === Overlay / glassmorphism === */
   --color-overlay:        rgba(39, 21, 238, 0.20);
+  --color-overlay-white:  rgba(243, 241, 241, 0.25);
 
   /* === Superfícies === */
   --color-bg:             #ffffff;
@@ -45,6 +46,7 @@
 
   /* === Overlay / glassmorphism === */
   --color-overlay:        rgba(77, 110, 255, 0.25);
+  --color-overlay-white:  rgba(243, 241, 241, 0.25);
 
   /* === Superfícies === */
   --color-bg:             #1B212E;

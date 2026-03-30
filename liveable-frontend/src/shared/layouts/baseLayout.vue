@@ -5,6 +5,7 @@
     import TheNav from '../components/TheNav.vue';
     import TheFooter from '../components/TheFooter.vue';
 import ViewProfile from '@/modules/profile/views/viewProfile.vue';
+import LoginView from '@/modules/login/views/loginView.vue';
 </script>
 
 <template>
@@ -13,7 +14,7 @@ import ViewProfile from '@/modules/profile/views/viewProfile.vue';
     </header>
 
     <main>
-        <ViewProfile />
+        <LoginView />
     </main>
 
     <footer>
