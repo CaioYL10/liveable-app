@@ -4,18 +4,19 @@
 
     import TheNav from '../components/TheNav.vue';
     import TheFooter from '../components/TheFooter.vue';
+import ViewProfile from '@/modules/profile/views/viewProfile.vue';
 </script>
 
 <template>
     <header>
-        <nav><TheNav /></nav>
+        <nav></nav>
     </header>
 
     <main>
-        <propertyDetails />
+        <ViewProfile />
     </main>
 
     <footer>
-        <TheFooter />
+        
     </footer>
 </template>
