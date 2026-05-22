@@ -31,6 +31,18 @@
             texto.value = fala;
         }
     }
+
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
+
+    function goToDetails() {
+      router.push('/baselogin')
+    }
+
+    function goToHome() {
+      router.push('/')
+    }
 </script>
 
 
@@ -48,7 +60,7 @@
 
 
         <ul>
-            <li @click="ativar('inicio')" :class="{ active: ativo === 'inicio' }"><PhHouse :size="20" /> Início</li>
+            <li @click="ativar('inicio'), goToHome()" :class="{ active: ativo === 'inicio' }"><PhHouse :size="20" /> Início</li>
             <li @click="ativar('filtros')" :class="{ active: ativo === 'filtros' }"><PhFunnel :size="20" /> Filtrar</li>
             <li @click="ativar('historico')" :class="{ active: ativo === 'historico' }"><PhTimer :size="20" /> Pendentes</li>
         </ul>
@@ -60,7 +72,7 @@
         </div>
 
         <div class="icones">
-            <div class="circle"><PhUser :size="20" /></div>
+            <div class="circle" @click="goToDetails"><PhUser :size="20" /></div>
             <div class="circle"><PhListHeart :size="20" /></div>
         </div>
     </nav>

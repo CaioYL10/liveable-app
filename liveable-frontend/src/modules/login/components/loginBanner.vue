@@ -58,11 +58,11 @@
 
     .texts {
         width: 100%;
-        min-height: 340px;
+        min-height: 35vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         background: var(--color-overlay-white);
         backdrop-filter: blur(2px);
         border-radius: 17px;
@@ -71,17 +71,18 @@
         padding: 2rem 0;
         color: var(--color-primary-text);
         background-repeat: no-repeat;
+        font-size: 0.85rem;
     }
 
     .carrossel-inputs {
         width: auto;
-        height: 10px;
+        height: 0.5vw;
         display: flex;
         gap: 10px;
     }
 
     .carrossel-input {
-        width: clamp(1rem, 6rem + 1vw, 100rem);
+        width: clamp(1rem, 5rem + 1vw, 100rem);
         height: 100%;
         background-color: #fff;
         border-radius: 10px;
