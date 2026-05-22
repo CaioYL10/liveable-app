@@ -80,23 +80,23 @@
         width: 100%;
         height: auto;
         display: flex;
-        align-items: stretch;
+        align-items: flex-start;
         justify-content: space-between;
     }
 
     .home-photo {
-        width: 67%;
+        width: 64%;
         aspect-ratio: 16 / 9;
         height: auto;
         border-radius: 30px;
         box-shadow: var(--shadow-sm);
-        background-image: url(https://projetaronline.com/wp-content/uploads/2025/04/P451-FOTOS_16-Foto.jpg);
+        background-image: url(https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg);
         background-size: cover;
         background-position: center;
     }
 
     .home-informations {
-        width: 30%;
+        width: 35%;
         height: auto;
         border-radius: 30px;
         display: flex;

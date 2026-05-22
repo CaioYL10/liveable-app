@@ -46,7 +46,7 @@
             </defs>
         </svg>
 
-         
+
         <ul>
             <li @click="ativar('inicio')" :class="{ active: ativo === 'inicio' }"><PhHouse :size="20" /> Início</li>
             <li @click="ativar('filtros')" :class="{ active: ativo === 'filtros' }"><PhFunnel :size="20" /> Filtrar</li>
@@ -68,10 +68,10 @@
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    
+
 
     nav {
-        width: 95%;
+        width: 95vw;
         height: 100px;
         background-color: var(--color-bg-secondary);
         border-radius: 30px;
@@ -116,7 +116,7 @@
         height: 2px;
         width: 100%;
         margin-top: 5px;
-        background-image: 
+        background-image:
             linear-gradient(var(--color-primary), var(--color-primary)),
             linear-gradient(var(--color-primary), var(--color-primary));
         background-repeat: no-repeat;

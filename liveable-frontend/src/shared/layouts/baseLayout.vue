@@ -10,14 +10,30 @@
 
 <template>
     <header>
-        <nav></nav>
+        <nav><TheNav class="nav" /></nav>
     </header>
 
     <main>
-        <homeView />
+        <router-view />
     </main>
 
     <footer>
-
+      <TheFooter />
     </footer>
 </template>
+
+<style scoped>
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+</style>
