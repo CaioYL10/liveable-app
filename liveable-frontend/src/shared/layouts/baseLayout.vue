@@ -14,7 +14,7 @@ import LoginView from '@/modules/login/views/loginView.vue';
     </header>
 
     <main>
-        <LoginView />
+        <ViewProfile />
     </main>
 
     <footer>
