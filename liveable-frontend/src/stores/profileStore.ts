@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useLoginStore } from './loginStore'
@@ -6,8 +7,10 @@ interface Perfil {
   id: number
   nome: string
   email: string
+  contact?: number
   foto?: string
   banner?: string
+  favoriteProperties?: string
 }
 
 export const useProfileStore = defineStore('profile', () => {

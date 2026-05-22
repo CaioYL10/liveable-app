@@ -1,16 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 interface Imovel {
   id: number
-  titulo: string
-  preco: number
-  avaliacao: number
-  imagem?: string
-  endereco?: string
+  title: string
+  price: number
+  type: string
+  contact: number
+  assessment: number
+  area: number
+  location: string
+  imagem: string
+  wiFi?: string
+  tv?: string
+  refrigerator?: string
+  airConditioning?: string
   camas?: number
+  washingMachine?: string
+  microwave?: string
   banheiros?: number
-  area?: number
 }
 
 export const usePropertiesStore = defineStore('properties', () => {
