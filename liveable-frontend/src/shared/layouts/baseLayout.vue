@@ -1,11 +1,11 @@
 <script setup lang="ts">
     // isso vai sair quando o router for arrumado, está forma de import esta aqui só para testes
     import propertyDetails from '@/modules/properties/views/propertyDetails.vue';
-
     import TheNav from '../components/TheNav.vue';
     import TheFooter from '../components/TheFooter.vue';
-import ViewProfile from '@/modules/profile/views/viewProfile.vue';
-import LoginView from '@/modules/login/views/loginView.vue';
+    import ViewProfile from '@/modules/profile/views/viewProfile.vue';
+    import LoginView from '@/modules/login/views/loginView.vue';
+    import homeView from '@/modules/home/views/homeView.vue';
 </script>
 
 <template>
@@ -14,10 +14,10 @@ import LoginView from '@/modules/login/views/loginView.vue';
     </header>
 
     <main>
-        <ViewProfile />
+        <homeView />
     </main>
 
     <footer>
-        
+
     </footer>
 </template>

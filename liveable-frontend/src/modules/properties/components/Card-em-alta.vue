@@ -27,7 +27,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
     .all {
-        width: clamp(25rem, 25vw, 40rem);
+        width: clamp(30rem, 25vw, 40rem);
         min-height: 350px;
         border-radius: 30px;
         display: flex;
@@ -44,7 +44,7 @@
     .informs {
         width: 100%;
         min-height: 120px;
-        background: var(--color-overlay); 
+        background: var(--color-overlay);
         backdrop-filter: blur(2px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
@@ -81,9 +81,9 @@
     }
 
     button {
-        width: 4rem; 
+        width: 4rem;
         max-height: 4rem;
-        aspect-ratio: 1 / 1; 
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
         border: none;
         cursor: pointer;
