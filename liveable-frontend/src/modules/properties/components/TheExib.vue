@@ -1,8 +1,38 @@
 <script setup lang="ts">
     import { PhHeart, PhPhone } from "@phosphor-icons/vue";
     import { ref } from "vue";
+    import { onMounted } from "vue";
     import VueSlider from "vue-slider-component"
     import "vue-slider-component/theme/default.css"
+
+    interface Property {
+      title: string
+      address: string
+      beds: number
+      bathrooms: number
+      size: string
+      pricePerDay: number
+      owner: string
+      image: string
+      ownerImage: string
+    }
+
+    const property = ref<Property | null>(null)
+
+      onMounted(async () => {
+          try {
+              const response = await fetch('http://127.0.0.1:8000/api/property')
+
+              const data = await response.json()
+
+              property.value = data
+
+              valordiaCasa.value = data.pricePerDay
+
+          } catch (error) {
+              console.error(error)
+          }
+      })
 
     const valor = ref<number>(3);
     const valordiaCasa = ref<number>(130.00);
@@ -11,26 +41,26 @@
 <template>
     <div class="all">
         <div class="home-title">
-            <p>Casa de Férias em Ubatuba</p>
+            <p>{{ property?.title }}</p>
         </div>
         <div class="home-details">
-            <div class="home-photo"></div>
+            <div class="home-photo" :style="{ backgroundImage: `url(${property?.image})` }"></div>
             <div class="home-informations">
                 <div class="ende">
                     <div class="casa-endereco">
-                        <p>201 Prade Dr, San Jose, CA 95119</p>
+                        <p>{{ property?.address }}</p>
                     </div>
                     <div class="fav"><PhHeart weight="fill" class="icon-fav"/></div>
                 </div>
                 <div class="info">
-                    <p>4 Camas</p>
+                    <p>{{ property?.beds }} Camas</p>
                     <div class="divisoria"></div>
-                    <p>3 Banheiros</p>
+                    <p>{{ property?.bathrooms }} Banheiros</p>
                     <div class="divisoria"></div>
-                    <p>50m²</p>
+                    <p>{{ property?.size }}</p>
                 </div>
                 <div class="simulation">
-                    <p>Simulação de preço: R${{ valor * valordiaCasa }},00</p>
+                    <p>Simulação de preço: R$ {{ valor * (property?.pricePerDay || 0) }}</p>
                     <div class="juntar">
                         <VueSlider class="slider" :min="0" :max="10" v-model="valor" :tooltip="'always'" tooltip-placement="bottom" />
                         <p class="n-baixo">N. de dias</p>
@@ -39,8 +69,8 @@
                 <div class="contact">
                     <div class="contato-escrita">Contato:</div>
                     <div class="card-contato">
-                        <div class="img"></div>
-                        <p>Wanderley Avanze</p>
+                        <div class="img" :style="{ backgroundImage: `url(${property?.ownerImage})` }"></div>
+                        <p>{{ property?.owner }}</p>
                         <PhPhone class="icon-phone"/>
                     </div>
                 </div>
@@ -90,7 +120,6 @@
         height: auto;
         border-radius: 30px;
         box-shadow: var(--shadow-sm);
-        background-image: url(https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg);
         background-size: cover;
         background-position: center;
     }
@@ -258,7 +287,6 @@
         height: 3rem;
         aspect-ratio: 1 / 1;
         border-radius: 50%;
-        background-image: url(https://static.vecteezy.com/ti/fotos-gratis/t2/23308898-ai-generativo-uma-homem-em-solido-cor-fundo-com-uma-sorrir-facial-expressao-foto.jpg);
         background-position: center;
         background-size: 150% 100%;
         cursor: pointer;

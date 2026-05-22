@@ -1,4 +1,4 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
     // isso vai sair quando o router for arrumado, está forma de import esta aqui só para testes
     import propertyDetails from '@/modules/properties/views/propertyDetails.vue';
     import TheNav from '../components/TheNav.vue';
@@ -38,9 +38,9 @@ main {
     align-items: center;
     padding: 20px 0;
 }
-</style> -->
+</style>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
 const mensagem = ref('carregando...')
@@ -63,4 +63,4 @@ onMounted(async () => {
   <div>
     <h1>{{ mensagem }}</h1>
   </div>
-</template>
+</template> -->
