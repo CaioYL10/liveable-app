@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\UserController;
 
+Route::get('/teste', function () {
+    return response()->json([
+        'mensagem' => 'Laravel conectado com Vue'
+    ]);
+});
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
