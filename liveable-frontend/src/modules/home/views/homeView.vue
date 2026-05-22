@@ -5,6 +5,6 @@
 </script>
 
 <template>
-    <TheCard />
+    <!-- <TheCard /> -->
     <TheAlta />
 </template>

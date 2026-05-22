@@ -50,13 +50,19 @@ const onSwiper = (swiper: any) => {
 
     <!-- CARROSSEL -->
     <Swiper
-        :modules="[Navigation]"
-        :slides-per-view="5"
-        :space-between="320"
-        :loop="true"
-        @swiper="onSwiper"
-        class="mySwiper"
-      >
+      :modules="[Navigation]"
+      :slides-per-view="1"
+      :space-between="24"
+      :loop="true"
+      :breakpoints="{
+        480:  { slidesPerView: 1.2, spaceBetween: 16 },
+        768:  { slidesPerView: 2.3, spaceBetween: 20 },
+        1280: { slidesPerView: 3.5, spaceBetween: 24 },
+        1600: { slidesPerView: 4.3, spaceBetween: 24 },
+      }"
+      @swiper="onSwiper"
+      class="mySwiper"
+    >
       <SwiperSlide>
         <CardCasa />
       </SwiperSlide>
@@ -194,5 +200,10 @@ const onSwiper = (swiper: any) => {
   transform: translateX(-50%);
 
   bottom: 10px !important;
+}
+
+:deep(.swiper-slide) {
+  height: auto;
+  box-sizing: border-box;
 }
 </style>
