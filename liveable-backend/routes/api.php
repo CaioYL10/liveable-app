@@ -54,3 +54,14 @@ Route::get('/propertyCard', function () {
         'image' => 'https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg',
     ]);
 });
+
+// Rota do card de imovel em alta
+Route::get('/propertyCardemAlta', function () {
+    return response()->json([
+        'title' => 'Casa de frente ao mar',
+        'pricePerDay' => 300.00,
+        'avaliation' => 5,
+        'clicks' => 70,
+        'image' => 'https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg',
+    ]);
+});

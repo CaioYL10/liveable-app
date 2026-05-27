@@ -7,6 +7,7 @@
     import LoginView from '@/modules/login/views/loginView.vue';
     import homeView from '@/modules/home/views/homeView.vue';
     import CardCarousel from '@/modules/properties/components/Card-carousel.vue';
+import CardAltaCarousel from '@/modules/properties/components/CardAlta-carousel.vue';
 </script>
 
 <template>
@@ -16,7 +17,6 @@
 
     <main>
         <router-view />
-        <CardCarousel />
     </main>
 
     <footer>
