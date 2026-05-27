@@ -32,7 +32,7 @@
           } catch (error) {
               console.error(error)
           }
-      })
+    })
 
     const valor = ref<number>(3);
     const valordiaCasa = ref<number>(130.00);

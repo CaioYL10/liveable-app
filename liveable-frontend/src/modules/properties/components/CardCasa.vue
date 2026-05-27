@@ -1,7 +1,30 @@
 <script setup lang="ts">
     import { PhHeart } from "@phosphor-icons/vue";
+    import { onMounted } from "vue";
+    import { ref } from "vue";
+    import { useRouter } from 'vue-router';
 
-    import { useRouter } from 'vue-router'
+    interface Property {
+      title: string
+      pricePerDay: number
+      avaliation: number
+      image: string
+    }
+
+    const property = ref<Property | null>(null)
+
+      onMounted(async () => {
+          try {
+              const response = await fetch('http://127.0.0.1:8000/api/propertyCard')
+
+              const data = await response.json()
+
+              property.value = data
+
+          } catch (error) {
+              console.error(error)
+          }
+    })
 
     const router = useRouter()
 
@@ -13,16 +36,16 @@
 
 <template>
     <div class="card">
-        <div class="cima" @click="goToDetails">
+        <div class="cima" :style="{ backgroundImage: `url(${property?.image})` }" @click="goToDetails">
             <div class="fav"><PhHeart weight="fill" class="icon-fav" :size="20" /></div>
         </div>
         <div class="baixo">
             <div class="textos">
-                <p>Casa de Férias em Ubatuba</p>
+                <p>{{ property?.title }}</p>
                 <div class="subtexto">
-                    <p>R$300,00 p/noite</p>
+                    <p>R${{property?.pricePerDay}} p/noite</p>
                     <p>•</p>
-                    <p>★ 5</p>
+                    <p>★ {{ property?.avaliation }}</p>
                 </div>
             </div>
 
@@ -57,7 +80,6 @@
     .card .cima {
         width: 100%;
         height: 70%;
-        background: url(https://img.freepik.com/fotos-gratis/foto-interior-bonita-de-uma-casa-moderna-com-paredes-brancas-relaxantes-moveis-e-tecnologia_181624-3828.jpg?semt=ais_hybrid&w=740&q=80);
         background-repeat: no-repeat;
         background-size: 140% 100%;
         background-position: center;
