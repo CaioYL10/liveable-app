@@ -8,7 +8,6 @@ import 'swiper/css/navigation'
 
 import { Navigation } from 'swiper/modules'
 
-import CardCasa from './CardCasa.vue'
 import CardEmAlta from './Card-em-alta.vue'
 
 const prevButton = ref(null)
@@ -117,9 +116,11 @@ const onSwiper = (swiper: any) => {
 .carousel-wrapper {
   position: relative;
   width: 100%;
-  padding: 0 3.5rem;
+  padding: 0 2rem;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  margin-top: 2vw;
+  margin-bottom: 2vw;
 }
 
 .escrita-cima {

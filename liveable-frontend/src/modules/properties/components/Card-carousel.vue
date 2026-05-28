@@ -102,7 +102,7 @@ const onSwiper = (swiper: any) => {
 .carousel-wrapper {
   position: relative;
   width: 100%;
-  padding: 0 3.5rem;
+  padding: 0 2rem;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }

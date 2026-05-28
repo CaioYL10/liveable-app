@@ -7,7 +7,7 @@ import LoginInputs from '../components/loginInputs.vue';
 
 <template>
   <div class="container-large">
-    <LoginBanner />
+    <div class="banner"><LoginBanner /></div>
     <LoginInputs />
   </div>
 </template>
@@ -17,7 +17,18 @@ import LoginInputs from '../components/loginInputs.vue';
     display: flex;
     justify-content: space-around;
 
-    width: 95%;
+    width: 100%;
     min-height: 90vh;
+  }
+
+  @media (max-width: 768px) {
+    .container-large {
+      flex-direction: column;
+      width: 90%;
+    }
+
+    .banner {
+      display: none;
+    }
   }
 </style>
