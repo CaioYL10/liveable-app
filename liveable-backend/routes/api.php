@@ -65,3 +65,13 @@ Route::get('/propertyCardemAlta', function () {
         'image' => 'https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg',
     ]);
 });
+
+// Rota das informações em baixo do TheExib
+Route::get('/infosExib', function () {
+    return response()->json([
+        'address' => 'San Jose, CA',
+        'pricePerDay' => 300.00,
+        'type' => 'Casa',
+        'rooms' => 3
+    ]);
+});

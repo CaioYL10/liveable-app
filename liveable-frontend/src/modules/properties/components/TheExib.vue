@@ -4,6 +4,7 @@
     import { onMounted } from "vue";
     import VueSlider from "vue-slider-component"
     import "vue-slider-component/theme/default.css"
+    import InfosProperties from "./InfosProperties.vue";
 
     interface Property {
       title: string
@@ -77,6 +78,8 @@
                 <button>Solicitar</button>
             </div>
         </div>
+
+        <InfosProperties />
     </div>
 </template>
 
@@ -89,6 +92,8 @@
         flex-direction: column;
         font-family: "Poppins", sans-serif;
         gap: 20px;
+        margin-top: 1vw;
+        margin-bottom: 1vw;
     }
 
     .home-title {
@@ -325,7 +330,8 @@
         aspect-ratio: auto;
         min-height: auto;
         width: 95%;
-        margin: 0 auto;
+        margin-top: 7vw;
+        margin-bottom: 7vw;
     }
 
     .home-details {

@@ -207,6 +207,10 @@
         transform: scaleX(1);
     }
 
+    .nav-desktop li.active {
+        opacity: 1;
+    }
+
     .pesquisar {
         width: 17%;
         height: 45%;
