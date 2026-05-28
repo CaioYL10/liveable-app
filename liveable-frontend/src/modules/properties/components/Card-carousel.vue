@@ -60,7 +60,7 @@ const onSwiper = (swiper: any) => {
       :breakpoints="{
         480:  { slidesPerView: 1.7, spaceBetween: 16 },
         768:  { slidesPerView: 2.8, spaceBetween: 20 },
-        1280: { slidesPerView: 3.5, spaceBetween: 24 },
+        1280: { slidesPerView: 3.9, spaceBetween: 24 },
         1600: { slidesPerView: 5, spaceBetween: 24 },
       }"
       @swiper="onSwiper"

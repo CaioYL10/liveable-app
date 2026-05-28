@@ -75,3 +75,15 @@ Route::get('/infosExib', function () {
         'rooms' => 3
     ]);
 });
+
+// Rota do card de imovel
+Route::get('/PendenciesCard', function () {
+    return response()->json([
+        'title' => 'Casa de Férias em Ubatuba',
+        'pricePerDay' => 300.00,
+        'avaliation' => 5,
+        'image' => 'https://vgprojetos.com/wp-content/uploads/2024/04/P16.jpg',
+        'owner' => 'Wanderley Avanze',
+        'ownerImage' => 'https://static.vecteezy.com/ti/fotos-gratis/t2/23308898-ai-generativo-uma-homem-em-solido-cor-fundo-com-uma-sorrir-facial-expressao-foto.jpg'
+    ]);
+});

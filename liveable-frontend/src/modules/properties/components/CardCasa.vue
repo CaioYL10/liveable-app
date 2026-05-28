@@ -1,179 +1,228 @@
 <script setup lang="ts">
-    import { PhHeart } from "@phosphor-icons/vue";
-    import { onMounted } from "vue";
-    import { ref } from "vue";
-    import { useRouter } from 'vue-router';
+import { PhHeart, PhPhone } from "@phosphor-icons/vue";
+import { onMounted, ref } from "vue";
+import { useRouter } from 'vue-router';
 
-    interface Property {
-      title: string
-      pricePerDay: number
-      avaliation: number
-      image: string
-    }
+interface Property {
+  title: string
+  pricePerDay: number
+  nights: number
+  avaliation: number
+  image: string
+  owner: string
+  ownerImage: string
+}
 
-    const property = ref<Property | null>(null)
+const property = ref<Property | null>(null)
 
-      onMounted(async () => {
-          try {
-              const response = await fetch('http://127.0.0.1:8000/api/propertyCard')
+onMounted(async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/PendenciesCard')
+    const data = await response.json()
+    property.value = data
+  } catch (error) {
+    console.error(error)
+  }
+})
 
-              const data = await response.json()
+const router = useRouter()
 
-              property.value = data
-
-          } catch (error) {
-              console.error(error)
-          }
-    })
-
-    const router = useRouter()
-
-    function goToDetails() {
-      router.push('/property-details')
-    }
+function goToDetails() {
+  router.push('/property-details')
+}
 </script>
 
-
 <template>
-    <div class="card">
-        <div class="cima" :style="{ backgroundImage: `url(${property?.image})` }" @click="goToDetails">
-            <div class="fav"><PhHeart weight="fill" class="icon-fav" :size="20" /></div>
-        </div>
-        <div class="baixo">
-            <div class="textos">
-                <p>{{ property?.title }}</p>
-                <div class="subtexto">
-                    <p>R${{property?.pricePerDay}} p/noite</p>
-                    <p>•</p>
-                    <p>★ {{ property?.avaliation }}</p>
-                </div>
-            </div>
-
-            <div class="button">
-                <button @click="goToDetails">Ver Mais</button>
-            </div>
-        </div>
+  <div class="card">
+    <!-- Imagem -->
+    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${property?.image})` }">
+      <div class="fav">
+        <PhHeart weight="fill" class="icon-fav" :size="20" />
+      </div>
     </div>
+
+    <!-- Conteúdo inferior -->
+    <div class="baixo">
+
+      <!-- Título e preço -->
+      <div class="textos">
+        <p class="titulo">{{ property?.title }}</p>
+        <div class="subtexto">
+          <p>R${{property?.pricePerDay}} p/noite</p>
+          <p>•</p>
+          <p>★ {{ property?.avaliation }}</p>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="actions" @click="goToDetails()">
+        <button class="btn-confirm">Confirmar</button>
+      </div>
+
+    </div>
+  </div>
 </template>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-    .card {
-        /* width: 20%;
-        max-width: 320px; */
-        width: 100%;
-        max-width: 100%;
-        /* min-width: 300px; */
-        background-color: var(--color-bg-secondary);
-        height: 440px;
-        border-radius: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: column;
-        font-family: "Poppins", sans-serif;
-        box-shadow: var(--shadow-sm);
-        color: var(--color-black-text);
-    }
+.card {
+  width: 300px;
+  background-color: var(--color-bg-secondary, #ffffff);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+  box-shadow: var(--shadow-sm, 0 4px 16px rgba(0,0,0,0.10));
+  color: var(--color-black-text, #1a1a1a);
+  overflow: hidden;
+}
 
-    .card .cima {
-        width: 100%;
-        height: 70%;
-        background-repeat: no-repeat;
-        background-size: 140% 100%;
-        background-position: center;
-        overflow: hidden;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
-        border-bottom-left-radius: 35px;
-        border-bottom-right-radius: 35px;
-        cursor: pointer;
-        display: flex;
-        justify-content: flex-end;
-        align-items: start;
-        padding: 13px 13px 0 0;
-        box-sizing: border-box;
-    }
+/* ── Imagem ── */
+.cima {
+  width: 100%;
+  height: 300px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+}
 
-    .cima .fav {
-        width: 12%;
-        height: 35px;
-        aspect-ratio: 1 / 1;
-        background-color: var(--color-bg);
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: var(--shadow-sm);
-        transition: box-shadow 0.3s;
-    }
+.fav {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: box-shadow 0.3s;
+  cursor: pointer;
+}
 
-    .fav:hover {
-        box-shadow: var(--shadow-hover-blue);
-    }
+.fav:hover {
+  box-shadow: var(--shadow-hover-blue, 0 4px 12px rgba(59,130,246,0.4));
+}
 
-    .icon-fav {
-        color: var(--color-icon-inactive);
-    }
+.icon-fav {
+  color: var(--color-primary, #3b82f6);
+}
 
-    .card .baixo {
-        width: 100%;
-        height: 30%;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        box-sizing: border-box;
-        padding: 20px;
-        padding-top: 0;
-        padding-bottom: 15px;
-    }
+/* ── Conteúdo ── */
+.baixo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+}
 
-    .baixo .button {
-        align-self: center;
-        width: 100%;
-        height: 37px;
-    }
+/* Título */
+.textos {
+  display: flex;
+  flex-direction: column;
+}
 
-    .button button {
-        width: 100%;
-        height: 100%;
-        border-radius: 16px;
-        cursor: pointer;
-        border: 0;
-        font-family: "Poppins", sans-serif;
-        font-weight: 500;
-        font-size: 14px;
-        background-color: var(--color-primary);
-        color: var(--color-primary-text);
-        transition: background-color 0.5s;
-    }
+.titulo {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
 
-    .button button:hover {
-        background-color: var(--color-primary-hover);
-    }
+.subtexto {
+  font-size: 13px;
+  opacity: 0.6;
+  display: flex;
+  gap: 10px;
+  font-size: clamp(0.7rem, 0.81vw, 0.85rem);
+}
 
-    .baixo .textos {
-        display: flex;
-        flex-direction: column;
-        text-align: start;
-        gap: 3px;
-        margin-top: 3%;
-        white-space: nowrap;
-        font-size: clamp(0.9rem, 1vw, 1.05rem);
-    }
+/* Quem solicitou */
+.label-solicitou {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    .textos p {
-        margin: 0;
-    }
+.card-contato {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.08));
+  background-color: var(--color-bg-secondary, #fff);
+}
 
-    .subtexto {
-        font-size: 13px;
-        opacity: 0.6;
-        display: flex;
-        gap: 10px;
-        font-size: clamp(0.7rem, 0.81vw, 0.85rem);
-    }
+.card-contato .img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+  flex-shrink: 0;
+}
 
+.owner-name {
+  margin: 0;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
 
+.icon-phone {
+  color: var(--color-black-text, #1a1a1a);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Botões */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-details {
+  background: none;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-black-text, #1a1a1a);
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: center;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+
+.btn-details:hover {
+  opacity: 1;
+}
+
+.btn-confirm {
+  width: 100%;
+  height: 42px;
+  border-radius: 14px;
+  cursor: pointer;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: var(--color-primary, #3b82f6);
+  color: var(--color-primary-text, #ffffff);
+  transition: background-color 0.3s;
+}
+
+.btn-confirm:hover {
+  background-color: var(--color-primary-hover, #2563eb);
+}
 </style>
