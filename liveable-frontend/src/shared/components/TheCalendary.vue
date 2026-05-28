@@ -120,7 +120,7 @@ function proximoMes(): void {
 }
 
 function nomeMes(mes: number): string {
-  return NOMES_MESES[mes]
+  return NOMES_MESES[mes] ?? ''
 }
 
 // Retorna array com os dias — null nos espaços vazios antes do dia 1

@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { PhCaretLeft, PhPencilSimpleLine, PhHouse, PhBuildingApartment, PhFarm, PhBed, PhBathtub, PhDresser, PhWifiHigh, PhMonitor, PhSidebar, PhCigarette, PhSnowflake, PhWashingMachine, PhHardDrive } from "@phosphor-icons/vue";
     import { ref } from "vue";
+    import { exibirEditor } from '@/modules/properties/composables/useEditor.ts'
 
     /* Lógica para o input radio desativar se clicar dnv */
 
@@ -28,7 +29,7 @@
 
 <template>
     <div class="all">
-        <div class="voltar">
+        <div class="voltar" @click="exibirEditor()">
             <PhCaretLeft :size="32" />
             <div class="circle-editor">
                 <PhPencilSimpleLine class="editor-icon" />
@@ -205,6 +206,7 @@
                 </div>
             </div>
         </div>
+        <button class="confirm-button">Confirmar</button>
     </div>
 </template>
 
@@ -238,6 +240,7 @@
         justify-content: flex-start;
         align-items: center;
         gap: 1rem;
+        cursor: pointer;
     }
 
     .circle-editor {
@@ -521,5 +524,16 @@
 
     button {
         color: var(--color-black-text);
+    }
+
+    .confirm-button {
+      width: 100%;
+      padding: 0.9rem 0;
+      border: 0;
+      background-color: var(--color-primary);
+      color: var(--color-primary-text);
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 600;
     }
 </style>
