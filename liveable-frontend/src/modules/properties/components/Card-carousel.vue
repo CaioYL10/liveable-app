@@ -33,7 +33,10 @@ const onSwiper = (swiper: any) => {
 <template>
   <div class="carousel-wrapper">
     <div class="escrita-cima">
-      <p>Sugestões para Você</p>
+      <div class="escrita">
+        <p>Sugestões para <span>Você</span></p>
+        <div class="button-circle"><i class="fa-solid fa-angle-right"></i></div>
+      </div>
 
       <div class="arrows">
         <!-- SETA ESQUERDA -->
@@ -113,6 +116,60 @@ const onSwiper = (swiper: any) => {
   align-items: center;
 }
 
+.escrita {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.button-circle {
+  height: 90%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 0.2rem;
+}
+
+p {
+    position: relative;
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+p span {
+  color: var(--color-primar);
+}
+
+p::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 75%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
+}
+
+p::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 20%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
+}
+
 .arrows {
   display: flex;
   gap: 10px;
@@ -121,7 +178,9 @@ const onSwiper = (swiper: any) => {
 .mySwiper {
   width: 100%;
   border-radius: 16px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: initial;
+  padding: 1rem 0;
 }
 
 /* Escondendo as setas padrões do swiper */
