@@ -4,10 +4,16 @@
 
     const ativo = ref<string>("inicio");
     const menuAberto = ref<boolean>(false);
+    const exibir = ref(false)
 
     const ativar = (item: string) => {
-        ativo.value = item;
-        menuAberto.value = false;
+      ativo.value = item
+
+      exibir.value = item === 'filtros'
+
+      if (item !== 'filtros') {
+        menuAberto.value = false
+      }
     }
 
     const toggleMenu = () => {
@@ -66,7 +72,26 @@
 
         <ul>
             <li @click="ativar('inicio'), goToHome()" :class="{ active: ativo === 'inicio' }"><PhHouse :size="20" /> Início</li>
-            <li @click="ativar('filtros')" :class="{ active: ativo === 'filtros' }"><PhFunnel :size="20" /> Filtrar</li>
+            <li @click="ativar('filtros')" class="filtrar-li" :class="{ active: ativo === 'filtros' }"><PhFunnel :size="20" />
+               Filtrar
+               <div class="box-filtrar" v-if="exibir">
+
+                <div class="input-filtrar">
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-house-chimney"></i> Casa</label>
+                </div>
+
+                <div>
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-building"></i> Apartamento</label>
+                </div>
+
+                <div>
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-building-wheat"></i> Chácara</label>
+                </div>
+               </div>
+            </li>
             <li @click="ativar('historico')" :class="{ active: ativo === 'historico' }"><PhTimer :size="20" /> Pendentes</li>
         </ul>
 
@@ -115,9 +140,26 @@
                 <li @click="ativar('inicio'), goToHome()" :class="{ active: ativo === 'inicio' }">
                     <PhHouse :size="20" /> Início
                 </li>
-                <li @click="ativar('filtros')" :class="{ active: ativo === 'filtros' }">
-                    <PhFunnel :size="20" /> Filtrar
-                </li>
+                <li @click="ativar('filtros')" class="filtrar-li" :class="{ active: ativo === 'filtros' }"><PhFunnel :size="20" />
+               Filtrar
+               <div class="box-filtrar" v-if="exibir">
+
+                <div class="input-filtrar">
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-house-chimney"></i> Casa</label>
+                </div>
+
+                <div>
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-building"></i> Apartamento</label>
+                </div>
+
+                <div>
+                  <input type="checkbox">
+                  <label for=""><i class="fa-solid fa-building-wheat"></i> Chácara</label>
+                </div>
+               </div>
+            </li>
                 <li @click="ativar('historico')" :class="{ active: ativo === 'historico' }">
                     <PhTimer :size="20" /> Pendentes
                 </li>
@@ -209,6 +251,31 @@
 
     .nav-desktop li.active {
         opacity: 1;
+    }
+
+    /* Parte do filtro */
+    .filtrar-li {
+      position: relative;
+    }
+
+    .box-filtrar {
+      position: absolute;
+      z-index: 999;
+      top: 35px;
+      padding: 2rem 1rem;
+      min-width: 160px;
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border-radius: 20px;
+    }
+
+    .input-filtrar {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
     }
 
     .pesquisar {
