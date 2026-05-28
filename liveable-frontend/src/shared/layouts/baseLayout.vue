@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import TheNav from '../components/TheNav.vue';
     import TheFooter from '../components/TheFooter.vue';
+import Thecalendary from '../components/TheCalendary.vue';
+
 </script>
 
 <template>
@@ -11,6 +13,7 @@
 
     <main>
         <router-view />
+        <Thecalendary />
     </main>
 
     <footer>

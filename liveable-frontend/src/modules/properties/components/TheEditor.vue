@@ -15,7 +15,7 @@
     }
 
     /* Lógica pro input do tipo de propriedade agora */
-    
+
     const tipoProp = ref<string | null>(null)
 
     function toggleTipo(tipo: string) {
@@ -340,7 +340,7 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        flex-direction: row; 
+        flex-direction: row;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: var(--shadow-sm);
@@ -496,7 +496,7 @@
     }
 
     .mais-detalhes-icons {
-        width: clamp(35px, 1.5vw, 40px);    
+        width: clamp(35px, 1.5vw, 40px);
     }
 
 
