@@ -161,7 +161,7 @@ p {
 }
 
 p span {
-  color: var(--color-primar);
+  color: var(--color-primary);
 }
 
 p::before {

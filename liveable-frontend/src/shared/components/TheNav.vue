@@ -54,6 +54,10 @@
     function goToHome() {
       router.push('/')
     }
+
+    function goToPendencies() {
+      router.push('/pendencias')
+    }
 </script>
 
 
@@ -92,7 +96,7 @@
                 </div>
                </div>
             </li>
-            <li @click="ativar('historico')" :class="{ active: ativo === 'historico' }"><PhTimer :size="20" /> Pendentes</li>
+            <li @click="ativar('historico'), goToPendencies()" :class="{ active: ativo === 'historico' }"><PhTimer :size="20" /> Pendentes</li>
         </ul>
 
         <div class="pesquisar">
@@ -160,7 +164,7 @@
                 </div>
                </div>
             </li>
-                <li @click="ativar('historico')" :class="{ active: ativo === 'historico' }">
+                <li @click="ativar('historico'), goToPendencies()" :class="{ active: ativo === 'historico' }">
                     <PhTimer :size="20" /> Pendentes
                 </li>
                 <li @click="goToDetails(); menuAberto = false">

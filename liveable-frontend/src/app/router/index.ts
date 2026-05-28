@@ -6,6 +6,7 @@ import HomeView from '@/modules/home/views/homeView.vue'
 import PropertyDetails from '@/modules/properties/views/propertyDetails.vue'
 import BaseLogin from '@/shared/layouts/baseLogin.vue'
 import LoginView from '@/modules/login/views/loginView.vue'
+import ImoveisPendentes from '@/modules/properties/views/imoveisPendentes.vue'
 
 const routes = [
   {
@@ -26,6 +27,11 @@ const routes = [
         path: 'login',
         name: 'loginPage',
         component: LoginView
+      },
+      {
+        path: 'pendencias',
+        name: 'pendenciasPage',
+        component: ImoveisPendentes
       }
     ]
   },
