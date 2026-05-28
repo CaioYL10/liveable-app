@@ -73,7 +73,7 @@ const onSwiper = (swiper: any) => {
         },
         // Telas Ultra-Wide
         '1920': {
-          slidesPerView: 4.5,
+          slidesPerView: 3.5,
           spaceBetween: 40,
         }
       }"
