@@ -15,7 +15,7 @@
                     <a href="">Trancoso, BA</a>
                     <a href="">Búzios, RJ</a>
                 </div>
-                
+
                 <div class="destination-group">
                     <a href="">Ibiza, Espanha</a>
                     <a href="">Positano, Itália</a>
@@ -117,4 +117,47 @@
     a {
         color: currentColor;
     }
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem 1.5rem;
+    }
+
+    .destinations {
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .baixo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .baixo .baixo-group-1 {
+        flex-wrap: wrap;
+        gap: 0.8rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .destinations {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .baixo-group-2 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .baixo-group-2 div:last-child {
+        display: flex;
+        gap: 1rem;
+    }
+}
 </style>
