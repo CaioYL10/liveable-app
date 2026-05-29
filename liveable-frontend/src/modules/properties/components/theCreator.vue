@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { PhCaretLeft, PhPencilSimpleLine, PhHouse, PhBuildingApartment, PhFarm, PhBed, PhBathtub, PhDresser, PhWifiHigh, PhMonitor, PhSidebar, PhCigarette, PhSnowflake, PhWashingMachine, PhHardDrive } from "@phosphor-icons/vue";
     import { ref } from "vue";
+    import { exibir } from "../composables/useConfirmSolicitation";
+    import { exibirConfirm } from "../composables/useConfirmSolicitation";
 
     /* Lógica pro input do tipo de propriedade agora */
 
@@ -36,78 +38,86 @@
     const endereco = ref<string>("")
     const area_terreno = ref<string>("")
     const titulo = ref<string>("")
-    const price = ref<number>(300)
-    const reviewId = ref<number>(1);
-    const status = ref<string>('Disponível');
+    const status = ref<string>('Disponível')
+      function pegarImagem(event: Event) {
+      const target = event.target as HTMLInputElement
+
+      if (target.files && target.files.length > 0) {
+        imagem.value = target.files[0]
+      }
+    }
+    const imagem = ref<File | null>(null)
 
     // Fazendo o Fetch
     async function salvarImovel() {
-      loading.value = true;
+  loading.value = true;
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/property/store", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          },
+  try {
+    const formData = new FormData();
 
-          body: JSON.stringify({
-            type: tipoProp.value,
+    formData.append("type", tipoProp.value || "");
+    formData.append("local", endereco.value);
+    formData.append("area", area_terreno.value);
+    formData.append("property_title", titulo.value);
 
-            // valor_diario: valor_diario.value,
-            // valor_semanal: valor_semanal.value,
-            // valor_mensal: valor_mensal.value,
+    formData.append("pricePerDay", String(valor_diario.value || 0));
+    formData.append("pricePerWeek", String(valor_semanal.value || 0));
+    formData.append("pricePerMonth", String(valor_mensal.value || 0));
 
-            local: endereco.value,
-            area: area_terreno.value,
-            property_title: titulo.value,
-            pricePerDay: price.value,
-            status: status.value,
+    formData.append("status", status.value);
 
+    formData.append("beds_qtd", String(camas.value));
+    formData.append("toilette", String(banheiros.value));
+    // formData.append("quartos", String(quartos.value));
 
-            beds_qtd: camas.value,
-            toilette: banheiros.value,
-            quartos: quartos.value,
+    formData.append("wifi", wifi.value ? "1" : "0");
+    formData.append("tv", tv.value ? "1" : "0");
+    formData.append("cooler", refrigerador.value ? "1" : "0");
+    formData.append("air_conditioning", ar.value ? "1" : "0");
+    formData.append("washer", maquina_lavar.value ? "1" : "0");
+    formData.append("microwave", micro_ondas.value ? "1" : "0");
 
-            wifi: wifi.value,
-            tv: tv.value,
-            cooler: refrigerador.value,
-            // fumaca: fumaca.value,
-            air_conditioning: ar.value,
-            washer: maquina_lavar.value,
-            microwave: micro_ondas.value
-          })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.log(data);
-          alert("Erro ao salvar imóvel");
-          return;
-        }
-
-        console.log(data);
-
-        alert("Imóvel salvo com sucesso!");
-      } catch (error) {
-        console.error(error);
-        alert("Erro no servidor");
-      } finally {
-        loading.value = false;
-      }
+    // imagem
+    if (imagem.value) {
+      formData.append("images[]", imagem.value);
     }
+
+    const response = await fetch("http://127.0.0.1:8000/api/property/store", {
+      method: "POST",
+      headers: {
+        Accept: "application/json"
+      },
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.log(data);
+      alert("Erro ao salvar imóvel");
+      return;
+    }
+
+    console.log(data);
+
+    alert("Imóvel salvo com sucesso!");
+  } catch (error) {
+    console.error(error);
+    alert("Erro no servidor");
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <template>
     <div class="all">
-        <div class="voltar">
+        <div class="voltar" @click="exibirConfirm()">
             <PhCaretLeft :size="32" />
             <div class="circle-editor">
                 <PhPencilSimpleLine class="editor-icon" />
             </div>
-            <p>Editar propriedades</p>
+            <p>Criar Propriedade</p>
         </div>
 
         <div class="valores">
@@ -217,6 +227,14 @@
                         <input type="text" v-model="titulo">
                         <div class="info-gerais-divisoria"></div>
                         <p>Título</p>
+                    </div>
+                </div>
+
+                <div class="info-gerais-input">
+                    <div class="info-gerais-input">
+                        <input type="file" name="images" @change="pegarImagem">
+                        <div class="info-gerais-divisoria"></div>
+                        <p>Imagem</p>
                     </div>
                 </div>
             </div>
@@ -383,6 +401,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .valores-card-baixo input {
+      height: 95%;
+      width: 100%;
+      border: 0;
     }
 
 

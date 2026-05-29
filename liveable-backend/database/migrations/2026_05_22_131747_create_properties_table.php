@@ -25,6 +25,8 @@ return new class extends Migration {
             $table->string('contract')->nullable();
             $table->string('status');
             $table->integer('pricePerDay');
+            $table->integer('pricePerWeek')->nullable();
+            $table->integer('pricePerMonth')->nullable();
             $table->foreignId('property_like_id')->nullable();
             $table->foreignId('property_image_id')->nullable();
             $table->timestamps();

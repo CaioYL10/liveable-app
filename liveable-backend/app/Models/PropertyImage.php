@@ -12,6 +12,12 @@ class PropertyImage extends Model
         'property_id',
     ];
 
+    protected $appends = ['url'];
+    
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->path);
+    }
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);

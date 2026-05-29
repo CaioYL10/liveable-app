@@ -9,7 +9,9 @@ interface Property {
   property_title: string
   pricePerDay: number
   avaliation: number
-  image: string
+  images: {
+    url: string
+  }[]
 }
 
 defineProps<{
@@ -26,7 +28,7 @@ function goToDetails() {
 <template>
   <div class="card">
     <!-- Imagem -->
-    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${casa?.image})` }">
+    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
       <div class="fav">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>

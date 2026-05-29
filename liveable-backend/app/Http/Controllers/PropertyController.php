@@ -13,10 +13,23 @@ use App\Models\User;
 class PropertyController extends Controller
 {
     public function index()
-    {
-        $properties = Property::all();
-        return response()->json($properties, 200);
-    }
+{
+    $properties = Property::with('images')->get();
+
+    $properties->transform(function ($property) {
+
+        $property->images->transform(function ($image) {
+
+            $image->url = asset('storage/' . $image->path);
+
+            return $image;
+        });
+
+        return $property;
+    });
+
+    return response()->json($properties, 200);
+}
 
     #[Authorize('adminOrOwner')]
     public function store(Request $request, User $user)
@@ -37,6 +50,8 @@ class PropertyController extends Controller
             'contract' => 'string',
             'images' => '',
             'pricePerDay' => 'required|integer',
+            'pricePerWeek' => 'integer',
+            'pricePerMonth' => 'integer',
             'status' => 'required|string',
             'property_reviews_id' => 'integer',
         ]);
