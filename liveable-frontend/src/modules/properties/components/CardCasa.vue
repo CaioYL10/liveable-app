@@ -20,15 +20,15 @@ defineProps<{
 
 const router = useRouter()
 
-function goToDetails() {
-  router.push('/property-details')
+function goToDetails(id: number) {
+  router.push(`/property-details/${id}`)
 }
 </script>
 
 <template>
   <div class="card">
     <!-- Imagem -->
-    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
+    <div class="cima" @click="goToDetails(casa.id)" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
       <div class="fav">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>
@@ -48,7 +48,7 @@ function goToDetails() {
       </div>
 
       <!-- Ações -->
-      <div class="actions" @click="goToDetails()">
+      <div class="actions" @click="goToDetails(casa.id)">
         <button class="btn-confirm">Confirmar</button>
       </div>
 

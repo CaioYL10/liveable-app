@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import TheExib from '@/modules/properties/components/TheExib.vue';
-  import TheEditor from '../components/TheEditor.vue';
   import { exibir } from '@/modules/properties/composables/useConfirmSolicitation.ts'
   import ConfirmSolicitation from '../components/ConfirmSolicitation.vue';
 </script>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 
+import CadastroInputs from '../components/cadastroInputs.vue';
 import LoginBanner from '../components/loginBanner.vue';
-import LoginInputs from '../components/loginInputs.vue';
 
 </script>
 
 <template>
   <div class="container-large">
     <div class="banner"><LoginBanner /></div>
-    <LoginInputs />
+    <CadastroInputs />
   </div>
 </template>
 

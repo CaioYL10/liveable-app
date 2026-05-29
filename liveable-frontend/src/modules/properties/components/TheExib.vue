@@ -1,65 +1,74 @@
 <script setup lang="ts">
-    import { PhHeart, PhPhone } from "@phosphor-icons/vue";
-    import { ref } from "vue";
-    import { onMounted } from "vue";
-    import VueSlider from "vue-slider-component"
-    import "vue-slider-component/theme/default.css"
-    import InfosProperties from "./InfosProperties.vue";
-    import { exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
+import { PhHeart, PhPhone } from "@phosphor-icons/vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-    interface Property {
-      title: string
-      address: string
-      beds: number
-      bathrooms: number
-      size: string
-      pricePerDay: number
-      owner: string
-      image: string
-      ownerImage: string
-    }
+import VueSlider from "vue-slider-component"
+import "vue-slider-component/theme/default.css"
 
-    const property = ref<Property | null>(null)
+import InfosProperties from "./InfosProperties.vue";
+import { exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
 
-      onMounted(async () => {
-          try {
-              const response = await fetch('http://127.0.0.1:8000/api/property')
+import api from '../services/api.ts'
 
-              const data = await response.json()
+interface Property {
+  id: number
+  property_title: string
+  local: string
+  beds_qtd: number
+  toilette: number
+  area: number
+  pricePerDay: number
+  owner_contact: string | null
+  // ownerImage: string | null
 
-              property.value = data
+  // images: {
+  //   url: string
+  // }[]
+}
 
-              valordiaCasa.value = data.pricePerDay
+const route = useRoute()
 
-          } catch (error) {
-              console.error(error)
-          }
-    })
+const propertyId = route.params.id
 
-    const valor = ref<number>(3);
-    const valordiaCasa = ref<number>(130.00);
+const property = ref<Property | null>(null)
+
+const valor = ref<number>(3)
+
+onMounted(async () => {
+  try {
+    const response = await api.get(`/property/${propertyId}`)
+
+    property.value = response.data.Propriedade
+
+    console.log(property.value)
+
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>
 
 <template>
     <div class="all">
         <div class="home-title">
-            <p>{{ property?.title }}</p>
+            <p>{{ property?.property_title }}</p>
         </div>
         <div class="home-details">
-            <div class="home-photo" :style="{ backgroundImage: `url(${property?.image})` }"></div>
+            <div class="home-photo"></div>
             <div class="home-informations">
                 <div class="ende">
                     <div class="casa-endereco">
-                        <p>{{ property?.address }}</p>
+                        <p>{{ property?.local }}</p>
                     </div>
                     <div class="fav"><PhHeart weight="fill" class="icon-fav"/></div>
                 </div>
                 <div class="info">
-                    <p>{{ property?.beds }} Camas</p>
+                    <p>{{ property?.beds_qtd }} Camas</p>
                     <div class="divisoria"></div>
-                    <p>{{ property?.bathrooms }} Banheiros</p>
+                    <p>{{ property?.toilette }} Banheiros</p>
                     <div class="divisoria"></div>
-                    <p>{{ property?.size }}</p>
+                    <p>{{ property?.area }} m²</p>
                 </div>
                 <div class="simulation">
                     <p>Simulação de preço: R$ {{ valor * (property?.pricePerDay || 0) }}</p>
@@ -71,8 +80,8 @@
                 <div class="contact">
                     <div class="contato-escrita">Contato:</div>
                     <div class="card-contato">
-                        <div class="img" :style="{ backgroundImage: `url(${property?.ownerImage})` }"></div>
-                        <p>{{ property?.owner }}</p>
+                        <div class="img"></div>
+                        <p>{{ property?.owner_contact }}</p>
                         <PhPhone class="icon-phone"/>
                     </div>
                 </div>

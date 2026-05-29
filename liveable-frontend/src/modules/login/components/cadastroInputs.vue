@@ -1,9 +1,47 @@
 <script setup lang="ts">
-import router from '@/app/router';
+import { ref } from 'vue';
 
-  function goToCadastro() {
-    router.push('/baselogin/cadastrar')
+  const nome = ref<string>('')
+  const sobrenome = ref<string>('')
+  const email = ref<string>('')
+  const senha = ref<string>('')
+
+async function enviarCadastro() {
+  try {
+    const response = await fetch('http://localhost:8000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: nome.value,
+        last_name: sobrenome.value,
+        email: email.value,
+        password: senha.value
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Erro ao cadastrar')
+    }
+
+    console.log('Usuário cadastrado:', data)
+
+    alert('Cadastro realizado com sucesso!')
+
+    // limpar campos
+    nome.value = ''
+    sobrenome.value = ''
+    email.value = ''
+    senha.value = ''
+
+  } catch (error: any) {
+    console.error(error)
+    alert(error.message)
   }
+}
 </script>
 
 <template>
@@ -30,25 +68,25 @@ import router from '@/app/router';
       </defs>
     </svg>
 
-    <h1>Bem-vindo de volta!</h1>
-    <h2>Ainda não tem uma conta? <span @click="goToCadastro()">Cadastrar-se</span></h2>
-    <input class="input-large input" type="text" placeholder="Email">
+    <h1>Criar uma conta!</h1>
+    <h2>Já tem uma conta? <span>Entrar</span></h2>
+
+    <div class="inputs-name">
+      <input class="input-large input" type="text" placeholder="Nome" v-model="nome">
+      <input class="input-large input" type="text" placeholder="Sobrenome" v-model="sobrenome">
+    </div>
+
+    <input class="input-large input" type="text" placeholder="Email" v-model="email">
 
     <div class="input-password">
-      <input class="input-large input" type="text" placeholder="Senha">
-      <a href="">Esqueceu sua senha?</a>
+      <input class="input-large input" type="text" placeholder="Senha" v-model="senha">
     </div>
 
-    <div class="save-informations-text">
-      <input type="checkbox">
-      <p>Salvar informações de login!</p>
-    </div>
-
-    <button class="input-large button">Entrar</button>
+    <button class="input-large button" @click="enviarCadastro()">Cadastrar-se</button>
 
     <div class="divisoria">
       <div class="risc"></div>
-      <p>Ou entrar com</p>
+      <p>Ou cadastrar-se com</p>
       <div class="risc"></div>
     </div>
 
@@ -111,6 +149,13 @@ import router from '@/app/router';
     text-decoration: underline;
   }
 
+  .inputs-name {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
   .container .input-large {
     width: 100%;
     padding: 0.8rem 0;
@@ -132,15 +177,6 @@ import router from '@/app/router';
 
   .input-password a {
     align-self: flex-end;
-  }
-
-  .save-informations-text {
-    display: flex;
-    gap: 10px;
-  }
-
-  .save-informations-text input {
-    width: 17px;
   }
 
   .divisoria {

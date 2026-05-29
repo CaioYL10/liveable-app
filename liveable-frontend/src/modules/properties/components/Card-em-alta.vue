@@ -6,7 +6,9 @@
       property_title: string
       pricePerDay: number
       avaliation: number
-      image: string
+      images: {
+        url: string
+      }[]
       clicks: number
     }
 
@@ -22,7 +24,7 @@
 </script>
 
 <template>
-    <div class="all" :style="{ backgroundImage: `url(${casa?.image})` }">
+    <div class="all" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
         <div class="informs">
             <div class="informs-texts">
                 <h3>{{ casa?.property_title }}</h3>

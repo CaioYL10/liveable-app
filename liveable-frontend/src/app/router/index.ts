@@ -8,6 +8,7 @@ import BaseLogin from '@/shared/layouts/baseLogin.vue'
 import LoginView from '@/modules/login/views/loginView.vue'
 import ImoveisPendentes from '@/modules/properties/views/imoveisPendentes.vue'
 import MinhasProps from '@/modules/properties/views/minhasProps.vue'
+import CadastroView from '@/modules/login/views/cadastroView.vue'
 
 const routes = [
   {
@@ -20,7 +21,7 @@ const routes = [
         component: HomeView
       },
       {
-        path: 'property-details',
+        path: '/property-details/:id',
         name: 'propertyDetails',
         component: PropertyDetails
       },
@@ -38,7 +39,7 @@ const routes = [
         path: 'minhasProps',
         name: 'minhasPropspage',
         component: MinhasProps
-      }
+      },
     ]
   },
 
@@ -50,6 +51,11 @@ const routes = [
         path: '',
         name: 'loginPage',
         component: LoginView
+      },
+      {
+        path: 'cadastrar',
+        name: 'cadastrarpage',
+        component: CadastroView
       }
     ]
   }
