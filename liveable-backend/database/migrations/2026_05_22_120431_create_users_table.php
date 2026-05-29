@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->string('email');
             $table->string('password');
             $table->string('profile_picture');
-            $table->boolean('is_admin');
+            $table->string('phone');
+            $table->string('role');
             $table->timestamps();
         });
     }

@@ -1,31 +1,18 @@
 <script setup lang="ts">
     import { PhFire, PhArrowRight } from "@phosphor-icons/vue";
-    import { onMounted } from "vue";
-    import { ref } from "vue";
     import { useRouter } from 'vue-router';
 
     interface Property {
-      title: string
+      property_title: string
       pricePerDay: number
       avaliation: number
       image: string
       clicks: number
     }
 
-    const property = ref<Property | null>(null)
-
-      onMounted(async () => {
-          try {
-              const response = await fetch('http://127.0.0.1:8000/api/propertyCardemAlta')
-
-              const data = await response.json()
-
-              property.value = data
-
-          } catch (error) {
-              console.error(error)
-          }
-    })
+    defineProps<{
+      casa: Property
+    }>()
 
     const router = useRouter()
 
@@ -35,14 +22,14 @@
 </script>
 
 <template>
-    <div class="all" :style="{ backgroundImage: `url(${property?.image})` }">
+    <div class="all" :style="{ backgroundImage: `url(${casa?.image})` }">
         <div class="informs">
             <div class="informs-texts">
-                <h3>{{ property?.title }}</h3>
+                <h3>{{ casa?.property_title }}</h3>
                 <div class="subs">
-                    <p class="subtitle opacity">R${{ property?.pricePerDay }} p/ noites • ★ {{ property?.avaliation }}</p>
+                    <p class="subtitle opacity">R${{ casa?.pricePerDay }} p/ noites • ★ {{ casa?.avaliation }}</p>
                     <p class="subtitle">
-                        Mais de {{ property?.clicks }} mil cliques!
+                        Mais de {{ casa?.clicks }} mil cliques!
                         <PhFire weight="fill" class="fire" :size="15" />
                     </p>
                 </div>

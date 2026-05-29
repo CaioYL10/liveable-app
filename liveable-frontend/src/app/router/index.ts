@@ -7,6 +7,7 @@ import PropertyDetails from '@/modules/properties/views/propertyDetails.vue'
 import BaseLogin from '@/shared/layouts/baseLogin.vue'
 import LoginView from '@/modules/login/views/loginView.vue'
 import ImoveisPendentes from '@/modules/properties/views/imoveisPendentes.vue'
+import MinhasProps from '@/modules/properties/views/minhasProps.vue'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
         path: 'pendencias',
         name: 'pendenciasPage',
         component: ImoveisPendentes
+      },
+      {
+        path: 'minhasProps',
+        name: 'minhasPropspage',
+        component: MinhasProps
       }
     ]
   },

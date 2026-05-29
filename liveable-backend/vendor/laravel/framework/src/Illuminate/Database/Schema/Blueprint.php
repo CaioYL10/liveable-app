@@ -1060,31 +1060,15 @@ class Blueprint
                 ->referencesModelColumn($model->getKeyName());
         }
 
-        if (isset(class_uses_recursive($model)[HasUlids::class])) {
+        $modelTraits = class_uses_recursive($model);
+
+        if (in_array(HasUlids::class, $modelTraits, true)) {
             return $this->foreignUlid($column, 26)
                 ->table($model->getTable())
                 ->referencesModelColumn($model->getKeyName());
         }
 
         return $this->foreignUuid($column)
-            ->table($model->getTable())
-            ->referencesModelColumn($model->getKeyName());
-    }
-
-    /**
-     * Create a foreign UUID column for the given model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model|string  $model
-     * @param  string|null  $column
-     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
-     */
-    public function foreignUuidFor($model, $column = null)
-    {
-        if (is_string($model)) {
-            $model = new $model;
-        }
-
-        return $this->foreignUuid($column ?: $model->getForeignKey())
             ->table($model->getTable())
             ->referencesModelColumn($model->getKeyName());
     }
@@ -1380,7 +1364,7 @@ class Blueprint
      */
     public function softDeletesDatetime($column = 'deleted_at', $precision = null)
     {
-        return $this->dateTime($column, $precision)->nullable();
+        return $this->datetime($column, $precision)->nullable();
     }
 
     /**

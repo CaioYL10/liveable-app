@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from "vue";
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
@@ -28,6 +28,31 @@ const onSwiper = (swiper: any) => {
     swiper.navigation.update()
   })
 }
+
+// Logica de receber dados
+
+interface Property {
+  id: number
+  title: string
+  pricePerDay: number
+  nights: number
+  avaliation: number
+  image: string
+  owner: string
+  ownerImage: string
+}
+
+const properties = ref<Property[]>([])
+
+onMounted(async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/properties')
+    const data = await response.json()
+    properties.value = data
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>
 
 <template>
@@ -66,32 +91,8 @@ const onSwiper = (swiper: any) => {
       @swiper="onSwiper"
       class="mySwiper"
     >
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <CardCasa />
+      <SwiperSlide v-for="casa in properties" :key="casa.id">
+        <CardCasa :casa="casa" />
       </SwiperSlide>
     </Swiper>
 

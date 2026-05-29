@@ -58,6 +58,10 @@
     function goToPendencies() {
       router.push('/pendencias')
     }
+
+    function goToProps() {
+      router.push('/minhasProps')
+    }
 </script>
 
 
@@ -97,6 +101,7 @@
                </div>
             </li>
             <li @click="ativar('historico'), goToPendencies()" :class="{ active: ativo === 'historico' }"><PhTimer :size="20" /> Pendentes</li>
+            <li @click="ativar('minhas'), goToProps()" :class="{ active: ativo === 'minhas' }">Minhas Propriedades</li>
         </ul>
 
         <div class="pesquisar">

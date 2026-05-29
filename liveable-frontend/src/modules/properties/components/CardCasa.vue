@@ -1,29 +1,20 @@
 <script setup lang="ts">
-import { PhHeart, PhPhone } from "@phosphor-icons/vue";
-import { onMounted, ref } from "vue";
+import { PhHeart} from "@phosphor-icons/vue";
 import { useRouter } from 'vue-router';
 
+// Receber dados
+
 interface Property {
-  title: string
+  id: number
+  property_title: string
   pricePerDay: number
-  nights: number
   avaliation: number
   image: string
-  owner: string
-  ownerImage: string
 }
 
-const property = ref<Property | null>(null)
-
-onMounted(async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/api/PendenciesCard')
-    const data = await response.json()
-    property.value = data
-  } catch (error) {
-    console.error(error)
-  }
-})
+defineProps<{
+  casa: Property
+}>()
 
 const router = useRouter()
 
@@ -35,7 +26,7 @@ function goToDetails() {
 <template>
   <div class="card">
     <!-- Imagem -->
-    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${property?.image})` }">
+    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${casa?.image})` }">
       <div class="fav">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>
@@ -46,11 +37,11 @@ function goToDetails() {
 
       <!-- Título e preço -->
       <div class="textos">
-        <p class="titulo">{{ property?.title }}</p>
+        <p class="titulo">{{ casa?.property_title }}</p>
         <div class="subtexto">
-          <p>R${{property?.pricePerDay}} p/noite</p>
+          <p>R${{casa?.pricePerDay}} p/noite</p>
           <p>•</p>
-          <p>★ {{ property?.avaliation }}</p>
+          <p>★ {{ casa?.avaliation }}</p>
         </div>
       </div>
 

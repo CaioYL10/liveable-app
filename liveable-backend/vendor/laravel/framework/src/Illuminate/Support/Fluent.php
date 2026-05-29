@@ -131,7 +131,7 @@ class Fluent implements Arrayable, ArrayAccess, IteratorAggregate, Jsonable, Jso
      * Get all of the attributes from the fluent instance.
      *
      * @param  mixed  $keys
-     * @return array<TKey, TValue>
+     * @return array
      */
     public function all($keys = null)
     {
@@ -206,7 +206,8 @@ class Fluent implements Arrayable, ArrayAccess, IteratorAggregate, Jsonable, Jso
     /**
      * Convert the fluent instance to pretty print formatted JSON.
      *
-     * @param  int  $options
+     * @params int $options
+     *
      * @return string
      */
     public function toPrettyJson(int $options = 0)

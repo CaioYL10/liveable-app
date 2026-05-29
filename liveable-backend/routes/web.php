@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
 
 
+Route::get('/', function () {
+    return json_encode('web');
+});
 // rotas auth
 Route::get('/register', [UserController::class, 'registerForm']);
 Route::post('/register', [UserController::class, 'register']);
