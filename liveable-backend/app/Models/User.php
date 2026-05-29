@@ -25,4 +25,8 @@ class User extends Authenticatable
             'is_admin' => 'boolean',
         ];
     }
+    public function property()
+    {
+        return $this->hasMany(Property::class);
+    }
 }

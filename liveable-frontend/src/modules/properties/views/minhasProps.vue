@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import CardCasa from '../components/CardCasa.vue';
 import TheCreator from '../components/theCreator.vue';
-import { exibirConfirm } from '../composables/useConfirmSolicitation.ts';
-import { exibir } from '@/modules/properties/composables/useConfirmSolicitation.ts'
+import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
 </script>
 
 <template>

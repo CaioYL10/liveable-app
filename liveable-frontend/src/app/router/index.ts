@@ -28,11 +28,6 @@ const routes = [
         component: PropertyDetails
       },
       {
-        path: 'login',
-        name: 'loginPage',
-        component: LoginView
-      },
-      {
         path: 'pendencias',
         name: 'pendenciasPage',
         component: ImoveisPendentes,

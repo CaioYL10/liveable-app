@@ -28,7 +28,7 @@ function goToDetails(id: number) {
 <template>
   <div class="card">
     <!-- Imagem -->
-    <div class="cima" @click="goToDetails(casa.id)" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
+    <div class="cima" @click="goToDetails(casa.id)" :style="{ backgroundImage: `url(${casa?.images[0]?.url})` }">
       <div class="fav">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>

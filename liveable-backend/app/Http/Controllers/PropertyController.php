@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\PropertyImage;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
@@ -59,7 +60,7 @@ class PropertyController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $property = Property::create($request->only([
+        $property = Auth::user()->property()->create($request->only([
             'local',
             'type',
             'beds_qtd',

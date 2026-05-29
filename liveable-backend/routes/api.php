@@ -21,7 +21,7 @@ Route::get('/admin/users', [UserController::class, 'listUsers'])->middleware('au
 // rotas de imoveis
 
 // crud
-Route::post('property/store', [PropertyController::class, 'store']);
+Route::post('property/store', [PropertyController::class, 'store'])->middleware('auth:sanctum');
 Route::put('property/update{property}', [PropertyController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('property/delete/{property}', [PropertyController::class, 'destroy'])->middleware('auth:sanctum');
 

@@ -3,7 +3,7 @@
     import { ref } from "vue";
     import { exibir } from "../composables/useConfirmSolicitation";
     import { exibirConfirm } from "../composables/useConfirmSolicitation";
-
+    import { getToken } from "../../../services/auth.js";
     /* Lógica pro input do tipo de propriedade agora */
 
     const tipoProp = ref<string | null>(null)
@@ -81,11 +81,12 @@
     if (imagem.value) {
       formData.append("images[]", imagem.value);
     }
-
+    const token = getToken();
     const response = await fetch("http://127.0.0.1:8000/api/property/store", {
       method: "POST",
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: formData
     });
