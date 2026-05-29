@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->integer('beds_qtd');
             $table->integer('toilette');
             $table->integer('area');
-            $table->string('owner_contact')->nullable();
+            $table->foreignId('user_id');
             $table->string('property_title');
             $table->boolean('wifi');
             $table->boolean('tv');

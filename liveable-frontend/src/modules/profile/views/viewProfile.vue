@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TheBanner from '../components/TheBanner.vue';
 
+import TheBanner from '../components/TheBanner.vue';
 
 </script>
 

@@ -1,9 +1,37 @@
 <script setup lang="ts">
-import router from '@/app/router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { setToken } from '@/services/auth'
 
-  function goToCadastro() {
-    router.push('/baselogin/cadastrar')
+const email = ref('')
+const password = ref('')
+const erro = ref('')
+const router = useRouter()
+
+function goToCadastro() {
+  router.push('/baselogin/cadastrar')
+}
+
+async function login() {
+  const response = await fetch('http://127.0.0.1:8000/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({ email: email.value, password: password.value })
+  })
+
+  const data = await response.json()
+
+  if (response.ok) {
+    setToken(data.token)
+    router.push('/')
+    console.log(data.token)
+  } else {
+    erro.value = data.message
   }
+}
 </script>
 
 <template>
@@ -32,10 +60,10 @@ import router from '@/app/router';
 
     <h1>Bem-vindo de volta!</h1>
     <h2>Ainda não tem uma conta? <span @click="goToCadastro()">Cadastrar-se</span></h2>
-    <input class="input-large input" type="text" placeholder="Email">
+    <input class="input-large input" type="text" placeholder="Email" v-model="email">
 
     <div class="input-password">
-      <input class="input-large input" type="text" placeholder="Senha">
+      <input class="input-large input" type="text" placeholder="Senha" v-model="password">
       <a href="">Esqueceu sua senha?</a>
     </div>
 
@@ -44,7 +72,7 @@ import router from '@/app/router';
       <p>Salvar informações de login!</p>
     </div>
 
-    <button class="input-large button">Entrar</button>
+    <button class="input-large button" @click="login">Entrar</button>
 
     <div class="divisoria">
       <div class="risc"></div>

@@ -47,8 +47,14 @@
 
     const router = useRouter()
 
+    import { isAuthenticated } from '@/services/auth'
+
     function goToDetails() {
-      router.push('/baselogin')
+      if (isAuthenticated()) {
+        router.push('/perfil') // ou a rota do perfil que você tiver
+      } else {
+        router.push('/baselogin')
+      }
     }
 
     function goToHome() {

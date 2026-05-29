@@ -24,16 +24,18 @@ class UserController extends Controller
             'last_name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'phone' => 'required|string',
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'phone' => 'string',
+            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $image = $request->file('profile_picture');
-        $name = $request->name . '_' . $image->getClientOriginalName() . '.png';
-        $profile_picture = $image->storeAs('assets/images/users', $name, 'public');
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $data = array_merge($request->only('name', 'last_name', 'email', 'is_admin', 'phone'), ['password' => Hash::make($request->password), 'profile_picture' => $profile_picture]);
+        if ($request->hasFile('profile_picture')){
+            $image = $request->file('profile_picture');
+            $name = $request->name . '_' . $image->getClientOriginalName() . '.png';
+            $profile_picture = $image->storeAs('assets/images/users', $name, 'public');
+        }
+        $data = array_merge($request->only('name', 'last_name', 'email', 'role', 'phone'), ['password' => Hash::make($request->password)]   );
         if (User::create($data)) {
             return response()->json(['message' => 'Usuario registrado'], 201);
         }
@@ -46,16 +48,20 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+
         $user = User::where('email', $request->email)->first();
-        if (!$user || Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $request->session()->regenerate();
-            $token = Auth::user()->createToken('access-token')->plainTextToken;
-            return response()->json(['token' => $token], 200);
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Dados Incorretos'], 401);
         }
-        return response()->json(['message' => 'Dados Incorretos'], 401);
+
+        $token = $user->createToken('access-token')->plainTextToken;
+
+        return response()->json(['token' => $token], 200);
     }
 
     public function show(User $user)

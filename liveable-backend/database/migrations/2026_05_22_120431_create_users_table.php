@@ -13,9 +13,9 @@ return new class extends Migration {
             $table->string('last_name');
             $table->string('email');
             $table->string('password');
-            $table->string('profile_picture');
-            $table->string('phone');
-            $table->string('role');
+            $table->string('profile_picture')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('role')->default('admin');
             $table->timestamps();
         });
     }
