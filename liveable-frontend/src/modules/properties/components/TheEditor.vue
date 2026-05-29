@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { PhCaretLeft, PhPencilSimpleLine, PhHouse, PhBuildingApartment, PhFarm, PhBed, PhBathtub, PhDresser, PhWifiHigh, PhMonitor, PhSidebar, PhCigarette, PhSnowflake, PhWashingMachine, PhHardDrive } from "@phosphor-icons/vue";
     import { ref } from "vue";
-    import { exibirEditor } from '@/modules/properties/composables/useEditor.ts'
 
     /* Lógica para o input radio desativar se clicar dnv */
 
@@ -29,7 +28,7 @@
 
 <template>
     <div class="all">
-        <div class="voltar" @click="exibirEditor()">
+        <div class="voltar">
             <PhCaretLeft :size="32" />
             <div class="circle-editor">
                 <PhPencilSimpleLine class="editor-icon" />

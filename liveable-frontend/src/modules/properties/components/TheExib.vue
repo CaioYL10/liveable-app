@@ -5,7 +5,7 @@
     import VueSlider from "vue-slider-component"
     import "vue-slider-component/theme/default.css"
     import InfosProperties from "./InfosProperties.vue";
-    import { exibirEditor } from '@/modules/properties/composables/useEditor.ts'
+    import { exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
 
     interface Property {
       title: string
@@ -76,7 +76,7 @@
                         <PhPhone class="icon-phone"/>
                     </div>
                 </div>
-                <button @click="exibirEditor()">Solicitar</button>
+                <button @click="exibirConfirm()">Solicitar</button>
             </div>
         </div>
 

@@ -205,27 +205,28 @@ function limpar(): void {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * { box-sizing: border-box; }
 
 .calendario-wrapper {
-  font-family: 'DM Sans', sans-serif;
-  max-width: 680px;
-  padding: 24px;
+  min-width: 100%;
   user-select: none;
+  font-family: "Poppins", sans-serif;
 }
 
 .titulo {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
   margin: 0 0 2px;
   color: #111;
 }
 
 .subtitulo {
-  font-size: 13px;
-  color: #888;
+  opacity: 0.6;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
   margin: 0 0 24px;
 }
 .subtitulo span { color: #333; font-weight: 500; }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import TheExib from '@/modules/properties/components/TheExib.vue';
   import TheEditor from '../components/TheEditor.vue';
-  import { exibir } from '@/modules/properties/composables/useEditor.ts'
+  import { exibir } from '@/modules/properties/composables/useConfirmSolicitation.ts'
+  import ConfirmSolicitation from '../components/ConfirmSolicitation.vue';
 </script>
 
 <template>
     <TheExib />
-    <TheEditor v-if="exibir" />
+    <ConfirmSolicitation v-if="exibir" />
 </template>
