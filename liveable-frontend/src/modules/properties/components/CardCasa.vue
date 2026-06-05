@@ -49,7 +49,7 @@ function goToDetails(id: number) {
 
       <!-- Ações -->
       <div class="actions" @click="goToDetails(casa.id)">
-        <button class="btn-confirm">Confirmar</button>
+        <button class="btn-confirm">Ver mais</button>
       </div>
 
     </div>

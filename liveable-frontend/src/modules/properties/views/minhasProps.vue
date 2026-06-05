@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CardCasa from '../components/CardCasa.vue';
+import OrganizationCardMinhasprops from '../components/organization-card-minhasprops.vue';
 import TheCreator from '../components/theCreator.vue';
 import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
 </script>
@@ -9,9 +10,7 @@ import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfi
     <h2>Suas Propriedades</h2>
     <button @click="exibirConfirm()">+</button>
   </div>
-    <div class="container-organization">
-      <CardCasa />
-    </div>
+      <OrganizationCardMinhasprops />
     <TheCreator v-if="exibir" />
 </template>
 
