@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { getUser } from "@/services/auth";
+
+const user = ref<any>(null);
+
+onMounted(async () => {
+  try {
+    user.value = await getUser();
+  } catch (error) {
+    console.error("Erro ao buscar usuário", error);
+  }
+});
+</script>
+
+
 <template>
     <div class="all">
         <div class="banner"></div>
@@ -6,7 +22,7 @@
 
         <div class="padding">
             <div class="inform-texts">
-                <p class="title">Aparência de Perfil</p>
+                <p class="title">Aparência de Perfil - <span v-if="user">{{ user.name }} {{ user.last_name }}</span></p>
                 <p class="subtitle">Está foto é mostrada públicamente à outros usuários.</p>
             </div>
 

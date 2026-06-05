@@ -33,13 +33,12 @@ const onSwiper = (swiper: any) => {
 
 interface Property {
   id: number
-  title: string
+  property_title: string
   pricePerDay: number
-  nights: number
   avaliation: number
-  image: string
-  owner: string
-  ownerImage: string
+  images: {
+    url: string
+  }[]
 }
 
 const properties = ref<Property[]>([])

@@ -1,9 +1,14 @@
 <script setup lang="ts">
   import { ref } from "vue";
   import { onMounted } from "vue";
+  import api from '../services/api.ts'
+  import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const propertyId = route.params.id // ou o nome do param que você definiu na rota
 
   interface Property {
-    address: string
+    local: string
     pricePerDay: number
     type: string
     rooms: number
@@ -13,11 +18,11 @@
 
   onMounted(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/infosExib')
+      const response = await api.get(`/property/${propertyId}`)
 
-      const data = await response.json()
+      property.value = response.data.Propriedade
 
-      property.value = data
+      console.log(property.value)
 
     } catch (error) {
         console.error(error)
@@ -37,7 +42,7 @@
           <i class="fa-solid fa-magnifying-glass-location"></i>
           <div class="align-text">
             <span class="titulo">Localização</span>
-            <span class="texto">{{ property?.address }}</span>
+            <span class="texto">{{ property?.local }}</span>
           </div>
         </div>
       </div>
