@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-integracao-api',
         'version' => 'dev-integracao-api',
-        'reference' => 'ee067c8fdf6defbc56b2e1af838128134eb4f4b7',
+        'reference' => '4cb142b5111cd9b48563b2aefa773962afe74342',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -400,7 +400,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-integracao-api',
             'version' => 'dev-integracao-api',
-            'reference' => 'ee067c8fdf6defbc56b2e1af838128134eb4f4b7',
+            'reference' => '4cb142b5111cd9b48563b2aefa773962afe74342',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

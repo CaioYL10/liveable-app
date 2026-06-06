@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\PropertyLike;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -32,17 +31,14 @@ class Property extends Model
         'property_image_id',
     ];
 
-    protected function casts()
-    {
-        return [
-            'wifi' => 'boolean',
-            'tv' => 'boolean',
-            'cooler' => 'boolean',
-            'air_conditioning' => 'boolean',
-            'washer' => 'boolean',
-            'microwave' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'wifi' => 'boolean',
+        'tv' => 'boolean',
+        'cooler' => 'boolean',
+        'air_conditioning' => 'boolean',
+        'washer' => 'boolean',
+        'microwave' => 'boolean',
+    ];
 
     public function likes(): HasMany
     {
@@ -69,6 +65,11 @@ class Property extends Model
     }
     public function images() {
         return $this->hasMany(PropertyImage::class);
+    }
+
+    public function rents(): HasMany
+    {
+        return $this->hasMany(Rent::class);
     }
 
 }

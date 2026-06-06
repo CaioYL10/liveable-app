@@ -4,6 +4,7 @@ use App\Http\Controllers\PropertyLikeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\PropertyRentController;
 use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
@@ -22,7 +23,7 @@ Route::get('/admin/users', [UserController::class, 'listUsers'])->middleware('au
 
 // crud
 Route::post('property/store', [PropertyController::class, 'store'])->middleware('auth:sanctum');
-Route::put('property/update{property}', [PropertyController::class, 'update'])->middleware('auth:sanctum');
+Route::put('property/update/{property}', [PropertyController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('property/delete/{property}', [PropertyController::class, 'destroy'])->middleware('auth:sanctum');
 
 
@@ -33,5 +34,6 @@ Route::get('/property/{property}', [PropertyController::class, 'show']);
 
 // iterations
 Route::get('/property/like', [PropertyLikeController::class, 'toggleLike'])->middleware('auth:sanctum');
-Route::get('/property/rent', [PropertyController::class, 'toggleRentProperty'])->middleware('auth:sanctum');
+Route::post('properties/{property}/rent', [PropertyRentController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/property/toggleEnabled', [PropertyController::class, 'toggleEnableProperty'])->middleware('auth:sanctum');
+Route::get('/{user}/myProperties', [UserController::class, 'myProperties'])->middleware('auth:sanctum');

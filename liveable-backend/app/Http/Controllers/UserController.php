@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -109,5 +110,14 @@ class UserController extends Controller
         Auth::logout();
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logout realizado'], 200);
+    }
+
+    public function myProperties(Request $request)
+    {
+        $user = $request->user();
+
+        $properties = Property::where('user_id', $user->id)->get();
+
+        return response()->json($properties);
     }
 }

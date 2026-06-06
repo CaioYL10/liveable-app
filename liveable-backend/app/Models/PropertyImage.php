@@ -13,7 +13,7 @@ class PropertyImage extends Model
     ];
 
     protected $appends = ['url'];
-    
+
     public function getUrlAttribute()
     {
         return asset('storage/' . $this->path);

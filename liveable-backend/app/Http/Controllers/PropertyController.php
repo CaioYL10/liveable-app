@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use App\Models\PropertyImage;
-use Illuminate\Routing\Attributes\Controllers\Authorize;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
 {
