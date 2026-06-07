@@ -10,34 +10,35 @@ use App\Http\Controllers\UserController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
 Route::get('/', function () {
     return 'isso ta funcionando';
 });
-// rotas auth
+
+// Auth
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/admin/users', [UserController::class, 'listUsers'])->middleware('auth:sanctum');
 
-// rotas de imoveis
-
-// crud
-Route::post('property/store', [PropertyController::class, 'store'])->middleware('auth:sanctum');
-Route::put('property/update/{property}', [PropertyController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('property/delete/{property}', [PropertyController::class, 'destroy'])->middleware('auth:sanctum');
-
-
-// show
-
+// Properties — públicas
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/property/{property}', [PropertyController::class, 'show']);
-Route::get('/my-properties/pending-rents', [PropertyRentController::class, 'pendingRents'])->middleware('auth:sanctum');
-Route::patch('/rents/{rent}/status', [PropertyRentController::class, 'updateStatus'])->middleware('auth:sanctum');
 
-// iterations
-Route::get('/property/like', [PropertyLikeController::class, 'toggleLike'])->middleware('auth:sanctum');
-Route::post('properties/{property}/rent', [PropertyRentController::class, 'store'])->middleware('auth:sanctum');
-// Manda pro front os dias reservados já
-Route::get('/properties/{property}/rent', [PropertyRentController::class, 'index'])->middleware('auth:sanctum');
-Route::get('/property/toggleEnabled', [PropertyController::class, 'toggleEnableProperty'])->middleware('auth:sanctum');
-Route::get('/{user}/myProperties', [UserController::class, 'myProperties'])->middleware('auth:sanctum');
+// Properties — autenticadas
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/property/store', [PropertyController::class, 'store']);
+    Route::put('/property/update/{property}', [PropertyController::class, 'update']);
+    Route::delete('/property/delete/{property}', [PropertyController::class, 'destroy']);
+    Route::get('/my-properties', [PropertyController::class, 'myProperties']);
+    Route::patch('/property/{property}/toggle-enabled', [PropertyController::class, 'toggleEnableProperty']);
+
+    // Rents
+    Route::post('/properties/{property}/rent', [PropertyRentController::class, 'store']);
+    Route::get('/properties/{property}/rent', [PropertyRentController::class, 'index']);
+    Route::get('/my-properties/pending-rents', [PropertyRentController::class, 'pendingRents']);
+    Route::patch('/rents/{rent}/status', [PropertyRentController::class, 'updateStatus']);
+
+    // Likes
+    Route::post('/property/{property}/like', [PropertyLikeController::class, 'toggleLike']);
+});

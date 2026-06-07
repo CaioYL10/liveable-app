@@ -20,24 +20,26 @@
 </template>
 
 <style scoped>
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 2vw;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 2rem;
-}
-
 .container-all {
   display: flex;
   flex-direction: column;
+  min-height: 100vh; /* ← ocupa a tela toda */
   gap: 2vw;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2vw;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+  flex: 1; /* ← empurra o footer para baixo */
 }
 </style>
 

@@ -157,4 +157,21 @@ class PropertyController extends Controller
         }
         return response()->json(['message' => 'Propriedade desabilitada pelo administrador'], 201);
     }
+
+    public function myProperties()
+    {
+        $properties = Property::with('images')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $properties->transform(function ($property) {
+            $property->images->transform(function ($image) {
+                $image->url = asset('storage/' . $image->path);
+                return $image;
+            });
+            return $property;
+        });
+
+        return response()->json($properties, 200);
+    }
 }

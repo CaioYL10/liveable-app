@@ -14,7 +14,7 @@ class Rent extends Model
         'guests_count',
         'details',
         'has_pet',
-        'confirmed' // 👈 ESSENCIAL
+        'confirmed'
     ];
 
     public function user()

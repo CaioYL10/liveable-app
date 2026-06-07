@@ -196,6 +196,8 @@ function toDate(dia: number, mes: number, ano: number): Date {
 function isDiaIndisponivel(dia: number | null, mes: number, ano: number): boolean {
   if (!dia) return false
   const ts = toDate(dia, mes, ano).getTime()
+  const tsHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()).getTime()
+  if (ts < tsHoje) return true
   return periodosNormalizados.value.some(p => ts >= p.inicio && ts <= p.fim)
 }
 
