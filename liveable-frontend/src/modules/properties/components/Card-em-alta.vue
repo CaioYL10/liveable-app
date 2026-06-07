@@ -24,7 +24,7 @@
 </script>
 
 <template>
-    <div class="all" :style="{ backgroundImage: `url(${casa.images[0]?.url})` }">
+    <div class="all" :style="casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}">
         <div class="informs">
             <div class="informs-texts">
                 <h3>{{ casa?.property_title }}</h3>

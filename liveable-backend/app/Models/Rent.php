@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Rent extends Model
 {
     protected $fillable = [
-        'property_id',
         'user_id',
-        'details',
+        'property_id',
         'checkin',
         'checkout',
         'guests_count',
+        'details',
         'has_pet',
+        'confirmed' // 👈 ESSENCIAL
     ];
 
     public function user()

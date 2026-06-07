@@ -98,10 +98,10 @@ class PropertyController extends Controller
     }
 
     public function show(Property $property)
-    {
-        $property = Property::findOrFail($property->id);
-        return response()->json(['Propriedade' => $property]);
-    }
+{
+    $property->load('images'); // ← adicione isso
+    return response()->json(['Propriedade' => $property]);
+}
 
     #[Authorize('adminOrOwner')]
     public function update(Request $request, Property $property)

@@ -1,43 +1,61 @@
 <script setup lang="ts">
-import { PhHeart, PhPhone } from "@phosphor-icons/vue";
-import { onMounted, ref } from "vue";
-import { useRouter } from 'vue-router';
+  import { PhPhone, PhCalendar, PhCheck, PhX } from "@phosphor-icons/vue";
 
-interface Property {
-  title: string
-  pricePerDay: number
-  nights: number
-  avaliation: number
-  image: string
-  owner: string
-  ownerImage: string
-}
-
-const property = ref<Property | null>(null)
-
-onMounted(async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/api/PendenciesCard')
-    const data = await response.json()
-    property.value = data
-  } catch (error) {
-    console.error(error)
+  interface Requester {
+    id: number
+    name: string
+    avatar: string
   }
-})
 
-const router = useRouter()
+  interface Property {
+    id: number
+    title: string
+    price_per_day: number
+    image: string
+  }
 
-function goToDetails() {
-  router.push('/property-details')
-}
+  interface PendingRent {
+    rent_id: number
+    checkin: string
+    checkout: string
+    guests_count: number
+    has_pet: boolean
+    details: string
+    confirmed: boolean
+    property: Property
+    requester: Requester
+  }
+
+  const props = defineProps<{ rent: PendingRent }>()  // ← faltava
+  const emit = defineEmits<{                           // ← faltava
+    confirm: [rentId: number]
+    reject: [rentId: number]
+  }>()
+
+  function formatDate(dateStr: string): string {
+    const soData = dateStr.split('T')[0]
+    return new Date(soData + 'T12:00:00').toLocaleDateString('pt-BR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+    })
+  }
+
+  function totalNoites(checkin: string, checkout: string): number {
+    const a = new Date(checkin.split('T')[0] + 'T12:00:00')
+    const b = new Date(checkout.split('T')[0] + 'T12:00:00')
+    return Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24))
+  }
 </script>
 
 <template>
   <div class="card">
+
     <!-- Imagem -->
-    <div class="cima" @click="goToDetails()" :style="{ backgroundImage: `url(${property?.image})` }">
-      <div class="fav">
-        <PhHeart weight="fill" class="icon-fav" :size="20" />
+    <div
+      class="cima"
+      :style="rent.property.image ? { backgroundImage: `url('${encodeURI(rent.property.image)}')` } : {}"
+    >
+      <div class="badge-noites">
+        {{ totalNoites(rent.checkin, rent.checkout) }} noites
       </div>
     </div>
 
@@ -46,28 +64,45 @@ function goToDetails() {
 
       <!-- Título e preço -->
       <div class="textos">
-        <p class="titulo">{{ property?.title }}</p>
+        <p class="titulo">{{ rent.property.title }}</p>
         <div class="subtexto">
-          <p>R${{property?.pricePerDay}} p/noite</p>
+          <p>R${{ rent.property.price_per_day }} p/noite</p>
           <p>•</p>
-          <p>★ {{ property?.avaliation }}</p>
+          <p>{{ rent.guests_count }} hóspede{{ rent.guests_count > 1 ? 's' : '' }}</p>
+          <span v-if="rent.has_pet">• 🐾</span>
         </div>
       </div>
+
+      <!-- Datas -->
+      <div class="info-row">
+        <PhCalendar :size="15" class="info-icon" />
+        <span>{{ formatDate(rent.checkin) }} → {{ formatDate(rent.checkout) }}</span>
+      </div>
+
+      <!-- Detalhes extras -->
+      <p v-if="rent.details" class="details-text">"{{ rent.details }}"</p>
 
       <!-- Quem solicitou -->
       <div class="pendencies-infos">
         <p class="label-solicitou">Quem solicitou:</p>
         <div class="card-contato">
-          <div class="img" :style="{ backgroundImage: `url(${property?.ownerImage})` }"></div>
-          <p class="owner-name">{{ property?.owner }}</p>
-          <PhPhone class="icon-phone" :size="22" />
+          <div
+            class="img"
+            :style="rent.requester.avatar ? { backgroundImage: `url('${encodeURI(rent.requester.avatar)}')` } : {}"
+          ></div>
+          <p class="owner-name">{{ rent.requester.name }}</p>
+          <PhPhone class="icon-phone" :size="20" />
         </div>
       </div>
 
       <!-- Ações -->
       <div class="actions">
-        <button class="btn-details" @click="goToDetails">Ver detalhes</button>
-        <button class="btn-confirm">Confirmar</button>
+        <button class="btn-recusar" @click="emit('reject', rent.rent_id)">
+          <PhX :size="15" /> Recusar
+        </button>
+        <button class="btn-confirm" @click="emit('confirm', rent.rent_id)">
+          <PhCheck :size="15" /> Confirmar
+        </button>
       </div>
 
     </div>
@@ -89,7 +124,6 @@ function goToDetails() {
   overflow: hidden;
 }
 
-/* ── Imagem ── */
 .cima {
   width: 100%;
   height: 300px;
@@ -98,34 +132,22 @@ function goToDetails() {
   background-position: center;
   border-radius: 20px;
   position: relative;
-  cursor: pointer;
+  background-color: #e8e8e8;
 }
 
-.fav {
+.badge-noites {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  background-color: #fff;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: box-shadow 0.3s;
-  cursor: pointer;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
 }
 
-.fav:hover {
-  box-shadow: var(--shadow-hover-blue, 0 4px 12px rgba(59,130,246,0.4));
-}
-
-.icon-fav {
-  color: var(--color-primary, #3b82f6);
-}
-
-/* ── Conteúdo ── */
 .baixo {
   display: flex;
   flex-direction: column;
@@ -133,11 +155,7 @@ function goToDetails() {
   padding: 15px;
 }
 
-/* Título */
-.textos {
-  display: flex;
-  flex-direction: column;
-}
+.textos { display: flex; flex-direction: column; }
 
 .titulo {
   margin: 0;
@@ -146,14 +164,33 @@ function goToDetails() {
 }
 
 .subtexto {
-  font-size: 13px;
   opacity: 0.6;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   font-size: clamp(0.7rem, 0.81vw, 0.85rem);
+  flex-wrap: wrap;
+}
+.subtexto p { margin: 0; }
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.info-icon { flex-shrink: 0; }
+
+.details-text {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.55;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Quem solicitou */
 .label-solicitou {
   margin: 0 0 8px 0;
   font-size: 14px;
@@ -177,6 +214,7 @@ function goToDetails() {
   background-position: center;
   background-size: cover;
   flex-shrink: 0;
+  background-color: #ddd;
 }
 
 .owner-name {
@@ -184,7 +222,6 @@ function goToDetails() {
   flex: 1;
   font-size: 14px;
   font-weight: 500;
-  cursor: pointer;
 }
 
 .icon-phone {
@@ -193,46 +230,52 @@ function goToDetails() {
   flex-shrink: 0;
 }
 
-/* Botões */
 .actions {
   display: flex;
-  flex-direction: column;
   gap: 8px;
   margin-top: 4px;
 }
 
-.btn-details {
+.btn-recusar {
+  flex: 1;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
   background: none;
-  border: none;
   font-family: "Poppins", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 14px;
   color: var(--color-black-text, #1a1a1a);
   cursor: pointer;
-  padding: 4px 0;
-  text-align: center;
-  opacity: 0.75;
-  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
-
-.btn-details:hover {
-  opacity: 1;
+.btn-recusar:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
 }
 
 .btn-confirm {
-  width: 100%;
+  flex: 1;
   height: 42px;
   border-radius: 14px;
-  cursor: pointer;
   border: none;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 14px;
   background-color: var(--color-primary, #3b82f6);
   color: var(--color-primary-text, #ffffff);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   transition: background-color 0.3s;
 }
-
 .btn-confirm:hover {
   background-color: var(--color-primary-hover, #2563eb);
 }

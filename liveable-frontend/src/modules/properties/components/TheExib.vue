@@ -22,9 +22,7 @@ interface Property {
   owner_contact: string | null
   // ownerImage: string | null
 
-  // images: {
-  //   url: string
-  // }[]
+  images: { url: string }[] // ← adicione isso
 }
 
 const route = useRoute()
@@ -55,7 +53,7 @@ onMounted(async () => {
             <p>{{ property?.property_title }}</p>
         </div>
         <div class="home-details">
-            <div class="home-photo"></div>
+            <div class="home-photo" :style="property?.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(property.images[0].url)}')` } : {}"></div>
             <div class="home-informations">
                 <div class="ende">
                     <div class="casa-endereco">

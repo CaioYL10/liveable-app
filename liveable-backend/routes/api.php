@@ -31,6 +31,8 @@ Route::delete('property/delete/{property}', [PropertyController::class, 'destroy
 
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/property/{property}', [PropertyController::class, 'show']);
+Route::get('/my-properties/pending-rents', [PropertyRentController::class, 'pendingRents'])->middleware('auth:sanctum');
+Route::patch('/rents/{rent}/status', [PropertyRentController::class, 'updateStatus'])->middleware('auth:sanctum');
 
 // iterations
 Route::get('/property/like', [PropertyLikeController::class, 'toggleLike'])->middleware('auth:sanctum');

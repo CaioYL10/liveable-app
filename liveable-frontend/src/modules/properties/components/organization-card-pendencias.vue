@@ -1,35 +1,99 @@
 <script setup lang="ts">
-import CardImoveisPendencia from './Card-imoveis-pendencia.vue';
+import { ref, onMounted } from 'vue'
+import PendingRentCard from '@/modules/properties/components/Card-imoveis-pendencia.vue'
 
+const reservas = ref<any[]>([])
+const carregando = ref(true)
+const erro = ref<string | null>(null)
 
+onMounted(async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/my-properties/pending-rents', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+    if (!response.ok) throw new Error(`Erro ${response.status}`)
+    reservas.value = await response.json()
+  } catch (e: any) {
+    erro.value = e.message
+  } finally {
+    carregando.value = false
+  }
+})
+
+async function handleConfirm(rentId: number) {
+  await updateStatus(rentId, true)
+}
+
+async function handleReject(rentId: number) {
+  await updateStatus(rentId, false)
+}
+
+async function updateStatus(rentId: number, confirmed: boolean) {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/rents/${rentId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ confirmed }),
+    })
+    if (!response.ok) throw new Error(`Erro ${response.status}`)
+    reservas.value = reservas.value.filter(r => r.rent_id !== rentId)
+  } catch (e: any) {
+    console.error('[updateStatus]', e)
+  }
+}
 </script>
 
 <template>
-    <div class="container-organization">
-      <CardImoveisPendencia />
-      <CardImoveisPendencia />
-      <CardImoveisPendencia />
-      <CardImoveisPendencia />
-      <CardImoveisPendencia />
-      <CardImoveisPendencia />
+  <div class="pendentes-wrapper">
+
+    <p v-if="carregando" class="estado">Carregando...</p>
+    <p v-else-if="erro" class="estado erro">{{ erro }}</p>
+    <p v-else-if="reservas.length === 0" class="estado">Nenhuma solicitação pendente.</p>
+
+    <div v-else class="cards-grid">
+      <PendingRentCard
+        v-for="rent in reservas"
+        :key="rent.rent_id"
+        :rent="rent"
+        @confirm="handleConfirm"
+        @reject="handleReject"
+      />
     </div>
+  </div>
 </template>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-  .container-organization {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 350px));
-    gap: 30px;
-    width: 100%;
-    justify-content: center;
-  }
+.pendentes-wrapper {
+  font-family: "Poppins", sans-serif;
+}
 
-  @media (max-width: 768px) {
-  .container-organization {
-    grid-template-columns: 1fr;
+.titulo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  color: var(--color-black-text, #1a1a1a);
+}
 
-    justify-items: center;
-  }}
+.estado {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.estado.erro {
+  color: #dc2626;
+  opacity: 1;
+}
+
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 </style>
