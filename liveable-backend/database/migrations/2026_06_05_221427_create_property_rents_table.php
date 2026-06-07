@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::dropIfExists('rents', function (Blueprint $table) {
+        Schema::create('rents', function (Blueprint $table) {
             $table->id();
             $table->date('checkin');
             $table->date('checkout');
@@ -19,12 +19,13 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Property::class);
             $table->string('details');
+            $table->boolean('confirmed')->default(false);
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('property_rents');
+        Schema::dropIfExists('rents');
     }
 };

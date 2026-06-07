@@ -9,6 +9,12 @@ use App\Models\Rent;
 
 class PropertyRentController extends Controller
 {
+    public function index(Property $property)
+    {
+        return $property->rents()
+            ->get(['checkin', 'checkout']);
+    }
+
     public function store(Request $request, Property $property)
     {
         // Cria o aluguel vinculado ao imóvel e ao usuário logado via Sanctum
@@ -18,7 +24,7 @@ class PropertyRentController extends Controller
             'checkout' => $request->checkout,
             'guests_count' => $request->guests_count,
             'details' => $request->details,
-            'has_pet' => $request->has_pet,
+            'has_pet' => $request->has_pet
         ]);
 
         return response()->json([

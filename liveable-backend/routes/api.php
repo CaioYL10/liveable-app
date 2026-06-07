@@ -35,5 +35,7 @@ Route::get('/property/{property}', [PropertyController::class, 'show']);
 // iterations
 Route::get('/property/like', [PropertyLikeController::class, 'toggleLike'])->middleware('auth:sanctum');
 Route::post('properties/{property}/rent', [PropertyRentController::class, 'store'])->middleware('auth:sanctum');
+// Manda pro front os dias reservados já
+Route::get('/properties/{property}/rent', [PropertyRentController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/property/toggleEnabled', [PropertyController::class, 'toggleEnableProperty'])->middleware('auth:sanctum');
 Route::get('/{user}/myProperties', [UserController::class, 'myProperties'])->middleware('auth:sanctum');
