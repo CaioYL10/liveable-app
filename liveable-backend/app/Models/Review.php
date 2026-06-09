@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PropertyReview
+class Review extends Model
 {
-    protected $fillable = [
-        'property_id',
-        'user_id',
-        'comment',
-        'rate',
-    ];
+    protected $fillable = ['property_id', 'user_id', 'rating', 'title', 'comment'];
 
     public function property(): BelongsTo
     {

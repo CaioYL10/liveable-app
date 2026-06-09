@@ -72,4 +72,9 @@ class Property extends Model
         return $this->hasMany(Rent::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
 }

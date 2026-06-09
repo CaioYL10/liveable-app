@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyRentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PropertyReviewController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,6 +25,7 @@ Route::get('/admin/users', [UserController::class, 'listUsers'])->middleware('au
 // Properties — públicas
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/property/{property}', [PropertyController::class, 'show']);
+Route::get('/properties/{property}/reviews', [PropertyReviewController::class, 'index']);
 
 // Properties — autenticadas
 Route::middleware('auth:sanctum')->group(function () {
@@ -41,4 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Likes
     Route::post('/property/{property}/like', [PropertyLikeController::class, 'toggleLike']);
+
+    // Reviews
+    Route::post('/properties/{property}/reviews', [PropertyReviewController::class, 'store']);
 });

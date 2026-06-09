@@ -15,16 +15,17 @@ class PropertyController extends Controller
 {
     public function index()
 {
-    $properties = Property::with('images')->get();
+    $properties = Property::with('images', 'reviews')->get();
 
     $properties->transform(function ($property) {
-
         $property->images->transform(function ($image) {
-
             $image->url = asset('storage/' . $image->path);
-
             return $image;
         });
+
+        $property->avaliation = $property->reviews->count()
+            ? round($property->reviews->avg('rating'), 1)
+            : 0;
 
         return $property;
     });
@@ -159,18 +160,24 @@ class PropertyController extends Controller
     }
 
     public function myProperties()
-    {
-        $properties = Property::with('images')
-            ->where('user_id', Auth::id())
-            ->get();
+{
+    $properties = Property::with('images', 'reviews')  // ← adicione 'reviews'
+        ->where('user_id', Auth::id())
+        ->get();
 
-        $properties->transform(function ($property) {
-            $property->images->transform(function ($image) {
-                $image->url = asset('storage/' . $image->path);
-                return $image;
-            });
-            return $property;
+    $properties->transform(function ($property) {
+        $property->images->transform(function ($image) {
+            $image->url = asset('storage/' . $image->path);
+            return $image;
         });
+
+        // ← adicione isso
+        $property->avaliation = $property->reviews->count()
+            ? round($property->reviews->avg('rating'), 1)
+            : 0;
+
+        return $property;
+    });
 
         return response()->json($properties, 200);
     }

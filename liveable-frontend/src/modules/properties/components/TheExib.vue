@@ -10,6 +10,7 @@ import InfosProperties from "./InfosProperties.vue";
 import { exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation.ts'
 
 import api from '../services/api.ts'
+import AvaliationSession from "./avaliation-session.vue";
 
 interface Property {
   id: number
@@ -88,6 +89,8 @@ onMounted(async () => {
         </div>
 
         <InfosProperties />
+
+        <AvaliationSession :property-id="Number(propertyId)" :price-per-night="property?.pricePerDay ?? 0" />
     </div>
 </template>
 
