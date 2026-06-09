@@ -100,7 +100,11 @@ class PropertyController extends Controller
 
     public function show(Property $property)
 {
-    $property->load('images'); // ← adicione isso
+    $property->load('images', 'user');
+    $property->images->transform(function ($image) {
+        $image->url = asset('storage/' . $image->path);
+        return $image;
+    });
     return response()->json(['Propriedade' => $property]);
 }
 

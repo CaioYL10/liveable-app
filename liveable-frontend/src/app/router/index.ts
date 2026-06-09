@@ -11,6 +11,7 @@ import ImoveisPendentes from '@/modules/properties/views/imoveisPendentes.vue'
 import MinhasProps from '@/modules/properties/views/minhasProps.vue'
 import CadastroView from '@/modules/login/views/cadastroView.vue'
 import ViewProfile from '@/modules/profile/views/viewProfile.vue'
+import ViewStrangerProfile from '@/modules/profile/views/viewStrangerProfile.vue'
 
 const routes = [
   {
@@ -31,19 +32,24 @@ const routes = [
         path: 'pendencias',
         name: 'pendenciasPage',
         component: ImoveisPendentes,
-        meta: { requiresAuth: true } // ← protegida
+        meta: { requiresAuth: true }
       },
       {
         path: 'minhasProps',
         name: 'minhasPropspage',
         component: MinhasProps,
-        meta: { requiresAuth: true } // ← protegida
+        meta: { requiresAuth: true }
       },
       {
         path: 'perfil',
         name: 'perfilPage',
         component: ViewProfile,
-        meta: { requiresAuth: true } // ← protegida
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'perfil/:id',
+        name: 'verPerfil',
+        component: ViewStrangerProfile,
       }
     ]
   },
@@ -56,13 +62,13 @@ const routes = [
         path: '',
         name: 'loginPage',
         component: LoginView,
-        meta: { guestOnly: true } // ← adiciona isso
+        meta: { guestOnly: true }
       },
       {
         path: 'cadastrar',
         name: 'cadastrarPage',
         component: CadastroView,
-        meta: { guestOnly: true } // ← e isso
+        meta: { guestOnly: true }
       }
     ]
   }
@@ -74,18 +80,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // rota protegida sem token → vai pro login
   if (to.meta.requiresAuth && !isAuthenticated()) {
     next('/baselogin')
-  }
-  // rota de guest com token → vai pro perfil
-  else if (to.meta.guestOnly && isAuthenticated()) {
-    next('/') // ou '/perfil' se tiver essa rota
-  }
-  else {
+  } else if (to.meta.guestOnly && isAuthenticated()) {
+    next('/')
+  } else {
     next()
   }
 })
-
 
 export default router

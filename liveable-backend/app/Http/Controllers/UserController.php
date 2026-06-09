@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -21,32 +20,40 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string',
-            'phone' => 'string',
+            'name'            => 'required|string',
+            'last_name'       => 'required|string',
+            'email'           => 'required|email|unique:users',
+            'password'        => 'required|string',
+            'phone'           => 'string',
             'profile_picture' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        if ($request->hasFile('profile_picture')){
+
+        $data = array_merge(
+            $request->only('name', 'last_name', 'email', 'role', 'phone'),
+            ['password' => Hash::make($request->password)]
+        );
+
+        if ($request->hasFile('profile_picture')) {
             $image = $request->file('profile_picture');
-            $name = $request->name . '_' . $image->getClientOriginalName() . '.png';
-            $profile_picture = $image->storeAs('assets/images/users', $name, 'public');
+            $name  = $request->name . '_' . $image->getClientOriginalName() . '.png';
+            $data['profile_picture'] = $image->storeAs('assets/images/users', $name, 'public');
         }
-        $data = array_merge($request->only('name', 'last_name', 'email', 'role', 'phone'), ['password' => Hash::make($request->password)]   );
+
         if (User::create($data)) {
             return response()->json(['message' => 'Usuario registrado'], 201);
         }
+
         return response()->json(['message' => 'Error ao registrar usuário'], 500);
     }
 
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required|string',
         ]);
 
@@ -71,38 +78,96 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function listUsers(User $user)
+    public function listUsers()
     {
-        $users = User::all();
-        return response()->json($users);
+        return response()->json(User::all());
     }
 
-    public function update(Request $request, User $user)
+    public function updateMe(Request $request)
     {
+        $user = $request->user();
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string',
-            'phone' => 'required|string',
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name'          => 'sometimes|string',
+            'last_name'     => 'sometimes|string',
+            'email'         => 'sometimes|email|unique:users,email,' . $user->id,
+            'phone'         => 'sometimes|nullable|string',
+            'bio'           => 'sometimes|nullable|string',
+            'twitter'       => 'sometimes|nullable|string',
+            'instagram'     => 'sometimes|nullable|string',
+            'facebook'      => 'sometimes|nullable|string',
+            'share_socials' => 'sometimes|boolean',
         ]);
-        $image = $request->file('profile_picture');
-        if (Storage::disk('public')->exists($user->profile_picture)) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-        $name = $request->name . '_' . $image->getClientOriginalName() . '.png';
-        $profile_picture = $image->storeAs('assets/images/users', $name, 'public');
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $data = array_merge($request->only('name', 'last_name', 'email', 'is_admin', 'telephone'), ['password' => Hash::make($request->password), 'profile_picture' => $profile_picture]);
 
-        if ($user->update($data)) {
-            return response()->json(['message' => 'Usuário atualizado'], 200);
+        $user->update($request->only([
+            'name', 'last_name', 'email', 'phone',
+            'bio', 'twitter', 'instagram', 'facebook', 'share_socials',
+        ]));
+
+        return response()->json(['message' => 'Usuário atualizado'], 200);
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
         }
-        return response()->json(['message' => 'Não foi possivel atualizar o usuário'], 401);
 
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        $image = $request->file('profile_picture');
+        $name  = $user->name . '_' . time() . '.' . $image->getClientOriginalExtension();
+        $path  = $image->storeAs('assets/images/users', $name, 'public');
+
+        $user->update(['profile_picture' => $path]);
+
+        return response()->json([
+            'message'         => 'Foto atualizada',
+            'profile_picture' => Storage::url($path),
+        ], 200);
+    }
+
+    public function updateBanner(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'banner' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        if ($user->banner && Storage::disk('public')->exists($user->banner)) {
+            Storage::disk('public')->delete($user->banner);
+        }
+
+        $image = $request->file('banner');
+        $path  = $image->storeAs(
+            'assets/images/banners',
+            $user->name . '_' . time() . '.' . $image->getClientOriginalExtension(),
+            'public'
+        );
+
+        $user->update(['banner' => $path]);
+
+        return response()->json([
+            'message' => 'Banner atualizado',
+            'banner'  => Storage::url($path),
+        ]);
     }
 
     public function logout(Request $request)
@@ -113,10 +178,7 @@ class UserController extends Controller
 
     public function myProperties(Request $request)
     {
-        $user = $request->user();
-
-        $properties = Property::where('user_id', $user->id)->get();
-
+        $properties = Property::where('user_id', $request->user()->id)->get();
         return response()->json($properties);
     }
 }

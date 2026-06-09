@@ -26,6 +26,8 @@ Route::get('/admin/users', [UserController::class, 'listUsers'])->middleware('au
 Route::get('/properties', [PropertyController::class, 'index']);
 Route::get('/property/{property}', [PropertyController::class, 'show']);
 Route::get('/properties/{property}/reviews', [PropertyReviewController::class, 'index']);
+// Perfil público de qualquer usuário
+Route::get('/user/{user}', [UserController::class, 'show']);
 
 // Properties — autenticadas
 Route::middleware('auth:sanctum')->group(function () {
@@ -46,4 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Reviews
     Route::post('/properties/{property}/reviews', [PropertyReviewController::class, 'store']);
+
+    // Users
+    Route::put('/user', [UserController::class, 'updateMe']);
+    Route::post('/user/photo', [UserController::class, 'updatePhoto']);
+    Route::post('/user/banner', [UserController::class, 'updateBanner']);
 });
