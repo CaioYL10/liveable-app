@@ -68,6 +68,10 @@
     function goToProps() {
       router.push('/minhasProps')
     }
+
+    function goToFavs() {
+      router.push('/favoritos')
+    }
 </script>
 
 
@@ -118,7 +122,7 @@
 
         <div class="icones">
             <div class="circle" @click="goToDetails"><PhUser :size="20" /></div>
-            <div class="circle"><PhListHeart :size="20" /></div>
+            <div class="circle" @click="goToFavs"><PhListHeart :size="20" /></div>
         </div>
     </nav>
 

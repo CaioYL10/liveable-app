@@ -3,26 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use App\Models\PropertyLike;
 use Illuminate\Http\Request;
 
 class PropertyLikeController extends Controller
 {
-    public function toggleLike(Property $property, Request $request)
+    public function toggleLike(Request $request, Property $property)
     {
-        $userId = $request->user()->id;
-
-        $like = PropertyLike::where(['property_id' => $property->id, 'user_id' => $userId])->first();
+        $user = $request->user();
+        $like = $user->likes()->where('property_id', $property->id)->first();
 
         if ($like) {
             $like->delete();
-
-            return response()->json(['message' => 'Liked removed successfully', 'liked' => false], 200);
+            return response()->json(['liked' => false]);
         }
-        PropertyLike::create([
-            'property_id' => $property->id,
-            'user_id' => $userId,
-        ]);
-        return response()->json(['message' => 'Liked successfully', 'liked' => true], 201);
+
+        $user->likes()->create(['property_id' => $property->id]);
+        return response()->json(['liked' => true]);
+    }
+
+    public function myLikes(Request $request)
+    {
+        $properties = $request->user()
+            ->likes()
+            ->with(['property.images'])
+            ->get()
+            ->map(function ($like) {
+                $property = $like->property;
+                if ($property) {
+                    $property->images->transform(function ($image) {
+                        $image->url = asset('storage/' . $image->path);
+                        return $image;
+                    });
+                }
+                return $property;
+            })
+            ->filter()
+            ->values();
+
+        return response()->json($properties);
     }
 }

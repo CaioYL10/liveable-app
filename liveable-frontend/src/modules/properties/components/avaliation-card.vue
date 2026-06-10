@@ -103,7 +103,7 @@ export default {
 .review-card {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -114,7 +114,7 @@ export default {
 }
 
 .review-card:hover {
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-hover-blue);
 }
 
 .review-card__header {

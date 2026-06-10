@@ -6,7 +6,6 @@ use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -14,80 +13,65 @@ use Illuminate\Support\Facades\Validator;
 class PropertyController extends Controller
 {
     public function index()
-{
-    $properties = Property::with('images', 'reviews')->get();
+    {
+        $properties = Property::with('images', 'reviews')->get();
 
-    $properties->transform(function ($property) {
-        $property->images->transform(function ($image) {
-            $image->url = asset('storage/' . $image->path);
-            return $image;
+        $properties->transform(function ($property) {
+            $property->images->transform(function ($image) {
+                $image->url = asset('storage/' . $image->path);
+                return $image;
+            });
+
+            $property->avaliation = $property->reviews->count()
+                ? round($property->reviews->avg('rating'), 1)
+                : 0;
+
+            return $property;
         });
 
-        $property->avaliation = $property->reviews->count()
-            ? round($property->reviews->avg('rating'), 1)
-            : 0;
+        return response()->json($properties, 200);
+    }
 
-        return $property;
-    });
-
-    return response()->json($properties, 200);
-}
-
-    #[Authorize('adminOrOwner')]
-    public function store(Request $request, User $user)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'local' => 'required|string',
-            'type' => 'required|string',
-            'beds_qtd' => 'required|integer',
-            'toilette' => 'required|integer',
-            'area' => 'required|integer',
-            'property_title' => 'required|string',
-            'wifi' => 'boolean',
-            'tv' => 'boolean',
-            'cooler' => 'boolean',
-            'air_conditioning' => 'boolean',
-            'washer' => 'boolean',
-            'microwave' => 'boolean',
-            'contract' => 'string',
-            'images' => '',
-            'pricePerDay' => 'required|integer',
-            'pricePerWeek' => 'integer',
-            'pricePerMonth' => 'integer',
-            'status' => 'required|string',
-            'property_reviews_id' => 'integer',
+            'local'           => 'required|string',
+            'type'            => 'required|string',
+            'beds_qtd'        => 'required|integer',
+            'toilette'        => 'required|integer',
+            'area'            => 'required|integer',
+            'property_title'  => 'required|string',
+            'wifi'            => 'boolean',
+            'tv'              => 'boolean',
+            'cooler'          => 'boolean',
+            'air_conditioning'=> 'boolean',
+            'washer'          => 'boolean',
+            'microwave'       => 'boolean',
+            'pricePerDay'     => 'required|integer',
+            'pricePerWeek'    => 'integer',
+            'pricePerMonth'   => 'integer',
+            'status'          => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+
         $property = Auth::user()->property()->create($request->only([
-            'local',
-            'type',
-            'beds_qtd',
-            'toilette',
-            'area',
-            'property_title',
-            'wifi',
-            'tv',
-            'cooler',
-            'air_conditioning',
-            'washer',
-            'microwave',
-            'pricePerDay',
-            'status',
+            'local', 'type', 'beds_qtd', 'toilette', 'area',
+            'property_title', 'wifi', 'tv', 'cooler', 'air_conditioning',
+            'washer', 'microwave', 'pricePerDay', 'status',
         ]));
 
         if ($request->hasFile('images')) {
-            $titleDirectory = $request->property_title;
-            $directory = "assets/images/properties/$titleDirectory";
+            $directory = 'assets/images/properties/' . $request->property_title;
             Storage::disk('public')->makeDirectory($directory);
 
             foreach ($request->images as $image) {
-                $property_image_path = $image->storeAs($directory, $image->getClientOriginalName(), 'public');
+                $path     = $image->storeAs($directory, $image->getClientOriginalName(), 'public');
                 $newImage = PropertyImage::create([
                     'property_id' => $property->id,
-                    'path' => $property_image_path,
+                    'path'        => $path,
                 ]);
                 if (!isset($property->property_image_id)) {
                     $property->update(['property_image_id' => $newImage->id]);
@@ -99,89 +83,98 @@ class PropertyController extends Controller
     }
 
     public function show(Property $property)
-{
-    $property->load('images', 'user');
-    $property->images->transform(function ($image) {
-        $image->url = asset('storage/' . $image->path);
-        return $image;
-    });
-    return response()->json(['Propriedade' => $property]);
-}
-
-    #[Authorize('adminOrOwner')]
-    public function update(Request $request, Property $property)
     {
+        $property->load('images', 'user');
+        $property->images->transform(function ($image) {
+            $image->url = asset('storage/' . $image->path);
+            return $image;
+        });
+        return response()->json(['Propriedade' => $property]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $property = Property::findOrFail($id);
+        $user     = $request->user();
+
+        if ($user->role !== 'admin' && $property->user_id !== $user->id) {
+            return response()->json(['message' => 'Sem permissão.'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
-            'local' => 'required|string',
-            'type' => 'required|string',
-            'beds_qtd' => 'required|integer',
-            'toilette' => 'required|integer',
-            'area' => 'required|integer',
-            'owner_contact' => 'required|string',
-            'property_title' => 'required|string',
-            'wifi' => 'boolean',
-            'tv' => 'boolean',
-            'cooler' => 'boolean',
-            'air_conditioning' => 'boolean',
-            'washer' => 'boolean',
-            'microwave' => 'boolean',
-            'contract' => 'required|string',
+            'property_title'   => 'sometimes|string|max:255',
+            'local'            => 'sometimes|string|max:255',
+            'area'             => 'sometimes|numeric|min:0',
+            'type'             => 'sometimes|string|in:casa,apartamento,chacara',
+            'beds_qtd'         => 'sometimes|integer|min:1',
+            'toilette'         => 'sometimes|integer|min:1',
+            'wifi'             => 'sometimes|boolean',
+            'tv'               => 'sometimes|boolean',
+            'cooler'           => 'sometimes|boolean',
+            'air_conditioning' => 'sometimes|boolean',
+            'washer'           => 'sometimes|boolean',
+            'microwave'        => 'sometimes|boolean',
+            'pricePerDay'      => 'sometimes|nullable|numeric|min:0',
+            'pricePerWeek'     => 'sometimes|nullable|numeric|min:0',
+            'pricePerMonth'    => 'sometimes|nullable|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['message' => $validator->errors()->first()], 422);
         }
 
-        if ($property->update($request->all())) {
-            return response()->json(['message' => 'Propriedade atualizada com sucesso!'], 201);
-        }
-        return response()->json(['message' => 'Erro ao atualizar propriedade!'], 401);
+        $property->update($request->only([
+            'property_title', 'local', 'area', 'type',
+            'beds_qtd', 'toilette',
+            'wifi', 'tv', 'cooler', 'air_conditioning', 'washer', 'microwave',
+            'pricePerDay', 'pricePerWeek', 'pricePerMonth',
+        ]));
+
+        return response()->json([
+            'message'     => 'Propriedade atualizada com sucesso!',
+            'Propriedade' => $property->fresh(),
+        ]);
     }
 
-    #[Authorize('adminOrOwner')]
-    public function destroy(Property $property)
+    public function destroy(Request $request, Property $property)
     {
+        $user = $request->user();
+
+        if ($user->role !== 'admin' && $property->user_id !== $user->id) {
+            return response()->json(['message' => 'Sem permissão.'], 403);
+        }
+
         $property->delete();
-        return response()->json(['message' => 'Propriedade deletada com sucesso!'], 201);
-    }
 
-    public function toggleRentProperty(Property $property)
-    {
-        if ($property->isRent($property)) { // returns true
-            return response()->json(['message' => 'Propriedade já alugada'], 400);
-        }
-        if ($property->update(['status' => 'rent'])) {
-            return response()->json(['message' => 'Propriedade alugada com sucesso!'], 201);
-        }
+        return response()->json(['message' => 'Propriedade deletada com sucesso!']);
     }
 
     public function toggleEnableProperty(Property $property)
     {
-        if ($property->isEnabled($property)) { // returns enabled
+        if ($property->isEnabled($property)) {
             return response()->json(['message' => 'Propriedade Disponível'], 200);
         }
         return response()->json(['message' => 'Propriedade desabilitada pelo administrador'], 201);
     }
 
     public function myProperties()
-{
-    $properties = Property::with('images', 'reviews')  // ← adicione 'reviews'
-        ->where('user_id', Auth::id())
-        ->get();
+    {
+        $properties = Property::with('images', 'reviews')
+            ->where('user_id', Auth::id())
+            ->get();
 
-    $properties->transform(function ($property) {
-        $property->images->transform(function ($image) {
-            $image->url = asset('storage/' . $image->path);
-            return $image;
+        $properties->transform(function ($property) {
+            $property->images->transform(function ($image) {
+                $image->url = asset('storage/' . $image->path);
+                return $image;
+            });
+
+            $property->avaliation = $property->reviews->count()
+                ? round($property->reviews->avg('rating'), 1)
+                : 0;
+
+            return $property;
         });
-
-        // ← adicione isso
-        $property->avaliation = $property->reviews->count()
-            ? round($property->reviews->avg('rating'), 1)
-            : 0;
-
-        return $property;
-    });
 
         return response()->json($properties, 200);
     }

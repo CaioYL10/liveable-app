@@ -317,6 +317,7 @@ export default {
   gap: 28px;
   font-family: "Poppins", sans-serif;
   position: relative;
+  margin-top: 2rem;
 }
 
 .reviews-section__status {
@@ -390,7 +391,7 @@ export default {
   display: flex;
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  box-shadow: var(--shadow-sm);
   padding: 0 8px;
   overflow: hidden;
 }
@@ -455,7 +456,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-sm);
   font-family: "Poppins", sans-serif;
   color: #1a1a2e;
 }
@@ -540,7 +541,7 @@ export default {
   background: #fff;
   outline: none;
   transition: border-color 0.18s ease;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .drawer__input:focus,

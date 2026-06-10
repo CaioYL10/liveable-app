@@ -50,6 +50,11 @@ const routes = [
         path: 'perfil/:id',
         name: 'verPerfil',
         component: ViewStrangerProfile,
+      },
+      {
+        path: '/favoritos',
+        name: 'favorites',
+        component: () => import('@/modules/favorites/views/FavoritesView.vue'),
       }
     ]
   },

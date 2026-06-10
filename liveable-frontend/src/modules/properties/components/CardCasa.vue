@@ -1,59 +1,57 @@
 <script setup lang="ts">
-import { PhHeart} from "@phosphor-icons/vue";
-import { useRouter } from 'vue-router';
-
-// Receber dados
+import { PhHeart } from "@phosphor-icons/vue"
+import { useRouter } from 'vue-router'
+import { useFavorites } from '@/modules/favorites/composables/useFavorites'
 
 interface Property {
   id: number
   property_title: string
   pricePerDay: number
   avaliation: number
-  images: {
-    url: string
-  }[]
+  images: { url: string }[]
 }
 
-defineProps<{
-  casa: Property
-}>()
+defineProps<{ casa: Property }>()
 
-const router = useRouter()
+const router   = useRouter()
+const { isFavorite, toggleFavorite } = useFavorites()
 
 function goToDetails(id: number) {
   router.push(`/property-details/${id}`)
+}
+
+async function handleFav(e: Event, id: number) {
+  e.stopPropagation()
+  const token = localStorage.getItem('token')
+  if (!token) {
+    router.push('/login')
+    return
+  }
+  await toggleFavorite(id)
 }
 </script>
 
 <template>
   <div class="card">
-    <!-- Imagem -->
-    <!-- ✅ Correto -->
-  <div class="cima" @click="goToDetails(casa.id)" 
-    :style="casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}">
-      <div class="fav">
+    <div class="cima" @click="goToDetails(casa.id)"
+      :style="casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}">
+      <div class="fav" @click="handleFav($event, casa.id)" :class="{ ativo: isFavorite(casa.id) }">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>
     </div>
 
-    <!-- Conteúdo inferior -->
     <div class="baixo">
-
-      <!-- Título e preço -->
       <div class="textos">
         <p class="titulo">{{ casa?.property_title }}</p>
         <div class="subtexto">
-          <p>R${{casa?.pricePerDay}} p/noite</p>
+          <p>R${{ casa?.pricePerDay }} p/noite</p>
           <p>•</p>
           <p>★ {{ casa?.avaliation }}</p>
         </div>
       </div>
-
-      <!-- Ações -->
       <div class="actions" @click="goToDetails(casa.id)">
         <button class="btn-confirm">Ver mais</button>
       </div>
-
     </div>
   </div>
 </template>
@@ -73,7 +71,6 @@ function goToDetails(id: number) {
   overflow: hidden;
 }
 
-/* ── Imagem ── */
 .cima {
   width: 100%;
   height: 300px;
@@ -97,19 +94,19 @@ function goToDetails(id: number) {
   justify-content: center;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, transform 0.2s;
   cursor: pointer;
 }
 
-.fav:hover {
-  box-shadow: var(--shadow-hover-blue, 0 4px 12px rgba(59,130,246,0.4));
-}
+.fav:hover { box-shadow: var(--shadow-hover-blue); transform: scale(1.1); }
 
 .icon-fav {
-  color: var(--color-primary, #3b82f6);
+  color: #d1d5db;
+  transition: color 0.2s;
 }
 
-/* ── Conteúdo ── */
+.fav.ativo .icon-fav { color: var(--color-primary); }
+
 .baixo {
   display: flex;
   flex-direction: column;
@@ -117,17 +114,9 @@ function goToDetails(id: number) {
   padding: 15px;
 }
 
-/* Título */
-.textos {
-  display: flex;
-  flex-direction: column;
-}
+.textos { display: flex; flex-direction: column; }
 
-.titulo {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-}
+.titulo { margin: 0; font-size: 15px; font-weight: 600; }
 
 .subtexto {
   font-size: 13px;
@@ -137,71 +126,7 @@ function goToDetails(id: number) {
   font-size: clamp(0.7rem, 0.81vw, 0.85rem);
 }
 
-/* Quem solicitou */
-.label-solicitou {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.card-contato {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.08));
-  background-color: var(--color-bg-secondary, #fff);
-}
-
-.card-contato .img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-position: center;
-  background-size: cover;
-  flex-shrink: 0;
-}
-
-.owner-name {
-  margin: 0;
-  flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.icon-phone {
-  color: var(--color-black-text, #1a1a1a);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-/* Botões */
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.btn-details {
-  background: none;
-  border: none;
-  font-family: "Poppins", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-black-text, #1a1a1a);
-  cursor: pointer;
-  padding: 4px 0;
-  text-align: center;
-  opacity: 0.75;
-  transition: opacity 0.2s;
-}
-
-.btn-details:hover {
-  opacity: 1;
-}
+.actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
 
 .btn-confirm {
   width: 100%;
@@ -217,7 +142,5 @@ function goToDetails(id: number) {
   transition: background-color 0.3s;
 }
 
-.btn-confirm:hover {
-  background-color: var(--color-primary-hover, #2563eb);
-}
+.btn-confirm:hover { background-color: var(--color-primary-hover, #2563eb); }
 </style>
