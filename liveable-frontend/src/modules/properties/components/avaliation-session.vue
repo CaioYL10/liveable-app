@@ -74,11 +74,6 @@
           <span class="reviews-summary__value">{{ recommendPercent }}%</span>
         </div>
       </div>
-
-      <div class="reviews-summary__item reviews-summary__item--price">
-        <span class="reviews-summary__price">R$ {{ pricePerNight.toFixed(2).replace('.', ',') }}</span>
-        <span class="reviews-summary__price-label">p/noite</span>
-      </div>
     </div>
 
     <!-- ── Drawer de avaliação ── -->
