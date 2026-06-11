@@ -130,7 +130,7 @@ function goToFavs() { router.push('/favoritos') }
       </li>
 
       <li @click="goToProps()" :class="{ active: ativo === 'minhas' }">
-        Minhas Propriedades
+        <PhHouse :size="20" /> Minhas Propriedades
       </li>
     </ul>
 

@@ -7,24 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class Rent extends Model
 {
     protected $fillable = [
-        'user_id',
-        'property_id',
-        'checkin',
-        'checkout',
-        'guests_count',
-        'details',
-        'has_pet',
-        'confirmed'
+        'checkin', 'checkout', 'has_pet', 'guests_count',
+        'user_id', 'property_id', 'details', 'confirmed',
     ];
 
-    public function user()
+    // Relacionamentos — adicione estes dois métodos:
+    public function payment()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(\App\Models\Payment::class);
     }
 
     public function property()
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(\App\Models\Property::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     protected $casts = [

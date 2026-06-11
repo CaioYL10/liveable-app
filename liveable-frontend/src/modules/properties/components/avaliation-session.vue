@@ -3,7 +3,7 @@
 
     <!-- Cabeçalho da seção -->
     <div class="reviews-section__header">
-      <h2 class="reviews-section__title">Avaliações <span>dos Hóspedes</span></h2>
+      <h2 class="reviews-section__title">Avaliações dos <span>Hóspedes</span></h2>
       <button class="reviews-section__avaliar-btn" @click="drawerOpen = true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         Avaliar
@@ -344,9 +344,32 @@ export default {
   font-weight: 700;
   color: #1a1a2e;
   margin: 0;
+  position: relative;
 }
 
 .reviews-section__title span { color: #1a2fa8; }
+
+  h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 3px;
+    width: 75%;
+    background-color: var(--color-primary);
+    border-radius: 15px;
+  }
+
+  h2::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -3px;
+    height: 3px;
+    width: 20%;
+    background-color: var(--color-primary);
+    border-radius: 15px;
+  }
 
 .reviews-section__avaliar-btn {
   display: flex;
@@ -356,7 +379,7 @@ export default {
   background: #1a2fa8;
   color: #fff;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   font-family: "Poppins", sans-serif;

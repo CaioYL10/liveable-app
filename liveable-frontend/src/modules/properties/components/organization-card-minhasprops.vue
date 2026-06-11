@@ -39,7 +39,7 @@ onMounted(async () => {
 
 <template>
   <div class="container-organization">
-    <p v-if="loading">Carregando...</p>
+    <p v-if="loading" class="loading">Carregando...</p>
     <p v-else-if="erro">Erro ao carregar propriedades.</p>
     <p v-else-if="properties.length === 0" class="vazio">
       Você ainda não tem nenhuma propriedade cadastrada.
@@ -71,10 +71,12 @@ onMounted(async () => {
   }
 }
 
-.vazio {
+.vazio, .loading {
   text-align: center;
   opacity: 0.5;
   font-size: 14px;
   grid-column: 1 / -1;
+  font-family: "Poppins", sans-serif;
+  margin-top: 4rem;
 }
 </style>

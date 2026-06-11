@@ -271,8 +271,8 @@ function handleSolicitar() {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 16px;
-  border-radius: 20px;
+  padding: 7px 16px;
+  border-radius: 12px;
   font-family: "Poppins", sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
@@ -282,14 +282,12 @@ function handleSolicitar() {
 }
 
 .btn-editar {
-  background: #fff;
-  border: 1.5px solid #e5e7eb;
-  color: var(--color-black-text, #1a1a2e);
+  background: var(--color-primary);
+  border: 0;
+  color: var(--color-primary-text, #1a1a2e);
 }
 
 .btn-editar:hover {
-  border-color: #1a2fa8;
-  color: #1a2fa8;
   box-shadow: 0 2px 8px rgba(26,47,168,0.12);
 }
 

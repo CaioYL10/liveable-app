@@ -187,7 +187,7 @@ p span {
 .btn-explorar {
   margin-top: 8px;
   padding: 0.7rem 2rem;
-  border-radius: 20px;
+  border-radius: 14px;
   border: 1.5px solid #1a2fa8;
   background: transparent;
   color: #1a2fa8;

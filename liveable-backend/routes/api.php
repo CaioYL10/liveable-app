@@ -8,6 +8,7 @@ use App\Http\Controllers\PropertyRentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyReviewController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,6 +28,7 @@ Route::get('/properties',                      [PropertyController::class,      
 Route::get('/property/{property}',             [PropertyController::class,       'show']);
 Route::get('/properties/{property}/reviews',   [PropertyReviewController::class, 'index']);
 Route::get('/user/{user}',                     [UserController::class,           'show']);
+Route::post('/webhooks/abacatepay', [PaymentController::class, 'webhook']);
 
 // Autenticadas
 Route::middleware('auth:sanctum')->group(function () {
@@ -65,4 +67,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Likes
     Route::get('/favorites', [PropertyLikeController::class, 'myLikes']);
+
+    // Payments
+    Route::get('/payments/my',                   [PaymentController::class, 'myPayments']);
+    Route::get('/payments/{payment}/qrcode',     [PaymentController::class, 'getQrCode']);
+    Route::post('/payments/{payment}/check',     [PaymentController::class, 'checkStatus']);
+    Route::post('/payments/{payment}/simulate',  [PaymentController::class, 'simulate']);
+
+    // Reservas ativas (pagas) — para ambos os lados
+    Route::get('/rents/active', [PropertyRentController::class, 'activeRents']);
 });
