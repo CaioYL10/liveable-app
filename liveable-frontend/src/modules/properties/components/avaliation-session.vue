@@ -1,3 +1,167 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Pagination } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/pagination'
+
+import ReviewCard from './avaliation-card.vue'
+
+const BASE_URL = 'http://127.0.0.1:8000/api'
+
+interface Review {
+  id: number
+  rating: number
+  title?: string
+  comment?: string
+  text?: string
+  user?: {
+    id: number
+    name: string
+  }
+}
+
+const props = defineProps<{
+  propertyId: number
+  pricePerNight?: number
+}>()
+
+const emit = defineEmits<{
+  (e: 'review-sent', review: Review): void
+}>()
+
+const swiperModules = [Pagination]
+
+// Dados carregados da API
+const localReviews = ref<Review[]>([])
+const carregando = ref(false)
+const erroCarregamento = ref<string | null>(null)
+
+// Drawer
+const drawerOpen = ref(false)
+const hoverRating = ref(0)
+const enviando = ref(false)
+const erroEnvio = ref<string | null>(null)
+const sucessoEnvio = ref(false)
+
+const form = ref({
+  rating: 0,
+  title: '',
+  comment: '',
+})
+
+const averageRating = computed(() => {
+  if (!localReviews.value.length) return 0
+
+  return (
+    localReviews.value.reduce((sum, review) => sum + review.rating, 0) / localReviews.value.length
+  )
+})
+
+const recommendPercent = computed(() => {
+  if (!localReviews.value.length) return 0
+
+  const good = localReviews.value.filter((review) => review.rating >= 4).length
+
+  return Math.round((good / localReviews.value.length) * 100)
+})
+
+const ratingLabel = computed(() => {
+  const active = hoverRating.value || form.value.rating
+
+  return (
+    ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'][active] ??
+    'Toque nas estrelas para avaliar'
+  )
+})
+
+async function carregarAvaliacoes() {
+  carregando.value = true
+  erroCarregamento.value = null
+
+  try {
+    const res = await fetch(`${BASE_URL}/properties/${props.propertyId}/reviews`)
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.message ?? `Erro ${res.status}`)
+    }
+
+    localReviews.value = data.data
+  } catch (e) {
+    erroCarregamento.value = 'Não foi possível carregar as avaliações.'
+    console.error('[carregarAvaliacoes]', e)
+  } finally {
+    carregando.value = false
+  }
+}
+
+async function enviarAvaliacao() {
+  if (!form.value.rating) {
+    erroEnvio.value = 'Selecione uma nota antes de enviar.'
+    return
+  }
+
+  if (!form.value.comment.trim()) {
+    erroEnvio.value = 'Escreva um comentário sobre sua estadia.'
+    return
+  }
+
+  enviando.value = true
+  erroEnvio.value = null
+  sucessoEnvio.value = false
+
+  try {
+    const res = await fetch(`${BASE_URL}/properties/${props.propertyId}/reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        rating: form.value.rating,
+        title: form.value.title,
+        comment: form.value.comment,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.message ?? `Erro ${res.status}`)
+    }
+
+    localReviews.value.unshift(data.data)
+
+    sucessoEnvio.value = true
+
+    emit('review-sent', data.data)
+
+    setTimeout(() => {
+      drawerOpen.value = false
+      sucessoEnvio.value = false
+
+      form.value = {
+        rating: 0,
+        title: '',
+        comment: '',
+      }
+    }, 1800)
+  } catch (e: any) {
+    erroEnvio.value = e.message ?? 'Erro ao enviar avaliação.'
+    console.error('[enviarAvaliacao]', e)
+  } finally {
+    enviando.value = false
+  }
+}
+
+onMounted(() => {
+  carregarAvaliacoes()
+})
+</script>
+
 <template>
   <div class="reviews-section">
     <!-- Cabeçalho da seção -->
@@ -172,150 +336,6 @@
   </div>
 </template>
 
-<script>
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Pagination } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/pagination'
-
-import ReviewCard from './avaliation-card.vue'
-
-const BASE_URL = 'http://127.0.0.1:8000/api'
-
-export default {
-  name: 'ReviewsSection',
-
-  components: { Swiper, SwiperSlide, ReviewCard },
-
-  props: {
-    propertyId: {
-      type: Number,
-      required: true,
-    },
-    pricePerNight: {
-      type: Number,
-      default: 0,
-    },
-  },
-
-  data() {
-    return {
-      swiperModules: [Pagination],
-
-      // Dados carregados da API
-      localReviews: [],
-      carregando: false,
-      erroCarregamento: null,
-
-      // Drawer
-      drawerOpen: false,
-      hoverRating: 0,
-      enviando: false,
-      erroEnvio: null,
-      sucessoEnvio: false,
-
-      form: {
-        rating: 0,
-        title: '',
-        comment: '', 
-      },
-    }
-  },
-
-  computed: {
-    averageRating() {
-      if (!this.localReviews.length) return 0
-      return this.localReviews.reduce((sum, r) => sum + r.rating, 0) / this.localReviews.length
-    },
-    recommendPercent() {
-      if (!this.localReviews.length) return 0
-      const good = this.localReviews.filter((r) => r.rating >= 4).length
-      return Math.round((good / this.localReviews.length) * 100)
-    },
-    ratingLabel() {
-      const active = this.hoverRating || this.form.rating
-      return (
-        ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'][active] ??
-        'Toque nas estrelas para avaliar'
-      )
-    },
-  },
-
-  async mounted() {
-    await this.carregarAvaliacoes()
-  },
-
-  methods: {
-    async carregarAvaliacoes() {
-      this.carregando = true
-      this.erroCarregamento = null
-
-      try {
-        const res = await fetch(`${BASE_URL}/properties/${this.propertyId}/reviews`)
-        const data = await res.json()
-
-        if (!res.ok) throw new Error(data.message ?? `Erro ${res.status}`)
-
-        this.localReviews = data.data
-      } catch (e) {
-        this.erroCarregamento = 'Não foi possível carregar as avaliações.'
-        console.error('[carregarAvaliacoes]', e)
-      } finally {
-        this.carregando = false
-      }
-    },
-
-    async enviarAvaliacao() {
-      if (!this.form.rating) {
-        this.erroEnvio = 'Selecione uma nota antes de enviar.'
-        return
-      }
-      if (!this.form.comment.trim()) {
-        this.erroEnvio = 'Escreva um comentário sobre sua estadia.'
-        return
-      }
-
-      this.enviando = true
-      this.erroEnvio = null
-      this.sucessoEnvio = false
-
-      try {
-        const res = await fetch(`${BASE_URL}/properties/${this.propertyId}/reviews`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({
-            rating: this.form.rating,
-            title: this.form.title,
-            comment: this.form.comment,
-          }),
-        })
-
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.message ?? `Erro ${res.status}`)
-
-        this.localReviews.unshift(data.data)
-        this.sucessoEnvio = true
-        this.$emit('review-sent', data.data)
-
-        setTimeout(() => {
-          this.drawerOpen = false
-          this.sucessoEnvio = false
-          this.form = { rating: 0, title: '', comment: '' }
-        }, 1800)
-      } catch (e) {
-        this.erroEnvio = e.message ?? 'Erro ao enviar avaliação.'
-        console.error('[enviarAvaliacao]', e)
-      } finally {
-        this.enviando = false
-      }
-    },
-  },
-}
-</script>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
@@ -325,7 +345,7 @@ export default {
   gap: 28px;
   font-family: 'Poppins', sans-serif;
   position: relative;
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 
 .reviews-section__status {
@@ -334,6 +354,14 @@ export default {
   margin: 0;
   text-align: center;
   padding: 24px 0;
+  min-height: 300px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  min-height: 300px;
+  font-size: 1rem;
+  opacity: 0.5;
+  font-weight: 600;
 }
 
 .reviews-section__status--erro {

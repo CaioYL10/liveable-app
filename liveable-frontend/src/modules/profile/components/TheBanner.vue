@@ -50,8 +50,13 @@ onMounted(async () => {
 
 const profilePicture = computed(() => {
   if (novaFotoPreview.value) return novaFotoPreview.value
-  if (user.value?.profile_picture)
-    return `http://127.0.0.1:8000/storage/${user.value.profile_picture}`
+  if (user.value?.profile_picture) {
+    const foto = user.value.profile_picture
+    if (foto.startsWith('http://') || foto.startsWith('https://')) {
+      return foto
+    }
+    return `http://127.0.0.1:8000/storage/${foto}`
+  }
   return randomAvatar
 })
 

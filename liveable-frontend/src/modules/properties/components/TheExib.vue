@@ -68,9 +68,7 @@ onMounted(async () => {
   try {
     const [resProperty, resMe] = await Promise.all([
       fetch(`http://127.0.0.1:8000/api/property/${propertyId}`, { headers }),
-      token
-        ? fetch(`http://127.0.0.1:8000/api/user`, { headers })
-        : null
+      token ? fetch(`http://127.0.0.1:8000/api/user`, { headers }) : null,
     ])
 
     const dataProperty = await resProperty.json()
@@ -80,7 +78,7 @@ onMounted(async () => {
       me.value = await resMe.json()
     }
   } catch (error) {
-    console.error("Erro ao carregar dados da página de detalhes:", error)
+    console.error('Erro ao carregar dados da página de detalhes:', error)
   } finally {
     carregando.value = false
   }
@@ -202,7 +200,7 @@ function handleSolicitar() {
 
       <div class="home-informations">
         <div class="ende">
-          <div class="casa-endereco">
+          <div class="casa-endereco" :title="property?.local">
             <p>{{ property?.local }}</p>
           </div>
           <div class="fav" @click="handleFav" :class="{ ativo: isFavorite(Number(propertyId)) }">
@@ -243,14 +241,19 @@ function handleSolicitar() {
               :style="
                 property?.user?.profile_picture
                   ? {
-                      backgroundImage: `url('http://127.0.0.1:8000/storage/${property.user.profile_picture}')`,
+                      backgroundImage: `url('${
+                        property.user.profile_picture.startsWith('http://') ||
+                        property.user.profile_picture.startsWith('https://')
+                          ? property.user.profile_picture
+                          : `http://127.0.0.1:8000/storage/${property.user.profile_picture}`
+                      }')`,
                     }
                   : {}
               "
             >
-              <span v-if="!property?.user?.profile_picture">{{
-                property?.user?.name?.charAt(0)
-              }}</span>
+              <span v-if="!property?.user?.profile_picture">
+                {{ property?.user?.name?.charAt(0) }}
+              </span>
             </div>
             <p @click.stop="verPerfil">
               {{ property?.user?.name }} {{ property?.user?.last_name }}
@@ -405,7 +408,9 @@ function handleSolicitar() {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px;
 }
+
 .ende p {
   margin: 0;
 }
@@ -421,6 +426,7 @@ function handleSolicitar() {
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.3s;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .fav:hover {
   box-shadow: var(--shadow-hover-blue);
@@ -439,7 +445,8 @@ function handleSolicitar() {
 }
 
 .casa-endereco {
-  width: 80%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   font-size: clamp(1.6rem, 1.5vw, 2.2rem);
@@ -458,6 +465,13 @@ function handleSolicitar() {
   font-weight: 600;
   box-shadow: var(--shadow-sm);
   font-size: clamp(0.9rem, 0.8vw, 1.6rem);
+}
+
+.casa-endereco p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .info .divisoria {
@@ -662,12 +676,7 @@ function handleSolicitar() {
 .skeleton-image,
 .skeleton-line,
 .skeleton-button {
-  background: linear-gradient(
-    90deg,
-    #e5e5e5 25%,
-    #f5f5f5 50%,
-    #e5e5e5 75%
-  );
+  background: linear-gradient(90deg, #e5e5e5 25%, #f5f5f5 50%, #e5e5e5 75%);
 
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
@@ -684,7 +693,7 @@ function handleSolicitar() {
 }
 
 .skeleton-container {
-  width: 95%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;

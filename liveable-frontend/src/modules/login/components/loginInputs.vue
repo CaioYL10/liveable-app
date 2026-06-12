@@ -32,6 +32,11 @@ async function login() {
     erro.value = data.message
   }
 }
+
+const loginWithGoogle = () => {
+  // Adicionado o '/redirect' no final da URL para bater certinho com a sua rota do Laravel
+  window.location.href = "http://127.0.0.1:8000/api/auth/google/redirect";
+};
 </script>
 
 <template>
@@ -127,9 +132,7 @@ async function login() {
     </div>
 
     <div class="social-medias">
-      <button><i class="fa-brands fa-google"></i></button>
-      <button><i class="fa-brands fa-square-facebook"></i></button>
-      <button><i class="fa-brands fa-x-twitter"></i></button>
+      <button @click="loginWithGoogle"><i class="fa-brands fa-google"></i></button>
     </div>
   </div>
 </template>

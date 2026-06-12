@@ -137,14 +137,12 @@ p span {
   border-radius: 15px;
 }
 
-/* ── Grid Clonada de Favoritos ── */
 .grid {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
 }
 
-/* ── Estados Padronizados ── */
 .estado {
   display: flex;
   justify-content: center;

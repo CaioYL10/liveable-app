@@ -16,6 +16,7 @@ class Property extends Model
         'type',
         'beds_qtd',
         'toilette',
+        'rooms',
         'area',
         'owner_contact',
         'property_title',

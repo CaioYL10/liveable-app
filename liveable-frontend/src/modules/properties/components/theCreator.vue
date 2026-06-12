@@ -99,6 +99,7 @@ async function salvarImovel() {
     formData.append('status', status.value)
     formData.append('beds_qtd', String(camas.value))
     formData.append('toilette', String(banheiros.value))
+    formData.append('rooms', String(quartos.value))
     formData.append('wifi', wifi.value ? '1' : '0')
     formData.append('tv', tv.value ? '1' : '0')
     formData.append('cooler', refrigerador.value ? '1' : '0')

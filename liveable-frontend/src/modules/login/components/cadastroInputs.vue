@@ -8,7 +8,7 @@ const senha = ref<string>('')
 
 async function enviarCadastro() {
   try {
-    const response = await fetch('http://localhost:8000/api/register', {
+    const response = await fetch('http://127.0.0.1:8000/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,8 +81,6 @@ function loginComTwitter() {
 
     <div class="social-medias">
       <button @click="loginComGoogle"><i class="fa-brands fa-google"></i></button>
-      <button @click="loginComFacebook"><i class="fa-brands fa-square-facebook"></i></button>
-      <button @click="loginComTwitter"><i class="fa-brands fa-x-twitter"></i></button>
     </div>
   </div>
 </template>

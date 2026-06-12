@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import api from '../services/api.ts'
 import { useRoute } from 'vue-router'
 
@@ -27,6 +27,13 @@ onMounted(async () => {
     console.error(error)
   }
 })
+
+const tipoFormatado = computed(() => {
+  if (!property.value?.type) return ''
+
+  return property.value.type.charAt(0).toUpperCase() +
+         property.value.type.slice(1).toLowerCase()
+})
 </script>
 
 <template>
@@ -39,7 +46,7 @@ onMounted(async () => {
           <i class="fa-solid fa-magnifying-glass-location"></i>
           <div class="align-text">
             <span class="titulo">Localização</span>
-            <span class="texto">{{ property?.local }}</span>
+            <span class="texto" :title="property?.local">{{ property?.local }}</span>
           </div>
         </div>
       </div>
@@ -53,7 +60,7 @@ onMounted(async () => {
           <i class="fa-solid fa-house"></i>
           <div class="align-text">
             <span class="titulo">Tipo de imóvel</span>
-            <span class="texto">{{ property?.type }}</span>
+            <span class="texto">{{ tipoFormatado }}</span>
           </div>
         </div>
       </div>
@@ -123,6 +130,7 @@ onMounted(async () => {
   align-items: center;
   gap: 16px;
   flex: 1;
+  min-width: 0;
   padding: 14px 26px;
   cursor: pointer;
   background: #ffffff;
@@ -162,6 +170,8 @@ onMounted(async () => {
   align-items: center;
   gap: 1rem;
   font-size: 1.3rem;
+  min-width: 0;
+  width: 100%;
 }
 
 .grupo-texto i {
@@ -186,8 +196,17 @@ onMounted(async () => {
   font-size: 20px;
   font-weight: 700;
   color: #111118;
-  white-space: nowrap;
   letter-spacing: -0.02em;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.align-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .linha-divisoria {

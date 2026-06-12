@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('type');
             $table->integer('beds_qtd');
             $table->integer('toilette');
+            $table->integer('rooms');
             $table->integer('area');
             $table->foreignId('user_id');
             $table->string('property_title');

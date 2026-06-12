@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { setToken } from 'liveable-frontend\src\services\auth'
+import { setToken } from '@/services/auth.js'
 
 const router = useRouter()
 

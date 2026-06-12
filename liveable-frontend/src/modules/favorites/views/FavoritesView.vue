@@ -154,7 +154,7 @@ p span {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
+  min-height: 300px;
   font-size: 1rem;
   opacity: 0.5;
 }
