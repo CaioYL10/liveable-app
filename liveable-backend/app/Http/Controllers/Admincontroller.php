@@ -20,11 +20,11 @@ class AdminController extends Controller
             'total_reviews'    => Review::count(),
             'total_admins'     => User::where('role', 'admin')->count(),
             'new_users_month'  => User::whereMonth('created_at', now()->month)
-                                      ->whereYear('created_at', now()->year)
-                                      ->count(),
+                ->whereYear('created_at', now()->year)
+                ->count(),
             'new_props_month'  => Property::whereMonth('created_at', now()->month)
-                                          ->whereYear('created_at', now()->year)
-                                          ->count(),
+                ->whereYear('created_at', now()->year)
+                ->count(),
         ]);
     }
 

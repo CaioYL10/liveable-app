@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref } from 'vue'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
@@ -15,10 +15,7 @@ const nextButton = ref(null)
 
 const onSwiper = (swiper: any) => {
   setTimeout(() => {
-    if (
-      swiper.params.navigation &&
-      typeof swiper.params.navigation !== 'boolean'
-    ) {
+    if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
       swiper.params.navigation.prevEl = prevButton.value
       swiper.params.navigation.nextEl = nextButton.value
     }
@@ -82,8 +79,8 @@ onMounted(async () => {
       :space-between="24"
       :loop="true"
       :breakpoints="{
-        480:  { slidesPerView: 1.7, spaceBetween: 16 },
-        768:  { slidesPerView: 2.8, spaceBetween: 20 },
+        480: { slidesPerView: 1.7, spaceBetween: 16 },
+        768: { slidesPerView: 2.8, spaceBetween: 20 },
         1280: { slidesPerView: 3.9, spaceBetween: 24 },
         1600: { slidesPerView: 5, spaceBetween: 24 },
       }"
@@ -94,19 +91,17 @@ onMounted(async () => {
         <CardCasa :casa="casa" />
       </SwiperSlide>
     </Swiper>
-
   </div>
 </template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
 .carousel-wrapper {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .escrita-cima {
@@ -137,10 +132,10 @@ onMounted(async () => {
 }
 
 p {
-    position: relative;
-    display: inline-block;
-    font-size: 1.3rem;
-    font-weight: 600;
+  position: relative;
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 p span {
@@ -227,7 +222,6 @@ p::after {
   right: 10px;
 }
 
-/* Colocando o fundo branco nas bolinhas */
 :deep(.swiper-pagination-bullet) {
   background: #999;
 

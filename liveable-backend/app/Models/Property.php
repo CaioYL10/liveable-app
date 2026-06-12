@@ -63,7 +63,8 @@ class Property extends Model
     {
         return (bool) $property->status == 'enabled';
     }
-    public function images() {
+    public function images()
+    {
         return $this->hasMany(PropertyImage::class);
     }
 
@@ -76,5 +77,4 @@ class Property extends Model
     {
         return $this->hasMany(Review::class);
     }
-
 }

@@ -54,16 +54,12 @@
         </div>
       </div>
 
-      <button class="nav-btn nav-next" @click="proximoMes" aria-label="Próximo mês">
-        &#8250;
-      </button>
+      <button class="nav-btn nav-next" @click="proximoMes" aria-label="Próximo mês">&#8250;</button>
     </div>
 
     <!-- Legenda -->
     <div class="legenda">
-      <span class="legenda-item">
-        <span class="legenda-cor disponivel"></span> Disponível
-      </span>
+      <span class="legenda-item"> <span class="legenda-cor disponivel"></span> Disponível </span>
       <span class="legenda-item">
         <span class="legenda-cor selecionado-ex"></span> Selecionado
       </span>
@@ -107,24 +103,27 @@ import { ref, computed } from 'vue'
  * Aceita tanto string ISO (ex: "2025-07-10") quanto objeto Date.
  */
 export interface PeriodoBloqueado {
-  checkin: string | Date   // data de entrada (inclusive)
-  checkout: string | Date  // data de saída (inclusive ou exclusive — veja isDiaIndisponivel)
+  checkin: string | Date // data de entrada (inclusive)
+  checkout: string | Date // data de saída (inclusive ou exclusive — veja isDiaIndisponivel)
 }
 
 // ─── Props ─────────────────────────────────────────────────────────────────────
-const props = withDefaults(defineProps<{
-  /**
-   * Lista de períodos bloqueados/alugados do banco de dados.
-   * Exemplo:
-   *   [
-   *     { checkin: '2025-07-10', checkout: '2025-07-15' },
-   *     { checkin: new Date('2025-08-01'), checkout: new Date('2025-08-05') },
-   *   ]
-   */
-  periodosBloqueados?: PeriodoBloqueado[]
-}>(), {
-  periodosBloqueados: () => [],
-})
+const props = withDefaults(
+  defineProps<{
+    /**
+     * Lista de períodos bloqueados/alugados do banco de dados.
+     * Exemplo:
+     *   [
+     *     { checkin: '2025-07-10', checkout: '2025-07-15' },
+     *     { checkin: new Date('2025-08-01'), checkout: new Date('2025-08-05') },
+     *   ]
+     */
+    periodosBloqueados?: PeriodoBloqueado[]
+  }>(),
+  {
+    periodosBloqueados: () => [],
+  },
+)
 
 const emit = defineEmits<{
   updateDates: [{ checkin: string; checkout: string }]
@@ -134,17 +133,27 @@ const emit = defineEmits<{
 const DIAS_SEMANA = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'] as const
 
 const NOMES_MESES = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
 ] as const
 
 // ─── Estado reativo ────────────────────────────────────────────────────────────
-const hoje       = new Date()
-const mesBase    = ref<number>(hoje.getMonth())
-const anoBase    = ref<number>(hoje.getFullYear())
+const hoje = new Date()
+const mesBase = ref<number>(hoje.getMonth())
+const anoBase = ref<number>(hoje.getFullYear())
 const dataInicio = ref<Date | null>(null)
-const dataFim    = ref<Date | null>(null)
-const hoverDate  = ref<Date | null>(null)
+const dataFim = ref<Date | null>(null)
+const hoverDate = ref<Date | null>(null)
 const avisoConflito = ref<boolean>(false)
 
 // ─── Computed ──────────────────────────────────────────────────────────────────
@@ -156,9 +165,7 @@ const ano2 = computed<number>(() => anoBase.value + Math.floor((mesBase.value + 
 
 const totalDias = computed<number>(() => {
   if (!dataInicio.value || !dataFim.value) return 0
-  return Math.round(
-    (dataFim.value.getTime() - dataInicio.value.getTime()) / (1000 * 60 * 60 * 24)
-  )
+  return Math.round((dataFim.value.getTime() - dataInicio.value.getTime()) / (1000 * 60 * 60 * 24))
 })
 
 /**
@@ -166,10 +173,10 @@ const totalDias = computed<number>(() => {
  * Feito como computed para reprocessar automaticamente se a prop mudar.
  */
 const periodosNormalizados = computed(() =>
-  props.periodosBloqueados.map(p => ({
+  props.periodosBloqueados.map((p) => ({
     inicio: normalizar(p.checkin).getTime(),
-    fim:    normalizar(p.checkout).getTime(),
-  }))
+    fim: normalizar(p.checkout).getTime(),
+  })),
 )
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -198,7 +205,7 @@ function isDiaIndisponivel(dia: number | null, mes: number, ano: number): boolea
   const ts = toDate(dia, mes, ano).getTime()
   const tsHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()).getTime()
   if (ts < tsHoje) return true
-  return periodosNormalizados.value.some(p => ts >= p.inicio && ts <= p.fim)
+  return periodosNormalizados.value.some((p) => ts >= p.inicio && ts <= p.fim)
 }
 
 /**
@@ -207,19 +214,23 @@ function isDiaIndisponivel(dia: number | null, mes: number, ano: number): boolea
  */
 function intervaloTemConflito(inicio: Date, fim: Date): boolean {
   const msInicio = inicio.getTime()
-  const msFim    = fim.getTime()
-  return periodosNormalizados.value.some(
-    p => p.inicio <= msFim && p.fim >= msInicio
-  )
+  const msFim = fim.getTime()
+  return periodosNormalizados.value.some((p) => p.inicio <= msFim && p.fim >= msInicio)
 }
 
 // ─── Navegação ─────────────────────────────────────────────────────────────────
-function mesAnterior(): void { mesBase.value-- }
-function proximoMes(): void  { mesBase.value++ }
-function nomeMes(mes: number): string { return NOMES_MESES[mes] ?? '' }
+function mesAnterior(): void {
+  mesBase.value--
+}
+function proximoMes(): void {
+  mesBase.value++
+}
+function nomeMes(mes: number): string {
+  return NOMES_MESES[mes] ?? ''
+}
 
 function diasDoMes(mes: number, ano: number): (number | null)[] {
-  const primeiroDia    = new Date(ano, mes, 1).getDay()
+  const primeiroDia = new Date(ano, mes, 1).getDay()
   const totalDiasNoMes = new Date(ano, mes + 1, 0).getDate()
   const dias: (number | null)[] = []
   for (let i = 0; i < primeiroDia; i++) dias.push(null)
@@ -235,18 +246,18 @@ function selecionarDia(dia: number, mes: number, ano: number): void {
   // 1º clique ou reiniciando
   if (!dataInicio.value || (dataInicio.value && dataFim.value)) {
     dataInicio.value = data
-    dataFim.value    = null
-    hoverDate.value  = null
+    dataFim.value = null
+    hoverDate.value = null
     return
   }
 
   // 2º clique: define o fim garantindo início < fim
   let inicio = dataInicio.value
-  let fim    = data
+  let fim = data
 
   if (data < dataInicio.value) {
     inicio = data
-    fim    = dataInicio.value
+    fim = dataInicio.value
   }
 
   // Verifica conflito com períodos bloqueados
@@ -254,17 +265,17 @@ function selecionarDia(dia: number, mes: number, ano: number): void {
     avisoConflito.value = true
     // Reinicia a seleção para o dia clicado como novo início
     dataInicio.value = data
-    dataFim.value    = null
-    hoverDate.value  = null
+    dataFim.value = null
+    hoverDate.value = null
     return
   }
 
   dataInicio.value = inicio
-  dataFim.value    = fim
-  hoverDate.value  = null
+  dataFim.value = fim
+  hoverDate.value = null
 
   emit('updateDates', {
-    checkin:  formatarParaAPI(inicio),
+    checkin: formatarParaAPI(inicio),
     checkout: formatarParaAPI(fim),
   })
 }
@@ -278,9 +289,9 @@ function hoverDia(dia: number, mes: number, ano: number): void {
 function classeDia(dia: number | null, mes: number, ano: number): string[] {
   if (!dia) return ['vazio']
 
-  const data   = toDate(dia, mes, ano)
+  const data = toDate(dia, mes, ano)
   const inicio = dataInicio.value
-  const fim    = dataFim.value ?? hoverDate.value
+  const fim = dataFim.value ?? hoverDate.value
 
   const classes: string[] = []
 
@@ -290,22 +301,24 @@ function classeDia(dia: number | null, mes: number, ano: number): string[] {
     return classes
   }
 
-  const eInicio     = !!inicio && data.getTime() === inicio.getTime()
-  const eFim        = !!fim    && data.getTime() === fim.getTime()
+  const eInicio = !!inicio && data.getTime() === inicio.getTime()
+  const eFim = !!fim && data.getTime() === fim.getTime()
   const noIntervalo = !!inicio && !!fim && data > inicio && data < fim
 
-  if (eInicio)                                   classes.push('inicio')
-  if (eFim && dataFim.value)                     classes.push('fim')
+  if (eInicio) classes.push('inicio')
+  if (eFim && dataFim.value) classes.push('fim')
   if (eFim && !dataFim.value && hoverDate.value) classes.push('hover-fim')
-  if (noIntervalo)                               classes.push('no-intervalo')
-  if (eInicio || (eFim && dataFim.value))        classes.push('selecionado')
+  if (noIntervalo) classes.push('no-intervalo')
+  if (eInicio || (eFim && dataFim.value)) classes.push('selecionado')
 
   return classes
 }
 
 function formatarData(date: Date): string {
   return date.toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short', year: 'numeric',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
   })
 }
 
@@ -314,9 +327,9 @@ function formatarParaAPI(date: Date): string {
 }
 
 function limpar(): void {
-  dataInicio.value    = null
-  dataFim.value       = null
-  hoverDate.value     = null
+  dataInicio.value = null
+  dataFim.value = null
+  hoverDate.value = null
   avisoConflito.value = false
 }
 </script>
@@ -324,12 +337,14 @@ function limpar(): void {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 .calendario-wrapper {
   width: 100%;
   user-select: none;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .titulo {
@@ -344,7 +359,10 @@ function limpar(): void {
   font-weight: 500;
   margin: 0 0 24px;
 }
-.subtitulo span { color: #333; font-weight: 500; }
+.subtitulo span {
+  color: #333;
+  font-weight: 500;
+}
 
 .calendario-grid {
   display: grid;
@@ -368,14 +386,16 @@ function limpar(): void {
   margin-top: 4px;
   transition: background 0.15s;
 }
-.nav-btn:hover { background: #f5f5f5; }
+.nav-btn:hover {
+  background: #f5f5f5;
+}
 
 .mes-card {
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
 .mes-titulo {
@@ -417,7 +437,9 @@ function limpar(): void {
   color: #222;
   cursor: pointer;
   border-radius: 50%;
-  transition: background 0.1s, color 0.1s;
+  transition:
+    background 0.1s,
+    color 0.1s;
   z-index: 1;
 }
 
@@ -425,7 +447,9 @@ function limpar(): void {
   background: #f0f0f0;
 }
 
-.dia.vazio { cursor: default; }
+.dia.vazio {
+  cursor: default;
+}
 
 /* ── Dias indisponíveis ───────────────────────────────────────────────────── */
 .dia.indisponivel {
@@ -502,8 +526,12 @@ function limpar(): void {
   border-radius: 50%;
   display: inline-block;
 }
-.legenda-cor.disponivel    { background: #e8e8e8; }
-.legenda-cor.selecionado-ex { background: #111; }
+.legenda-cor.disponivel {
+  background: #e8e8e8;
+}
+.legenda-cor.selecionado-ex {
+  background: #111;
+}
 .legenda-cor.indisponivel-ex {
   background: #fff;
   border: 1px solid #ddd;
@@ -566,7 +594,9 @@ function limpar(): void {
   color: #666;
   transition: background 0.15s;
 }
-.btn-limpar:hover { background: #eee; }
+.btn-limpar:hover {
+  background: #eee;
+}
 
 /* ── Aviso de conflito ────────────────────────────────────────────────────── */
 .aviso-conflito {

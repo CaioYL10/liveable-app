@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { PhCaretLeft, PhWifiHigh, PhMonitor, PhSidebar, PhCigarette, PhSnowflake, PhWashingMachine, PhHardDrive } from "@phosphor-icons/vue";
-import { ref, onMounted } from "vue";
+import {
+  PhCaretLeft,
+  PhWifiHigh,
+  PhMonitor,
+  PhSidebar,
+  PhCigarette,
+  PhSnowflake,
+  PhWashingMachine,
+  PhHardDrive,
+} from '@phosphor-icons/vue'
+import { ref, onMounted } from 'vue'
 import { exibirConfirm } from '@/modules/properties/composables/useConfirmSolicitation'
-import TheCalendary from "@/shared/components/TheCalendary.vue";
+import TheCalendary from '@/shared/components/TheCalendary.vue'
 import { useReservas } from '@/modules/properties/composables/useReservas'
 import { useRoute } from 'vue-router'
 
-// ─── Pega o ID da propriedade direto da rota /property-details/:id ────────────
+// Pega o ID da propriedade direto da rota /property-details/:id
 const route = useRoute()
 const propertyId = Number(route.params.id)
 
-// ─── Reservas / períodos bloqueados ───────────────────────────────────────────
+// Reservas / períodos bloqueados
 const { periodosBloqueados, carregando, erro, buscarReservas } = useReservas()
 
 onMounted(() => {
@@ -21,23 +30,23 @@ onMounted(() => {
   buscarReservas(propertyId)
 })
 
-// ─── Datas selecionadas no calendário ─────────────────────────────────────────
-const checkin  = ref<string | null>(null)
+// Datas selecionadas no calendário
+const checkin = ref<string | null>(null)
 const checkout = ref<string | null>(null)
 
 function handleDatas(datas: { checkin: string; checkout: string }) {
-  checkin.value  = datas.checkin
+  checkin.value = datas.checkin
   checkout.value = datas.checkout
 }
 
-// ─── Outros campos do formulário ──────────────────────────────────────────────
+// Outros campos do formulário
 const numPersons = ref<number | null>(null)
-const details    = ref<string>('')
-const has_pet    = ref<boolean | undefined>(undefined)
+const details = ref<string>('')
+const has_pet = ref<boolean | undefined>(undefined)
 
-// ─── Envio da reserva ─────────────────────────────────────────────────────────
-const enviando      = ref(false)
-const erroReserva   = ref<string | null>(null)
+// Envio da reserva
+const enviando = ref(false)
+const erroReserva = ref<string | null>(null)
 const sucessoReserva = ref(false)
 
 async function reservar() {
@@ -46,8 +55,8 @@ async function reservar() {
     return
   }
 
-  enviando.value     = true
-  erroReserva.value  = null
+  enviando.value = true
+  erroReserva.value = null
   sucessoReserva.value = false
 
   try {
@@ -55,14 +64,14 @@ async function reservar() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
-        checkin:      checkin.value,
-        checkout:     checkout.value,
+        checkin: checkin.value,
+        checkout: checkout.value,
         guests_count: numPersons.value,
-        has_pet:      has_pet.value,
-        details:      details.value,
+        has_pet: has_pet.value,
+        details: details.value,
       }),
     })
 
@@ -74,7 +83,6 @@ async function reservar() {
 
     sucessoReserva.value = true
     console.log('Reserva criada:', data)
-
   } catch (e: any) {
     erroReserva.value = e.message ?? 'Erro ao confirmar reserva.'
     console.error('[reservar]', e)
@@ -86,7 +94,6 @@ async function reservar() {
 
 <template>
   <div class="all">
-
     <!-- Cabeçalho -->
     <div class="voltar" @click="exibirConfirm()">
       <PhCaretLeft :size="32" />
@@ -97,15 +104,11 @@ async function reservar() {
     </div>
 
     <!-- Calendário -->
-    <div style="width: 100%;">
+    <div style="width: 100%">
       <p v-if="carregando">Carregando disponibilidade...</p>
-      <p v-else-if="erro" style="color: red;">{{ erro }}</p>
+      <p v-else-if="erro" style="color: red">{{ erro }}</p>
 
-      <TheCalendary
-        v-else
-        :periodosBloqueados="periodosBloqueados"
-        @updateDates="handleDatas"
-      />
+      <TheCalendary v-else :periodosBloqueados="periodosBloqueados" @updateDates="handleDatas" />
     </div>
 
     <!-- Mais detalhes / comodidades -->
@@ -162,15 +165,12 @@ async function reservar() {
       </div>
     </div>
 
-    <!-- Feedback de erro na reserva -->
     <p v-if="erroReserva" class="aviso-erro">⚠️ {{ erroReserva }}</p>
     <p v-if="sucessoReserva" class="aviso-sucesso">✅ Reserva confirmada com sucesso!</p>
 
-    <!-- Botão confirmar -->
     <button class="confirm-button" @click="reservar" :disabled="enviando">
       {{ enviando ? 'Enviando...' : 'Confirmar' }}
     </button>
-
   </div>
 </template>
 
@@ -192,7 +192,7 @@ async function reservar() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   gap: 3rem;
   box-shadow: var(--shadow-md);
   color: var(--color-black-text);
@@ -344,11 +344,15 @@ async function reservar() {
 }
 
 /* Globais */
-button, input, textarea {
-  font-family: "Poppins", sans-serif;
+button,
+input,
+textarea {
+  font-family: 'Poppins', sans-serif;
 }
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 
 .title-principal {
   font-size: 1.2rem;

@@ -44,7 +44,7 @@ class PropertyController extends Controller
             'wifi'            => 'boolean',
             'tv'              => 'boolean',
             'cooler'          => 'boolean',
-            'air_conditioning'=> 'boolean',
+            'air_conditioning' => 'boolean',
             'washer'          => 'boolean',
             'microwave'       => 'boolean',
             'pricePerDay'     => 'required|integer',
@@ -58,9 +58,20 @@ class PropertyController extends Controller
         }
 
         $property = Auth::user()->property()->create($request->only([
-            'local', 'type', 'beds_qtd', 'toilette', 'area',
-            'property_title', 'wifi', 'tv', 'cooler', 'air_conditioning',
-            'washer', 'microwave', 'pricePerDay', 'status',
+            'local',
+            'type',
+            'beds_qtd',
+            'toilette',
+            'area',
+            'property_title',
+            'wifi',
+            'tv',
+            'cooler',
+            'air_conditioning',
+            'washer',
+            'microwave',
+            'pricePerDay',
+            'status',
         ]));
 
         if ($request->hasFile('images')) {
@@ -124,10 +135,21 @@ class PropertyController extends Controller
         }
 
         $property->update($request->only([
-            'property_title', 'local', 'area', 'type',
-            'beds_qtd', 'toilette',
-            'wifi', 'tv', 'cooler', 'air_conditioning', 'washer', 'microwave',
-            'pricePerDay', 'pricePerWeek', 'pricePerMonth',
+            'property_title',
+            'local',
+            'area',
+            'type',
+            'beds_qtd',
+            'toilette',
+            'wifi',
+            'tv',
+            'cooler',
+            'air_conditioning',
+            'washer',
+            'microwave',
+            'pricePerDay',
+            'pricePerWeek',
+            'pricePerMonth',
         ]));
 
         return response()->json([

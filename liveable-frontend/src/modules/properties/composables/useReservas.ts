@@ -1,4 +1,3 @@
-// useReservas.ts
 import { ref } from 'vue'
 
 export interface PeriodoBloqueado {
@@ -20,7 +19,7 @@ export function useReservas() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // ← autenticação obrigatória (sua rota tem auth:sanctum)
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
 
@@ -29,11 +28,9 @@ export function useReservas() {
       const data = await response.json()
 
       periodosBloqueados.value = data.map((reserva: any) => ({
-        // Corta o "T00:00:00.000000Z" — pega só "2026-06-10"
-        checkin:  reserva.checkin.split('T')[0],
+        checkin: reserva.checkin.split('T')[0],
         checkout: reserva.checkout.split('T')[0],
       }))
-
     } catch (e: any) {
       erro.value = e.message ?? 'Erro desconhecido'
       console.error('[useReservas]', e)

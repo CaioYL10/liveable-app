@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import {
-  PhCaretLeft, PhPencilSimpleLine,
-  PhHouse, PhBuildingApartment, PhFarm,
-  PhBed, PhBathtub, PhDresser,
-  PhWifiHigh, PhMonitor, PhSidebar, PhCigarette,
-  PhSnowflake, PhWashingMachine, PhHardDrive,
-} from "@phosphor-icons/vue"
-import { ref, watch } from "vue"
+  PhCaretLeft,
+  PhPencilSimpleLine,
+  PhHouse,
+  PhBuildingApartment,
+  PhFarm,
+  PhBed,
+  PhBathtub,
+  PhDresser,
+  PhWifiHigh,
+  PhMonitor,
+  PhSidebar,
+  PhCigarette,
+  PhSnowflake,
+  PhWashingMachine,
+  PhHardDrive,
+} from '@phosphor-icons/vue'
+import { ref, watch } from 'vue'
 
 // ── Props / emits ──────────────────────────────────────
 const props = defineProps<{
@@ -20,9 +30,9 @@ const emit = defineEmits<{
 }>()
 
 // ── Estado do formulário ───────────────────────────────
-const salvando  = ref(false)
-const erro      = ref<string | null>(null)
-const sucesso   = ref(false)
+const salvando = ref(false)
+const erro = ref<string | null>(null)
+const sucesso = ref(false)
 
 const form = ref({
   property_title: '',
@@ -43,54 +53,55 @@ const form = ref({
   pricePerMonth: '',
 })
 
-const tiposAtivos = ref<string[]>([])   // preços ativos
-const tipoProp    = ref<string | null>(null)
+const tiposAtivos = ref<string[]>([]) 
+const tipoProp = ref<string | null>(null)
 
-// Carrega os dados da propriedade quando o drawer abre
-watch(() => props.open, async (aberto) => {
-  if (!aberto) return
-  erro.value    = null
-  sucesso.value = false
-  try {
-    const res  = await fetch(`http://127.0.0.1:8000/api/property/${props.propertyId}`, {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-    const data = await res.json()
-    const p    = data.Propriedade
+watch(
+  () => props.open,
+  async (aberto) => {
+    if (!aberto) return
+    erro.value = null
+    sucesso.value = false
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/property/${props.propertyId}`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      const data = await res.json()
+      const p = data.Propriedade
 
-    form.value = {
-      property_title: p.property_title ?? '',
-      local:          p.local          ?? '',
-      area:           p.area           ?? '',
-      type:           p.type           ?? '',
-      beds_qtd:       p.beds_qtd       ?? 1,
-      toilette:       p.toilette       ?? 1,
-      dresser:        1,
-      wifi:           !!p.wifi,
-      tv:             !!p.tv,
-      cooler:         !!p.cooler,
-      air_conditioning: !!p.air_conditioning,
-      washer:         !!p.washer,
-      microwave:      !!p.microwave,
-      pricePerDay:    p.pricePerDay    ?? '',
-      pricePerWeek:   p.pricePerWeek   ?? '',
-      pricePerMonth:  p.pricePerMonth  ?? '',
+      form.value = {
+        property_title: p.property_title ?? '',
+        local: p.local ?? '',
+        area: p.area ?? '',
+        type: p.type ?? '',
+        beds_qtd: p.beds_qtd ?? 1,
+        toilette: p.toilette ?? 1,
+        dresser: 1,
+        wifi: !!p.wifi,
+        tv: !!p.tv,
+        cooler: !!p.cooler,
+        air_conditioning: !!p.air_conditioning,
+        washer: !!p.washer,
+        microwave: !!p.microwave,
+        pricePerDay: p.pricePerDay ?? '',
+        pricePerWeek: p.pricePerWeek ?? '',
+        pricePerMonth: p.pricePerMonth ?? '',
+      }
+
+      tipoProp.value = p.type ?? null
+
+      tiposAtivos.value = []
+      if (p.pricePerDay) tiposAtivos.value.push('dia')
+      if (p.pricePerWeek) tiposAtivos.value.push('semana')
+      if (p.pricePerMonth) tiposAtivos.value.push('mes')
+    } catch (e) {
+      console.error('[TheEditProperty] carregar', e)
     }
-
-    tipoProp.value = p.type ?? null
-
-    tiposAtivos.value = []
-    if (p.pricePerDay)   tiposAtivos.value.push('dia')
-    if (p.pricePerWeek)  tiposAtivos.value.push('semana')
-    if (p.pricePerMonth) tiposAtivos.value.push('mes')
-
-  } catch (e) {
-    console.error('[TheEditProperty] carregar', e)
-  }
-})
+  },
+)
 
 // ── Helpers ────────────────────────────────────────────
 function toggleTipo(tipo: string) {
@@ -100,7 +111,7 @@ function toggleTipo(tipo: string) {
 
 function togglePreco(t: string) {
   if (tiposAtivos.value.includes(t)) {
-    tiposAtivos.value = tiposAtivos.value.filter(x => x !== t)
+    tiposAtivos.value = tiposAtivos.value.filter((x) => x !== t)
   } else {
     tiposAtivos.value.push(t)
   }
@@ -117,35 +128,35 @@ function dec(campo: 'beds_qtd' | 'toilette' | 'dresser') {
 // ── Salvar ─────────────────────────────────────────────
 async function salvar() {
   salvando.value = true
-  erro.value     = null
-  sucesso.value  = false
+  erro.value = null
+  sucesso.value = false
 
   const body: Record<string, any> = {
-    property_title:   form.value.property_title,
-    local:            form.value.local,
-    area:             Number(form.value.area),
-    type:             form.value.type,
-    beds_qtd:         form.value.beds_qtd,
-    toilette:         form.value.toilette,
-    wifi:             form.value.wifi,
-    tv:               form.value.tv,
-    cooler:           form.value.cooler,
+    property_title: form.value.property_title,
+    local: form.value.local,
+    area: Number(form.value.area),
+    type: form.value.type,
+    beds_qtd: form.value.beds_qtd,
+    toilette: form.value.toilette,
+    wifi: form.value.wifi,
+    tv: form.value.tv,
+    cooler: form.value.cooler,
     air_conditioning: form.value.air_conditioning,
-    washer:           form.value.washer,
-    microwave:        form.value.microwave,
+    washer: form.value.washer,
+    microwave: form.value.microwave,
   }
 
-  if (tiposAtivos.value.includes('dia'))    body.pricePerDay   = Number(form.value.pricePerDay)
-  if (tiposAtivos.value.includes('semana')) body.pricePerWeek  = Number(form.value.pricePerWeek)
-  if (tiposAtivos.value.includes('mes'))    body.pricePerMonth = Number(form.value.pricePerMonth)
+  if (tiposAtivos.value.includes('dia')) body.pricePerDay = Number(form.value.pricePerDay)
+  if (tiposAtivos.value.includes('semana')) body.pricePerWeek = Number(form.value.pricePerWeek)
+  if (tiposAtivos.value.includes('mes')) body.pricePerMonth = Number(form.value.pricePerMonth)
 
   try {
     const res = await fetch(`http://127.0.0.1:8000/api/property/update/${props.propertyId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Accept: 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(body),
     })
@@ -159,7 +170,6 @@ async function salvar() {
       sucesso.value = false
       emit('close')
     }, 1600)
-
   } catch (e: any) {
     erro.value = e.message ?? 'Erro ao salvar.'
   } finally {
@@ -169,15 +179,12 @@ async function salvar() {
 </script>
 
 <template>
-  <!-- Overlay -->
   <Transition name="overlay">
     <div v-if="open" class="edit-overlay" @click.self="emit('close')" />
   </Transition>
 
-  <!-- Drawer -->
   <Transition name="drawer">
     <div v-if="open" class="all">
-
       <!-- Cabeçalho -->
       <div class="voltar" @click="emit('close')">
         <PhCaretLeft :size="32" />
@@ -330,26 +337,56 @@ async function salvar() {
         </div>
         <div class="mais-detalhes-options">
           <div class="esquerda">
-            <label><input type="checkbox" v-model="form.wifi" /><PhWifiHigh class="mais-detalhes-icons" /> Wi-fi</label>
-            <label><input type="checkbox" v-model="form.tv" /><PhMonitor class="mais-detalhes-icons" /> TV</label>
-            <label><input type="checkbox" v-model="form.cooler" /><PhSidebar class="mais-detalhes-icons" /> Refrigerador</label>
-            <label><input type="checkbox" /><PhCigarette class="mais-detalhes-icons" /> Det. fumaça</label>
+            <label
+              ><input type="checkbox" v-model="form.wifi" /><PhWifiHigh
+                class="mais-detalhes-icons"
+              />
+              Wi-fi</label
+            >
+            <label
+              ><input type="checkbox" v-model="form.tv" /><PhMonitor class="mais-detalhes-icons" />
+              TV</label
+            >
+            <label
+              ><input type="checkbox" v-model="form.cooler" /><PhSidebar
+                class="mais-detalhes-icons"
+              />
+              Refrigerador</label
+            >
+            <label
+              ><input type="checkbox" /><PhCigarette class="mais-detalhes-icons" /> Det.
+              fumaça</label
+            >
           </div>
           <div class="direita">
-            <label><input type="checkbox" v-model="form.air_conditioning" /><PhSnowflake class="mais-detalhes-icons" /> Ar condicionado</label>
-            <label><input type="checkbox" v-model="form.washer" /><PhWashingMachine class="mais-detalhes-icons" /> Máq. de lavar</label>
-            <label><input type="checkbox" v-model="form.microwave" /><PhHardDrive class="mais-detalhes-icons" /> Micro-ondas</label>
+            <label
+              ><input type="checkbox" v-model="form.air_conditioning" /><PhSnowflake
+                class="mais-detalhes-icons"
+              />
+              Ar condicionado</label
+            >
+            <label
+              ><input type="checkbox" v-model="form.washer" /><PhWashingMachine
+                class="mais-detalhes-icons"
+              />
+              Máq. de lavar</label
+            >
+            <label
+              ><input type="checkbox" v-model="form.microwave" /><PhHardDrive
+                class="mais-detalhes-icons"
+              />
+              Micro-ondas</label
+            >
           </div>
         </div>
       </div>
 
-      <p v-if="erro"    class="aviso aviso--erro">⚠️ {{ erro }}</p>
+      <p v-if="erro" class="aviso aviso--erro">⚠️ {{ erro }}</p>
       <p v-if="sucesso" class="aviso aviso--ok">✅ Propriedade atualizada!</p>
 
       <button class="confirm-button" @click="salvar" :disabled="salvando">
         {{ salvando ? 'Salvando...' : 'Confirmar' }}
       </button>
-
     </div>
   </Transition>
 </template>
@@ -357,18 +394,22 @@ async function salvar() {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* ── Overlay ── */
 .edit-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 998;
 }
 
-.overlay-enter-active, .overlay-leave-active { transition: opacity 0.28s ease; }
-.overlay-enter-from,  .overlay-leave-to      { opacity: 0; }
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.28s ease;
+}
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}
 
-/* ── Drawer ── */
 .all {
   position: fixed;
   z-index: 999;
@@ -387,11 +428,17 @@ async function salvar() {
   gap: 3rem;
   box-shadow: var(--shadow-md);
   color: var(--color-black-text);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
-.drawer-enter-active, .drawer-leave-active { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-.drawer-enter-from,  .drawer-leave-to      { transform: translateX(100%); }
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.drawer-enter-from,
+.drawer-leave-to {
+  transform: translateX(100%);
+}
 
 /* ── Cabeçalho ── */
 .voltar {
@@ -412,20 +459,34 @@ async function salvar() {
   align-items: center;
 }
 
-.editor-icon { width: clamp(35px, 1.5vw, 40px); }
+.editor-icon {
+  width: clamp(35px, 1.5vw, 40px);
+}
 
 /* ── Valores ── */
-.valores, .categoria, .info-gerais, .detalhes, .mais-detalhes {
+.valores,
+.categoria,
+.info-gerais,
+.detalhes,
+.mais-detalhes {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.valores-title, .categoria-title, .info-gerais-title,
-.detalhes-title, .mais-detalhes-title { display: flex; flex-direction: column; }
+.valores-title,
+.categoria-title,
+.info-gerais-title,
+.detalhes-title,
+.mais-detalhes-title {
+  display: flex;
+  flex-direction: column;
+}
 
-.valores-cards, .categoria-cards, .detalhes-cards {
+.valores-cards,
+.categoria-cards,
+.detalhes-cards {
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -468,14 +529,17 @@ async function salvar() {
   border: none;
   background: transparent;
   text-align: center;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-black-text);
   outline: none;
 }
 
-.price-placeholder { opacity: 0.35; font-size: 0.85rem; }
+.price-placeholder {
+  opacity: 0.35;
+  font-size: 0.85rem;
+}
 
 /* ── Categoria ── */
 .categoria-card {
@@ -499,7 +563,9 @@ async function salvar() {
   align-items: center;
 }
 
-.categoria-icon { width: clamp(20px, 2.5rem, 40px); }
+.categoria-icon {
+  width: clamp(20px, 2.5rem, 40px);
+}
 
 /* ── Info gerais ── */
 .info-gerais-inputs {
@@ -523,13 +589,13 @@ async function salvar() {
 
 .info-gerais-input input {
   flex: 1;
-  min-width: 0;          /* impede o input de estourar o flex */
+  min-width: 0;
   height: 52px;
   border: none;
   background: transparent;
   box-sizing: border-box;
   padding: 10px 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.95rem;
   color: var(--color-black-text);
   outline: none;
@@ -580,13 +646,15 @@ async function salvar() {
   justify-content: space-around;
 }
 
-.esquerda, .direita {
+.esquerda,
+.direita {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.esquerda label, .direita label {
+.esquerda label,
+.direita label {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -594,16 +662,18 @@ async function salvar() {
   cursor: pointer;
 }
 
-.esquerda label input, .direita label input {
+.esquerda label input,
+.direita label input {
   accent-color: #1a2fa8;
   width: 16px;
   height: 16px;
   cursor: pointer;
 }
 
-.mais-detalhes-icons { width: clamp(28px, 1.5vw, 36px); }
+.mais-detalhes-icons {
+  width: clamp(28px, 1.5vw, 36px);
+}
 
-/* ── Avisos ── */
 .aviso {
   width: 100%;
   border-radius: 10px;
@@ -613,10 +683,17 @@ async function salvar() {
   box-sizing: border-box;
 }
 
-.aviso--erro { background: #fff8e1; border: 1px solid #ffe082; color: #7a5800; }
-.aviso--ok   { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+.aviso--erro {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #7a5800;
+}
+.aviso--ok {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
 
-/* ── Botão ── */
 .confirm-button {
   width: 100%;
   padding: 0.9rem 0;
@@ -626,14 +703,25 @@ async function salvar() {
   border-radius: 15px;
   cursor: pointer;
   font-weight: 600;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   transition: opacity 0.2s;
 }
 
-.confirm-button:disabled { opacity: 0.6; cursor: not-allowed; }
+.confirm-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-p { margin: 0; }
-.title-principal { font-size: 1.2rem; font-weight: 650; }
-.subtitulo       { opacity: 0.6; font-weight: 500; }
+p {
+  margin: 0;
+}
+.title-principal {
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+.subtitulo {
+  opacity: 0.6;
+  font-weight: 500;
+}
 </style>

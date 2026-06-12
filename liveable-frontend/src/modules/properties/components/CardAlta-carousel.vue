@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref } from 'vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -15,10 +15,7 @@ const nextButton = ref(null)
 
 const onSwiper = (swiper: any) => {
   setTimeout(() => {
-    if (
-      swiper.params.navigation &&
-      typeof swiper.params.navigation !== 'boolean'
-    ) {
+    if (swiper.params.navigation && typeof swiper.params.navigation !== 'boolean') {
       swiper.params.navigation.prevEl = prevButton.value
       swiper.params.navigation.nextEl = nextButton.value
     }
@@ -100,30 +97,26 @@ onMounted(async () => {
         '1920': {
           slidesPerView: 3.5,
           spaceBetween: 40,
-        }
+        },
       }"
       @swiper="onSwiper"
       class="mySwiper"
-    >per="onSwiper"
-          class="mySwiper"
-        >
+      >per="onSwiper" class="mySwiper" >
       <SwiperSlide v-for="casa in properties" :key="casa.id">
         <CardEmAlta :casa="casa" />
       </SwiperSlide>
     </Swiper>
-
   </div>
 </template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
 .carousel-wrapper {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .escrita-cima {
@@ -154,10 +147,10 @@ onMounted(async () => {
 }
 
 p {
-    position: relative;
-    display: inline-block;
-    font-size: 1.3rem;
-    font-weight: 600;
+  position: relative;
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 p span {

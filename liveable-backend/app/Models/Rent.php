@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Rent extends Model
 {
     protected $fillable = [
-        'checkin', 'checkout', 'has_pet', 'guests_count',
-        'user_id', 'property_id', 'details', 'confirmed',
+        'checkin',
+        'checkout',
+        'has_pet',
+        'guests_count',
+        'user_id',
+        'property_id',
+        'details',
+        'confirmed',
     ];
 
     // Relacionamentos — adicione estes dois métodos:

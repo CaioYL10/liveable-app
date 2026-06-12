@@ -21,9 +21,9 @@ onMounted(async () => {
 
     const res = await fetch('http://127.0.0.1:8000/api/my-properties', {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-      }
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
     })
 
     if (!res.ok) throw new Error()
@@ -44,12 +44,7 @@ onMounted(async () => {
     <p v-else-if="properties.length === 0" class="vazio">
       Você ainda não tem nenhuma propriedade cadastrada.
     </p>
-    <CardCasa
-      v-else
-      v-for="property in properties"
-      :key="property.id"
-      :casa="property"
-    />
+    <CardCasa v-else v-for="property in properties" :key="property.id" :casa="property" />
   </div>
 </template>
 
@@ -71,12 +66,13 @@ onMounted(async () => {
   }
 }
 
-.vazio, .loading {
+.vazio,
+.loading {
   text-align: center;
   opacity: 0.5;
   font-size: 14px;
   grid-column: 1 / -1;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin-top: 4rem;
 }
 </style>

@@ -13,12 +13,12 @@ class AdminSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@liveable.com'],
             [
-                'name'             => 'Admin',
-                'last_name'        => 'Liveable',
-                'email'            => 'admin@liveable.com',
-                'password'         => Hash::make('admin123'),
-                'role'             => 'admin',
-                'share_socials'    => false,
+                'name' => 'Admin',
+                'last_name' => 'Liveable',
+                'email' => 'admin@liveable.com',
+                'password' => Hash::make('admin123'),
+                'role' => 'admin',
+                'share_socials' => false,
             ]
         );
     }

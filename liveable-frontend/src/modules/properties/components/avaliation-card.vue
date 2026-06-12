@@ -12,7 +12,9 @@
       <div class="review-card__rating">
         <span class="review-card__rating-value">{{ Number(review.rating).toFixed(1) }}</span>
         <svg class="review-card__star-icon" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 1l1.85 3.75L14 5.5l-3 2.92.71 4.12L8 10.5l-3.71 1.95.71-4.12-3-2.92 4.15-.75z"/>
+          <path
+            d="M8 1l1.85 3.75L14 5.5l-3 2.92.71 4.12L8 10.5l-3.71 1.95.71-4.12-3-2.92 4.15-.75z"
+          />
         </svg>
       </div>
     </div>
@@ -26,7 +28,9 @@
         viewBox="0 0 16 16"
         fill="currentColor"
       >
-        <path d="M8 1l1.85 3.75L14 5.5l-3 2.92.71 4.12L8 10.5l-3.71 1.95.71-4.12-3-2.92 4.15-.75z"/>
+        <path
+          d="M8 1l1.85 3.75L14 5.5l-3 2.92.71 4.12L8 10.5l-3.71 1.95.71-4.12-3-2.92 4.15-.75z"
+        />
       </svg>
     </div>
 
@@ -40,7 +44,7 @@
 
     <div v-if="review.propertyName" class="review-card__property">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M8 1.5L1.5 7v7h4v-4h5v4h4V7z"/>
+        <path d="M8 1.5L1.5 7v7h4v-4h5v4h4V7z" />
       </svg>
       <span>{{ review.propertyName }}</span>
     </div>
@@ -55,16 +59,6 @@ export default {
     review: {
       type: Object,
       required: true,
-      // Shape esperado (vindo da API):
-      // {
-      //   id: Number,
-      //   author: String,
-      //   avatarUrl: String (optional),
-      //   date: String,       <- 'YYYY-MM-DD'
-      //   rating: Number,     <- 1–5
-      //   text: String,       <- campo 'comment' mapeado no controller
-      //   propertyName: String (optional)
-      // }
     },
   },
 
@@ -80,7 +74,7 @@ export default {
       if (!this.review.author) return '?'
       return this.review.author
         .split(' ')
-        .map(n => n[0])
+        .map((n) => n[0])
         .slice(0, 2)
         .join('')
         .toUpperCase()

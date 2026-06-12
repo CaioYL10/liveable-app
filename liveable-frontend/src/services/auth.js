@@ -21,23 +21,23 @@ export function isAuthenticated() {
 }
 
 export async function getUser() {
-  const token = getToken();
+  const token = getToken()
 
   if (!token) {
-    throw new Error("Token não encontrado");
+    throw new Error('Token não encontrado')
   }
 
-  const response = await fetch("http://127.0.0.1:8000/api/user", {
-    method: "GET",
+  const response = await fetch('http://127.0.0.1:8000/api/user', {
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-  });
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
 
   if (!response.ok) {
-    throw new Error("Erro ao buscar usuário");
+    throw new Error('Erro ao buscar usuário')
   }
 
-  return await response.json();
+  return await response.json()
 }

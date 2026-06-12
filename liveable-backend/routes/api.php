@@ -34,34 +34,34 @@ Route::post('/webhooks/abacatepay', [PaymentController::class, 'webhook']);
 Route::middleware('auth:sanctum')->group(function () {
 
     // Properties
-    Route::post('/property/store',                        [PropertyController::class, 'store']);
-    Route::put('/property/update/{property}',             [PropertyController::class, 'update']);
-    Route::delete('/property/delete/{property}',          [PropertyController::class, 'destroy']);
-    Route::get('/my-properties',                          [PropertyController::class, 'myProperties']);
-    Route::patch('/property/{property}/toggle-enabled',   [PropertyController::class, 'toggleEnableProperty']);
+    Route::post('/property/store', [PropertyController::class, 'store']);
+    Route::put('/property/update/{property}', [PropertyController::class, 'update']);
+    Route::delete('/property/delete/{property}', [PropertyController::class, 'destroy']);
+    Route::get('/my-properties', [PropertyController::class, 'myProperties']);
+    Route::patch('/property/{property}/toggle-enabled', [PropertyController::class, 'toggleEnableProperty']);
 
     // Rents
-    Route::post('/properties/{property}/rent',            [PropertyRentController::class, 'store']);
-    Route::get('/properties/{property}/rent',             [PropertyRentController::class, 'index']);
-    Route::get('/my-properties/pending-rents',            [PropertyRentController::class, 'pendingRents']);
-    Route::patch('/rents/{rent}/status',                  [PropertyRentController::class, 'updateStatus']);
+    Route::post('/properties/{property}/rent', [PropertyRentController::class, 'store']);
+    Route::get('/properties/{property}/rent', [PropertyRentController::class, 'index']);
+    Route::get('/my-properties/pending-rents', [PropertyRentController::class, 'pendingRents']);
+    Route::patch('/rents/{rent}/status', [PropertyRentController::class, 'updateStatus']);
 
     // Likes
-    Route::post('/property/{property}/like',              [PropertyLikeController::class, 'toggleLike']);
+    Route::post('/property/{property}/like', [PropertyLikeController::class, 'toggleLike']);
 
     // Reviews
-    Route::post('/properties/{property}/reviews',         [PropertyReviewController::class, 'store']);
+    Route::post('/properties/{property}/reviews', [PropertyReviewController::class, 'store']);
 
     // Users
-    Route::put('/user',          [UserController::class, 'updateMe']);
-    Route::post('/user/photo',   [UserController::class, 'updatePhoto']);
-    Route::post('/user/banner',  [UserController::class, 'updateBanner']);
+    Route::put('/user', [UserController::class, 'updateMe']);
+    Route::post('/user/photo', [UserController::class, 'updatePhoto']);
+    Route::post('/user/banner', [UserController::class, 'updateBanner']);
 
     // Admin
     Route::prefix('admin')->group(function () {
-        Route::get('/stats',               [AdminController::class, 'stats']);
-        Route::get('/users',               [AdminController::class, 'listUsers']);
-        Route::post('/create-admin',       [AdminController::class, 'createAdmin']);
+        Route::get('/stats',[AdminController::class, 'stats']);
+        Route::get('/users',[AdminController::class, 'listUsers']);
+        Route::post('/create-admin',[AdminController::class, 'createAdmin']);
         Route::patch('/users/{user}/role', [AdminController::class, 'changeRole']);
     });
 
@@ -69,11 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/favorites', [PropertyLikeController::class, 'myLikes']);
 
     // Payments
-    Route::get('/payments/my',                   [PaymentController::class, 'myPayments']);
-    Route::get('/payments/{payment}/qrcode',     [PaymentController::class, 'getQrCode']);
-    Route::post('/payments/{payment}/check',     [PaymentController::class, 'checkStatus']);
-    Route::post('/payments/{payment}/simulate',  [PaymentController::class, 'simulate']);
+    Route::get('/payments/my',[PaymentController::class, 'myPayments']);
+    Route::get('/payments/{payment}/qrcode',[PaymentController::class, 'getQrCode']);
+    Route::post('/payments/{payment}/check',[PaymentController::class, 'checkStatus']);
+    Route::post('/payments/{payment}/simulate',[PaymentController::class, 'simulate']);
 
-    // Reservas ativas (pagas) — para ambos os lados
     Route::get('/rents/active', [PropertyRentController::class, 'activeRents']);
 });

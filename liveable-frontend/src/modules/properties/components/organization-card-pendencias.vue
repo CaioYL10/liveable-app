@@ -10,7 +10,7 @@ onMounted(async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/my-properties/pending-rents', {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
     if (!response.ok) throw new Error(`Erro ${response.status}`)
@@ -36,12 +36,12 @@ async function updateStatus(rentId: number, confirmed: boolean) {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({ confirmed }),
     })
     if (!response.ok) throw new Error(`Erro ${response.status}`)
-    reservas.value = reservas.value.filter(r => r.rent_id !== rentId)
+    reservas.value = reservas.value.filter((r) => r.rent_id !== rentId)
   } catch (e: any) {
     console.error('[updateStatus]', e)
   }
@@ -50,7 +50,6 @@ async function updateStatus(rentId: number, confirmed: boolean) {
 
 <template>
   <div class="pendentes-wrapper">
-
     <p v-if="carregando" class="estado">Carregando...</p>
     <p v-else-if="erro" class="estado erro">{{ erro }}</p>
     <p v-else-if="reservas.length === 0" class="estado">Nenhuma solicitação pendente.</p>
@@ -71,7 +70,7 @@ async function updateStatus(rentId: number, confirmed: boolean) {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 .pendentes-wrapper {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .titulo {

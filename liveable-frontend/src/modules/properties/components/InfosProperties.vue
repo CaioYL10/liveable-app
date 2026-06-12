@@ -1,40 +1,37 @@
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { onMounted } from "vue";
-  import api from '../services/api.ts'
-  import { useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
+import api from '../services/api.ts'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const propertyId = route.params.id // ou o nome do param que você definiu na rota
+const propertyId = route.params.id
 
-  interface Property {
-    local: string
-    pricePerDay: number
-    type: string
-    rooms: number
+interface Property {
+  local: string
+  pricePerDay: number
+  type: string
+  rooms: number
+}
+
+const property = ref<Property | null>(null)
+
+onMounted(async () => {
+  try {
+    const response = await api.get(`/property/${propertyId}`)
+
+    property.value = response.data.Propriedade
+
+    console.log(property.value)
+  } catch (error) {
+    console.error(error)
   }
-
-  const property = ref<Property | null>(null)
-
-  onMounted(async () => {
-    try {
-      const response = await api.get(`/property/${propertyId}`)
-
-      property.value = response.data.Propriedade
-
-      console.log(property.value)
-
-    } catch (error) {
-        console.error(error)
-    }
-  })
-
+})
 </script>
 
 <template>
   <div class="container-barra">
     <div class="barra-pesquisa">
-
       <div class="card-opcao">
         <i class="ICONE LUPA"></i>
 
@@ -83,7 +80,6 @@ const propertyId = route.params.id // ou o nome do param que você definiu na ro
           <span class="noite">p/noite</span>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -102,12 +98,7 @@ const propertyId = route.params.id // ou o nome do param que você definiu na ro
 .barra-pesquisa {
   display: flex;
   align-items: center;
-  background: linear-gradient(
-    160deg,
-    #ffffff 0%,
-    #f7f7fa 60%,
-    #f2f2f6 100%
-  );
+  background: linear-gradient(160deg, #ffffff 0%, #f7f7fa 60%, #f2f2f6 100%);
 
   border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.95);
@@ -202,13 +193,7 @@ const propertyId = route.params.id // ou o nome do param que você definiu na ro
 .linha-divisoria {
   width: 1px;
   height: 38px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #d4d4da 30%,
-    #d4d4da 70%,
-    transparent
-  );
+  background: linear-gradient(to bottom, transparent, #d4d4da 30%, #d4d4da 70%, transparent);
   flex-shrink: 0;
   margin: 0 2px;
 }

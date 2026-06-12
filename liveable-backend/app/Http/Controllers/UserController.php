@@ -104,8 +104,15 @@ class UserController extends Controller
         }
 
         $user->update($request->only([
-            'name', 'last_name', 'email', 'phone',
-            'bio', 'twitter', 'instagram', 'facebook', 'share_socials',
+            'name',
+            'last_name',
+            'email',
+            'phone',
+            'bio',
+            'twitter',
+            'instagram',
+            'facebook',
+            'share_socials',
         ]));
 
         return response()->json(['message' => 'Usuário atualizado'], 200);

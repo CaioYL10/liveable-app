@@ -6,18 +6,16 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const isAdmin = ref(false)
-const route   = useRoute()
+const route = useRoute()
 
-const mostrarPanel = computed(() =>
-  isAdmin.value && route.name === 'home'
-)
+const mostrarPanel = computed(() => isAdmin.value && route.name === 'home')
 
 onMounted(async () => {
   const token = localStorage.getItem('token')
   if (!token) return
   try {
-    const res  = await fetch('http://127.0.0.1:8000/api/user', {
-      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+    const res = await fetch('http://127.0.0.1:8000/api/user', {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
     })
     const data = await res.json()
     isAdmin.value = data.role === 'admin'
@@ -73,7 +71,6 @@ main {
 
 .admin-panel {
   width: 100%;
-    
 }
 
 .admin-divisor {
@@ -95,7 +92,7 @@ main {
 }
 
 .admin-divisor span {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   color: #1a2fa8;

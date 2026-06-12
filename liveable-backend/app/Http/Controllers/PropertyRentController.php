@@ -37,8 +37,8 @@ class PropertyRentController extends Controller
         $user = $request->user();
 
         $reservas = Rent::whereHas('property', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
+            $query->where('user_id', $user->id);
+        })
             ->where('confirmed', false)
             ->whereDoesntHave('payment', fn($q) => $q->where('status', 'pending_payment'))
             ->with([
@@ -73,7 +73,6 @@ class PropertyRentController extends Controller
 
     public function updateStatus(Request $request, Rent $rent)
     {
-        // Só o dono da propriedade pode aceitar/recusar
         if ($rent->property->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Não autorizado.'], 403);
         }
@@ -83,15 +82,13 @@ class PropertyRentController extends Controller
         ]);
 
         if (!$request->confirmed) {
-            // Recusar — deleta o registro
             $rent->delete();
             return response()->json(['message' => 'Reserva recusada e removida.']);
         }
 
-        // Aceitar — cria o payment aguardando pagamento (24h)
         $noites = Carbon::parse($rent->checkin)->diffInDays(Carbon::parse($rent->checkout));
         $noites = max(1, $noites);
-        $amount = $rent->property->pricePerDay * $noites * 100; // centavos
+        $amount = $rent->property->pricePerDay * $noites * 100;
 
         $payment = Payment::create([
             'rent_id'     => $rent->id,
@@ -108,16 +105,14 @@ class PropertyRentController extends Controller
         ]);
     }
 
-    // Reservas confirmadas (pagas) — para ambos os lados verem a contagem
     public function activeRents(Request $request)
     {
         $user = $request->user();
 
-        // Reservas onde o usuário é o solicitador OU dono da propriedade
         $rents = Rent::where('confirmed', true)
             ->where(function ($q) use ($user) {
                 $q->where('user_id', $user->id)
-                  ->orWhereHas('property', fn($q2) => $q2->where('user_id', $user->id));
+                    ->orWhereHas('property', fn($q2) => $q2->where('user_id', $user->id));
             })
             ->with([
                 'property:id,property_title,pricePerDay,user_id',

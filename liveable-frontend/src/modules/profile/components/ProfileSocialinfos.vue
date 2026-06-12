@@ -6,22 +6,22 @@ const BASE = 'http://127.0.0.1:8000/api'
 const compartilhar = ref(true)
 const links = ref({ twitter: '', instagram: '', facebook: '' })
 const salvando = ref(false)
-const sucesso  = ref(false)
-const erro     = ref<string | null>(null)
+const sucesso = ref(false)
+const erro = ref<string | null>(null)
 
 onMounted(async () => {
   try {
     const res = await fetch(`${BASE}/user`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Accept': 'application/json',
-      }
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Accept: 'application/json',
+      },
     })
     const data = await res.json()
-    links.value.twitter   = data.twitter   ?? ''
+    links.value.twitter = data.twitter ?? ''
     links.value.instagram = data.instagram ?? ''
-    links.value.facebook  = data.facebook  ?? ''
-    compartilhar.value    = data.share_socials ?? true
+    links.value.facebook = data.facebook ?? ''
+    compartilhar.value = data.share_socials ?? true
   } catch (e) {
     console.error('[ProfileSocialLinks]', e)
   }
@@ -29,17 +29,17 @@ onMounted(async () => {
 
 async function salvar() {
   salvando.value = true
-  sucesso.value  = false
-  erro.value     = null
+  sucesso.value = false
+  erro.value = null
   try {
     const res = await fetch(`${BASE}/user`, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
-      body: JSON.stringify({ ...links.value, share_socials: compartilhar.value })
+      body: JSON.stringify({ ...links.value, share_socials: compartilhar.value }),
     })
     if (!res.ok) {
       const err = await res.json()
@@ -101,7 +101,7 @@ const socials = [
       </div>
     </div>
 
-    <p v-if="erro"    class="profile-social__aviso profile-social__aviso--erro">⚠️ {{ erro }}</p>
+    <p v-if="erro" class="profile-social__aviso profile-social__aviso--erro">⚠️ {{ erro }}</p>
     <p v-if="sucesso" class="profile-social__aviso profile-social__aviso--ok">✅ Links salvos!</p>
 
     <button class="profile-social__btn" @click="salvar" :disabled="salvando">
@@ -117,10 +117,14 @@ const socials = [
   display: flex;
   flex-direction: column;
   gap: 16px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
-.profile-social__head { display: flex; flex-direction: column; gap: 8px; }
+.profile-social__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .profile-social__title {
   margin: 0;
@@ -136,7 +140,7 @@ const socials = [
   cursor: pointer;
 }
 
-.profile-social__toggle input[type="checkbox"] {
+.profile-social__toggle input[type='checkbox'] {
   accent-color: #1a2fa8;
   width: 16px;
   height: 16px;
@@ -148,7 +152,11 @@ const socials = [
   color: #6b7280;
 }
 
-.profile-social__fields { display: flex; flex-direction: column; gap: 10px; }
+.profile-social__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .profile-social__row {
   display: flex;
@@ -158,11 +166,13 @@ const socials = [
   border: 1.5px solid #e5e7eb;
   border-radius: 12px;
   padding: 0.65rem 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   transition: border-color 0.18s;
 }
 
-.profile-social__row:focus-within { border-color: #1a2fa8; }
+.profile-social__row:focus-within {
+  border-color: #1a2fa8;
+}
 
 .profile-social__icon {
   width: 18px;
@@ -173,7 +183,10 @@ const socials = [
   align-items: center;
 }
 
-.profile-social__icon :deep(svg) { width: 18px; height: 18px; }
+.profile-social__icon :deep(svg) {
+  width: 18px;
+  height: 18px;
+}
 
 .profile-social__input-wrap {
   display: flex;
@@ -194,14 +207,16 @@ const socials = [
   border: none;
   outline: none;
   background: transparent;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.88rem;
   color: var(--color-black-text, #1a1a2e);
   width: 100%;
   min-width: 0;
 }
 
-.profile-social__input::placeholder { color: #c0c0c0; }
+.profile-social__input::placeholder {
+  color: #c0c0c0;
+}
 
 .profile-social__aviso {
   margin: 0;
@@ -210,8 +225,16 @@ const socials = [
   padding: 8px 14px;
 }
 
-.profile-social__aviso--erro { background: #fff8e1; border: 1px solid #ffe082; color: #7a5800; }
-.profile-social__aviso--ok   { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+.profile-social__aviso--erro {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #7a5800;
+}
+.profile-social__aviso--ok {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
 
 .profile-social__btn {
   align-self: flex-start;
@@ -220,13 +243,18 @@ const socials = [
   border-radius: 12px;
   background: #1a2fa8;
   color: #fff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.18s;
 }
 
-.profile-social__btn:hover:not(:disabled) { background: #1527a0; }
-.profile-social__btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.profile-social__btn:hover:not(:disabled) {
+  background: #1527a0;
+}
+.profile-social__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 </style>

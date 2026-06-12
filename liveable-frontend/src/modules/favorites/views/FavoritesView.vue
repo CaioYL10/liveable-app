@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFavorites } from '../composables/useFavorites'
 import CardCasa from '@/modules/properties/components/CardCasa.vue'
-import { PhHeart } from "@phosphor-icons/vue"
+import { PhHeart } from '@phosphor-icons/vue'
 
 interface Property {
   id: number
@@ -13,9 +13,9 @@ interface Property {
   images: { url: string }[]
 }
 
-const router      = useRouter()
-const properties  = ref<Property[]>([])
-const carregando  = ref(true)
+const router = useRouter()
+const properties = ref<Property[]>([])
+const carregando = ref(true)
 const { carregar } = useFavorites()
 
 onMounted(async () => {
@@ -28,8 +28,8 @@ onMounted(async () => {
   try {
     const res = await fetch('http://127.0.0.1:8000/api/favorites', {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
       },
     })
     properties.value = await res.json()
@@ -44,7 +44,6 @@ onMounted(async () => {
 
 <template>
   <div class="favorites">
-
     <div class="favorites-header">
       <div class="escrita">
         <p class="title">Meus <span>Favoritos</span></p>
@@ -68,7 +67,6 @@ onMounted(async () => {
     <div v-else class="grid">
       <CardCasa v-for="p in properties" :key="p.id" :casa="p" />
     </div>
-
   </div>
 </template>
 
@@ -81,11 +79,10 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   padding: 2rem 0;
 }
 
-/* ── Header igual ao carrossel ── */
 .favorites-header {
   display: flex;
   justify-content: space-between;
@@ -182,7 +179,11 @@ p span {
   color: var(--color-black-text);
 }
 
-.vazio-sub { margin: 0; opacity: 0.55; font-size: 0.9rem; }
+.vazio-sub {
+  margin: 0;
+  opacity: 0.55;
+  font-size: 0.9rem;
+}
 
 .btn-explorar {
   margin-top: 8px;
@@ -191,16 +192,23 @@ p span {
   border: 1.5px solid #1a2fa8;
   background: transparent;
   color: #1a2fa8;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  transition:
+    background 0.18s,
+    color 0.18s;
 }
 
-.btn-explorar:hover { background: #1a2fa8; color: #fff; }
+.btn-explorar:hover {
+  background: #1a2fa8;
+  color: #fff;
+}
 
 @media (max-width: 768px) {
-  .grid { justify-content: center; }
+  .grid {
+    justify-content: center;
+  }
 }
 </style>

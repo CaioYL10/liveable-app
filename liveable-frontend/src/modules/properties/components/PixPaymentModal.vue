@@ -11,24 +11,24 @@ interface PaymentData {
 }
 
 const props = defineProps<{ payment: PaymentData }>()
-const emit  = defineEmits<{ close: []; paid: [] }>()
+const emit = defineEmits<{ close: []; paid: [] }>()
 
-const BASE    = 'http://127.0.0.1:8000/api'
-const token   = () => localStorage.getItem('token') ?? ''
-const headers = () => ({ 'Authorization': `Bearer ${token()}`, 'Accept': 'application/json' })
+const BASE = 'http://127.0.0.1:8000/api'
+const token = () => localStorage.getItem('token') ?? ''
+const headers = () => ({ Authorization: `Bearer ${token()}`, Accept: 'application/json' })
 
-const qrCode        = ref<string | null>(null)
-const brCode        = ref<string | null>(null)
-const carregando    = ref(true)
-const copiado       = ref(false)
-const statusPago    = ref(false)
+const qrCode = ref<string | null>(null)
+const brCode = ref<string | null>(null)
+const carregando = ref(true)
+const copiado = ref(false)
+const statusPago = ref(false)
 const statusExpired = ref(false)
-const erroQr        = ref<string | null>(null)
-const simulando     = ref(false)
+const erroQr = ref<string | null>(null)
+const simulando = ref(false)
 
 const tempoRestante = ref('')
 let countdownInterval: ReturnType<typeof setInterval> | null = null
-let pollInterval:     ReturnType<typeof setInterval> | null = null
+let pollInterval: ReturnType<typeof setInterval> | null = null
 
 function atualizarContagem() {
   const diff = new Date(props.payment.expires_at).getTime() - Date.now()
@@ -41,14 +41,16 @@ function atualizarContagem() {
   const h = Math.floor(diff / 3_600_000)
   const m = Math.floor((diff % 3_600_000) / 60_000)
   const s = Math.floor((diff % 60_000) / 1_000)
-  tempoRestante.value = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  tempoRestante.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
 async function carregarQrCode() {
   carregando.value = true
-  erroQr.value     = null
+  erroQr.value = null
   try {
-    const res  = await fetch(`${BASE}/payments/${props.payment.payment_id}/qrcode`, { headers: headers() })
+    const res = await fetch(`${BASE}/payments/${props.payment.payment_id}/qrcode`, {
+      headers: headers(),
+    })
     const data = await res.json()
     if (!res.ok) throw new Error(data.message ?? `Erro ${res.status}`)
     const base64 = data.br_code_base64 ?? ''
@@ -63,7 +65,7 @@ async function carregarQrCode() {
 
 async function verificarPagamento() {
   try {
-    const res  = await fetch(`${BASE}/payments/${props.payment.payment_id}/check`, {
+    const res = await fetch(`${BASE}/payments/${props.payment.payment_id}/check`, {
       method: 'POST',
       headers: headers(),
     })
@@ -84,7 +86,7 @@ async function verificarPagamento() {
 async function simularPagamento() {
   simulando.value = true
   try {
-    const res  = await fetch(`${BASE}/payments/${props.payment.payment_id}/simulate`, {
+    const res = await fetch(`${BASE}/payments/${props.payment.payment_id}/simulate`, {
       method: 'POST',
       headers: headers(),
     })
@@ -113,12 +115,13 @@ function copiarCodigo() {
 
 function limparIntervalos() {
   if (countdownInterval) clearInterval(countdownInterval)
-  if (pollInterval)      clearInterval(pollInterval)
+  if (pollInterval) clearInterval(pollInterval)
 }
 
 const valorFormatado = computed(() =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-    .format(props.payment.amount / 100)
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+    props.payment.amount / 100,
+  ),
 )
 
 function formatDate(d: string) {
@@ -129,7 +132,7 @@ onMounted(async () => {
   atualizarContagem()
   await carregarQrCode()
   countdownInterval = setInterval(atualizarContagem, 1000)
-  pollInterval      = setInterval(verificarPagamento, 5000)
+  pollInterval = setInterval(verificarPagamento, 5000)
 })
 
 onUnmounted(limparIntervalos)
@@ -139,8 +142,6 @@ onUnmounted(limparIntervalos)
   <Teleport to="body">
     <div class="pix-backdrop" @click.self="emit('close')">
       <div class="pix-modal">
-
-        <!-- Header -->
         <div class="pix-modal__header">
           <div class="pix-modal__header-info">
             <h2 class="pix-modal__title">Pagamento PIX</h2>
@@ -152,7 +153,6 @@ onUnmounted(limparIntervalos)
           <button class="pix-modal__close" @click="emit('close')">✕</button>
         </div>
 
-        <!-- Valor + prazo -->
         <div class="pix-modal__meta">
           <div class="pix-modal__meta-item">
             <span class="pix-modal__meta-label">Valor total</span>
@@ -160,29 +160,27 @@ onUnmounted(limparIntervalos)
           </div>
           <div class="pix-modal__meta-item">
             <span class="pix-modal__meta-label">Tempo restante</span>
-            <span class="pix-modal__meta-value pix-modal__meta-value--timer">{{ tempoRestante }}</span>
+            <span class="pix-modal__meta-value pix-modal__meta-value--timer">{{
+              tempoRestante
+            }}</span>
           </div>
         </div>
 
-        <!-- Estado: carregando -->
         <div v-if="carregando" class="pix-modal__loading">
           <div class="pix-modal__spinner" />
           <p>Gerando QR Code...</p>
         </div>
 
-        <!-- Estado: erro -->
         <div v-else-if="erroQr" class="pix-modal__aviso pix-modal__aviso--erro">
           ⚠️ {{ erroQr }}
         </div>
 
-        <!-- Estado: pago -->
         <div v-else-if="statusPago" class="pix-modal__sucesso">
           <div class="pix-modal__check">✓</div>
           <p>Pagamento confirmado!</p>
           <p class="pix-modal__sucesso-sub">Sua reserva foi confirmada.</p>
         </div>
 
-        <!-- Estado: expirado -->
         <div v-else-if="statusExpired" class="pix-modal__aviso pix-modal__aviso--erro">
           ⏰ O prazo de pagamento expirou. Entre em contato com o proprietário.
         </div>
@@ -214,7 +212,6 @@ onUnmounted(limparIntervalos)
             {{ simulando ? 'Simulando...' : '🧪 Simular pagamento (dev)' }}
           </button>
         </template>
-
       </div>
     </div>
   </Teleport>
@@ -226,13 +223,13 @@ onUnmounted(limparIntervalos)
 .pix-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   overflow-y: auto;
 }
 
@@ -247,32 +244,54 @@ onUnmounted(limparIntervalos)
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   position: relative;
   margin: auto;
 }
 
 /* Header */
-.pix-modal__header { display: flex; justify-content: space-between; align-items: flex-start; }
-.pix-modal__title  { margin: 0; font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
-.pix-modal__sub    { margin: 2px 0 0; font-size: 0.85rem; color: #6b7280; }
-.pix-modal__dates  { margin: 2px 0 0; font-size: 0.78rem; color: #9ca3af; }
+.pix-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.pix-modal__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.pix-modal__sub {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+.pix-modal__dates {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
 
 .pix-modal__close {
   background: #f3f4f6;
   border: none;
   border-radius: 50%;
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   font-size: 0.9rem;
   cursor: pointer;
   color: #6b7280;
   flex-shrink: 0;
   transition: background 0.18s;
 }
-.pix-modal__close:hover { background: #e5e7eb; }
+.pix-modal__close:hover {
+  background: #e5e7eb;
+}
 
-/* Meta */
-.pix-modal__meta { display: flex; gap: 12px; }
+.pix-modal__meta {
+  display: flex;
+  gap: 12px;
+}
 
 .pix-modal__meta-item {
   flex: 1;
@@ -284,11 +303,23 @@ onUnmounted(limparIntervalos)
   gap: 4px;
 }
 
-.pix-modal__meta-label { font-size: 0.72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; }
-.pix-modal__meta-value { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; }
-.pix-modal__meta-value--timer { color: #1a2fa8; font-variant-numeric: tabular-nums; font-size: 1.3rem; }
+.pix-modal__meta-label {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pix-modal__meta-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.pix-modal__meta-value--timer {
+  color: #1a2fa8;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.3rem;
+}
 
-/* Loading */
 .pix-modal__loading {
   display: flex;
   flex-direction: column;
@@ -300,14 +331,19 @@ onUnmounted(limparIntervalos)
 }
 
 .pix-modal__spinner {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border: 3px solid #e5e7eb;
   border-top-color: #1a2fa8;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* QR Code */
 .pix-modal__qr-wrap {
@@ -324,11 +360,23 @@ onUnmounted(limparIntervalos)
   border: 2px solid #e5e7eb;
 }
 
-.pix-modal__qr-hint { font-size: 0.8rem; color: #9ca3af; margin: 0; }
+.pix-modal__qr-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
 
-/* Copia e cola */
-.pix-modal__copy { display: flex; flex-direction: column; gap: 8px; }
-.pix-modal__copy-label { font-size: 0.78rem; color: #6b7280; margin: 0; font-weight: 500; }
+.pix-modal__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pix-modal__copy-label {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 500;
+}
 
 .pix-modal__copy-row {
   display: flex;
@@ -355,7 +403,7 @@ onUnmounted(limparIntervalos)
   color: #fff;
   border-radius: 8px;
   padding: 5px 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -363,9 +411,10 @@ onUnmounted(limparIntervalos)
   transition: background 0.18s;
   flex-shrink: 0;
 }
-.pix-modal__copy-btn:hover { background: #1527a0; }
+.pix-modal__copy-btn:hover {
+  background: #1527a0;
+}
 
-/* Poll hint */
 .pix-modal__poll-hint {
   display: flex;
   align-items: center;
@@ -376,7 +425,8 @@ onUnmounted(limparIntervalos)
 }
 
 .pix-modal__dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   background: #22c55e;
   border-radius: 50%;
   animation: pulse 1.5s ease-in-out infinite;
@@ -384,8 +434,15 @@ onUnmounted(limparIntervalos)
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
 }
 
 /* Dev btn */
@@ -396,15 +453,22 @@ onUnmounted(limparIntervalos)
   border-radius: 12px;
   background: #22c55e;
   color: #fff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s, opacity 0.18s;
+  transition:
+    background 0.18s,
+    opacity 0.18s;
 }
 
-.pix-modal__dev-btn:hover:not(:disabled) { background: #16a34a; }
-.pix-modal__dev-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.pix-modal__dev-btn:hover:not(:disabled) {
+  background: #16a34a;
+}
+.pix-modal__dev-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* Sucesso */
 .pix-modal__sucesso {
@@ -418,7 +482,8 @@ onUnmounted(limparIntervalos)
 }
 
 .pix-modal__check {
-  width: 56px; height: 56px;
+  width: 56px;
+  height: 56px;
   background: #dcfce7;
   color: #16a34a;
   border-radius: 50%;
@@ -428,7 +493,12 @@ onUnmounted(limparIntervalos)
   font-size: 1.6rem;
 }
 
-.pix-modal__sucesso-sub { font-size: 0.85rem; font-weight: 400; color: #6b7280; margin: 0; }
+.pix-modal__sucesso-sub {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0;
+}
 
 /* Avisos */
 .pix-modal__aviso {
@@ -438,7 +508,13 @@ onUnmounted(limparIntervalos)
   margin: 0;
 }
 
-.pix-modal__aviso--erro { background: #fff8e1; border: 1px solid #ffe082; color: #7a5800; }
+.pix-modal__aviso--erro {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #7a5800;
+}
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 </style>

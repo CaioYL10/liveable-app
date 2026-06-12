@@ -5,8 +5,8 @@ const BASE = 'http://127.0.0.1:8000/api'
 const token = () => localStorage.getItem('token') ?? ''
 
 const headers = () => ({
-  'Authorization': `Bearer ${token()}`,
-  'Accept': 'application/json',
+  Authorization: `Bearer ${token()}`,
+  Accept: 'application/json',
   'Content-Type': 'application/json',
 })
 
@@ -30,32 +30,30 @@ interface UserRow {
 }
 
 // ── Estado ─────────────────────────────────────────────
-const stats      = ref<Stats | null>(null)
-const users      = ref<UserRow[]>([])
+const stats = ref<Stats | null>(null)
+const users = ref<UserRow[]>([])
 const carregando = ref(true)
-const filtro     = ref('')
+const filtro = ref('')
 
-const form     = ref({ name: '', last_name: '', email: '', password: '' })
-const criando  = ref(false)
+const form = ref({ name: '', last_name: '', email: '', password: '' })
+const criando = ref(false)
 const erroForm = ref<string | null>(null)
-const okForm   = ref(false)
+const okForm = ref(false)
 
 const usersVisiveis = () =>
-  users.value.filter(u =>
-    `${u.name} ${u.last_name} ${u.email}`
-      .toLowerCase()
-      .includes(filtro.value.toLowerCase())
+  users.value.filter((u) =>
+    `${u.name} ${u.last_name} ${u.email}`.toLowerCase().includes(filtro.value.toLowerCase()),
   )
 
 // ── Carregamento ───────────────────────────────────────
 onMounted(async () => {
   try {
     const [sRes, uRes] = await Promise.all([
-      fetch(`${BASE}/admin/stats`,  { headers: headers() }),
-      fetch(`${BASE}/admin/users`,  { headers: headers() }),
+      fetch(`${BASE}/admin/stats`, { headers: headers() }),
+      fetch(`${BASE}/admin/users`, { headers: headers() }),
     ])
-    stats.value = (await sRes.json())
-    users.value = (await uRes.json())
+    stats.value = await sRes.json()
+    users.value = await uRes.json()
   } catch (e) {
     console.error('[AdminPanel] carregar dados', e)
   } finally {
@@ -66,11 +64,11 @@ onMounted(async () => {
 // ── Criar admin ────────────────────────────────────────
 async function criarAdmin() {
   erroForm.value = null
-  okForm.value   = false
-  criando.value  = true
+  okForm.value = false
+  criando.value = true
 
   try {
-    const res  = await fetch(`${BASE}/admin/create-admin`, {
+    const res = await fetch(`${BASE}/admin/create-admin`, {
       method: 'POST',
       headers: headers(),
       body: JSON.stringify(form.value),
@@ -84,13 +82,12 @@ async function criarAdmin() {
 
     users.value.unshift(data.user)
     okForm.value = true
-    form.value   = { name: '', last_name: '', email: '', password: '' }
+    form.value = { name: '', last_name: '', email: '', password: '' }
     if (stats.value) {
       stats.value.total_admins++
       stats.value.total_users++
     }
     setTimeout(() => (okForm.value = false), 2500)
-
   } catch (e: any) {
     erroForm.value = e.message ?? 'Erro ao criar admin.'
   } finally {
@@ -130,7 +127,11 @@ async function toggleRole(user: UserRow) {
 
     <div v-else-if="stats" class="admin__stats">
       <div class="admin__stat">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+          />
+        </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Usuários</span>
           <span class="admin__stat-value">{{ stats.total_users }}</span>
@@ -139,7 +140,9 @@ async function toggleRole(user: UserRow) {
       </div>
 
       <div class="admin__stat">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+        </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Imóveis</span>
           <span class="admin__stat-value">{{ stats.total_properties }}</span>
@@ -148,7 +151,11 @@ async function toggleRole(user: UserRow) {
       </div>
 
       <div class="admin__stat">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+          />
+        </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Avaliações</span>
           <span class="admin__stat-value">{{ stats.total_reviews }}</span>
@@ -156,7 +163,11 @@ async function toggleRole(user: UserRow) {
       </div>
 
       <div class="admin__stat">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
+          />
+        </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Admins</span>
           <span class="admin__stat-value">{{ stats.total_admins }}</span>
@@ -168,14 +179,19 @@ async function toggleRole(user: UserRow) {
     <div class="admin__card">
       <h3 class="admin__card-title">Criar novo admin</h3>
       <div class="admin__form">
-        <input class="admin__input" placeholder="Nome"       v-model="form.name" />
-        <input class="admin__input" placeholder="Sobrenome"  v-model="form.last_name" />
-        <input class="admin__input" placeholder="E-mail" type="email"    v-model="form.email" />
-        <input class="admin__input" placeholder="Senha (mín. 6 caracteres)" type="password" v-model="form.password" />
+        <input class="admin__input" placeholder="Nome" v-model="form.name" />
+        <input class="admin__input" placeholder="Sobrenome" v-model="form.last_name" />
+        <input class="admin__input" placeholder="E-mail" type="email" v-model="form.email" />
+        <input
+          class="admin__input"
+          placeholder="Senha (mín. 6 caracteres)"
+          type="password"
+          v-model="form.password"
+        />
       </div>
 
       <p v-if="erroForm" class="admin__aviso admin__aviso--erro">⚠️ {{ erroForm }}</p>
-      <p v-if="okForm"   class="admin__aviso admin__aviso--ok">✅ Admin criado com sucesso!</p>
+      <p v-if="okForm" class="admin__aviso admin__aviso--ok">✅ Admin criado com sucesso!</p>
 
       <button class="admin__btn" @click="criarAdmin" :disabled="criando">
         {{ criando ? 'Criando...' : 'Criar admin' }}
@@ -207,7 +223,9 @@ async function toggleRole(user: UserRow) {
               <td>
                 <span
                   class="admin__role-badge"
-                  :class="u.role === 'admin' ? 'admin__role-badge--admin' : 'admin__role-badge--user'"
+                  :class="
+                    u.role === 'admin' ? 'admin__role-badge--admin' : 'admin__role-badge--user'
+                  "
                 >
                   {{ u.role }}
                 </span>
@@ -216,7 +234,9 @@ async function toggleRole(user: UserRow) {
               <td>
                 <button
                   class="admin__toggle-btn"
-                  :class="u.role === 'admin' ? 'admin__toggle-btn--demote' : 'admin__toggle-btn--promote'"
+                  :class="
+                    u.role === 'admin' ? 'admin__toggle-btn--demote' : 'admin__toggle-btn--promote'
+                  "
                   @click="toggleRole(u)"
                 >
                   {{ u.role === 'admin' ? 'Remover admin' : 'Tornar admin' }}
@@ -227,7 +247,6 @@ async function toggleRole(user: UserRow) {
         </table>
       </div>
     </div>
-
   </section>
 </template>
 
@@ -238,12 +257,16 @@ async function toggleRole(user: UserRow) {
   display: flex;
   flex-direction: column;
   gap: 28px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   width: 100%;
   margin-top: 1.5rem;
 }
 
-.admin__title-row { display: flex; align-items: center; gap: 12px; }
+.admin__title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
 .admin__title {
   margin: 0;
@@ -252,7 +275,9 @@ async function toggleRole(user: UserRow) {
   color: var(--color-black-text, #1a1a2e);
 }
 
-.admin__title span { color: #1a2fa8; }
+.admin__title span {
+  color: #1a2fa8;
+}
 
 .admin__badge {
   background: #1a2fa8;
@@ -265,7 +290,11 @@ async function toggleRole(user: UserRow) {
   text-transform: uppercase;
 }
 
-.admin__loading { font-size: 0.9rem; color: #9ca3af; padding: 12px 0; }
+.admin__loading {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  padding: 12px 0;
+}
 
 .admin__stats {
   display: grid;
@@ -284,11 +313,40 @@ async function toggleRole(user: UserRow) {
   position: relative;
 }
 
-.admin__stat svg { width: 28px; height: 28px; color: #1a2fa8; flex-shrink: 0; }
-.admin__stat-info { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-.admin__stat-label { font-size: 11px; color: #9ca3af; }
-.admin__stat-value { font-size: 1.4rem; font-weight: 700; color: var(--color-black-text, #1a1a2e); line-height: 1; }
-.admin__stat-sub { position: absolute; top: 12px; right: 14px; font-size: 10px; color: #22c55e; font-weight: 600; }
+.admin__stat svg {
+  width: 28px;
+  height: 28px;
+  color: #1a2fa8;
+  flex-shrink: 0;
+}
+
+.admin__stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.admin__stat-label {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.admin__stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-black-text, #1a1a2e);
+  line-height: 1;
+}
+
+.admin__stat-sub {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 10px;
+  color: #22c55e;
+  font-weight: 600;
+}
 
 .admin__card {
   background: #fff;
@@ -326,7 +384,7 @@ async function toggleRole(user: UserRow) {
   border: 1.5px solid #e5e7eb;
   border-radius: 10px;
   padding: 0.7rem 1rem;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.88rem;
   color: var(--color-black-text, #1a1a2e);
   background: #f8f9fb;
@@ -336,15 +394,36 @@ async function toggleRole(user: UserRow) {
 }
 
 .admin__input:focus,
-.admin__search:focus { border-color: #1a2fa8; background: #fff; }
+.admin__search:focus {
+  border-color: #1a2fa8;
+  background: #fff;
+}
+
 .admin__input::placeholder,
-.admin__search::placeholder { color: #c0c0c0; }
+.admin__search::placeholder {
+  color: #c0c0c0;
+}
 
-.admin__search { width: 220px; }
+.admin__search {
+  width: 220px;
+}
 
-.admin__aviso { margin: 0; font-size: 0.82rem; border-radius: 10px; padding: 8px 14px; }
-.admin__aviso--erro { background: #fff8e1; border: 1px solid #ffe082; color: #7a5800; }
-.admin__aviso--ok   { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+.admin__aviso {
+  margin: 0;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+.admin__aviso--erro {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #7a5800;
+}
+.admin__aviso--ok {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
 
 .admin__btn {
   align-self: flex-start;
@@ -353,19 +432,30 @@ async function toggleRole(user: UserRow) {
   border-radius: 12px;
   background: #1a2fa8;
   color: #fff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.18s;
 }
 
-.admin__btn:hover:not(:disabled) { background: #1527a0; }
-.admin__btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.admin__btn:hover:not(:disabled) {
+  background: #1527a0;
+}
+.admin__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-.admin__table-wrap { overflow-x: auto; }
+.admin__table-wrap {
+  overflow-x: auto;
+}
 
-.admin__table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.admin__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
 
 .admin__table th {
   text-align: left;
@@ -384,9 +474,18 @@ async function toggleRole(user: UserRow) {
   vertical-align: middle;
 }
 
-.admin__table tr:last-child td { border-bottom: none; }
-.admin__email { color: #6b7280; font-size: 0.82rem; }
-.admin__date  { color: #9ca3af; font-size: 0.8rem; white-space: nowrap; }
+.admin__table tr:last-child td {
+  border-bottom: none;
+}
+.admin__email {
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+.admin__date {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
 
 .admin__role-badge {
   display: inline-block;
@@ -398,15 +497,21 @@ async function toggleRole(user: UserRow) {
   letter-spacing: 0.04em;
 }
 
-.admin__role-badge--admin { background: #e8eaf6; color: #1a2fa8; }
-.admin__role-badge--user  { background: #f3f4f6; color: #6b7280; }
+.admin__role-badge--admin {
+  background: #e8eaf6;
+  color: #1a2fa8;
+}
+.admin__role-badge--user {
+  background: #f3f4f6;
+  color: #6b7280;
+}
 
 .admin__toggle-btn {
   border: 1.5px solid #e5e7eb;
   background: #fff;
   border-radius: 8px;
   padding: 4px 12px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
@@ -414,15 +519,27 @@ async function toggleRole(user: UserRow) {
   white-space: nowrap;
 }
 
-.admin__toggle-btn--promote:hover { border-color: #1a2fa8; color: #1a2fa8; }
-.admin__toggle-btn--demote:hover  { border-color: #dc2626; color: #dc2626; }
+.admin__toggle-btn--promote:hover {
+  border-color: #1a2fa8;
+  color: #1a2fa8;
+}
+.admin__toggle-btn--demote:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}
 
 @media (max-width: 900px) {
-  .admin__stats { grid-template-columns: repeat(2, 1fr); }
-  .admin__form  { grid-template-columns: 1fr; }
+  .admin__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin__form {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {
-  .admin__stats { grid-template-columns: 1fr 1fr; }
+  .admin__stats {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
   <div class="reviews-section">
-
     <!-- Cabeçalho da seção -->
     <div class="reviews-section__header">
       <h2 class="reviews-section__title">Avaliações dos <span>Hóspedes</span></h2>
       <button class="reviews-section__avaliar-btn" @click="drawerOpen = true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
         Avaliar
       </button>
     </div>
@@ -44,18 +46,24 @@
     <div v-if="localReviews.length" class="reviews-summary">
       <div class="reviews-summary__item">
         <span class="reviews-summary__icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+          </svg>
         </span>
         <div class="reviews-summary__divider" />
         <div class="reviews-summary__info">
           <span class="reviews-summary__label">Avaliação geral</span>
-          <span class="reviews-summary__value">{{ averageRating.toFixed(1) }} <small>/ 5</small></span>
+          <span class="reviews-summary__value"
+            >{{ averageRating.toFixed(1) }} <small>/ 5</small></span
+          >
         </div>
       </div>
 
       <div class="reviews-summary__item">
         <span class="reviews-summary__icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z" />
+          </svg>
         </span>
         <div class="reviews-summary__divider" />
         <div class="reviews-summary__info">
@@ -66,7 +74,11 @@
 
       <div class="reviews-summary__item">
         <span class="reviews-summary__icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+            />
+          </svg>
         </span>
         <div class="reviews-summary__divider" />
         <div class="reviews-summary__info">
@@ -83,15 +95,16 @@
 
     <Transition name="drawer">
       <div v-if="drawerOpen" class="drawer">
-
         <!-- Header do drawer -->
         <div class="drawer__header" @click="drawerOpen = false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M15 18l-6-6 6-6"/>
+            <path d="M15 18l-6-6 6-6" />
           </svg>
           <div class="drawer__header-icon">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              <path
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+              />
             </svg>
           </div>
           <p>Enviar Avaliação</p>
@@ -112,7 +125,9 @@
               @click="form.rating = i"
             >
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                <path
+                  d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                />
               </svg>
             </button>
           </div>
@@ -144,16 +159,16 @@
 
         <!-- Feedback -->
         <p v-if="erroEnvio" class="drawer__aviso drawer__aviso--erro">⚠️ {{ erroEnvio }}</p>
-        <p v-if="sucessoEnvio" class="drawer__aviso drawer__aviso--sucesso">✅ Avaliação enviada com sucesso!</p>
+        <p v-if="sucessoEnvio" class="drawer__aviso drawer__aviso--sucesso">
+          ✅ Avaliação enviada com sucesso!
+        </p>
 
         <!-- Botão enviar -->
         <button class="drawer__confirm-btn" @click="enviarAvaliacao" :disabled="enviando">
           {{ enviando ? 'Enviando...' : 'Confirmar Avaliação' }}
         </button>
-
       </div>
     </Transition>
-
   </div>
 </template>
 
@@ -202,7 +217,7 @@ export default {
       form: {
         rating: 0,
         title: '',
-        comment: '',   // ✅ bate com o campo que o Laravel espera
+        comment: '', 
       },
     }
   },
@@ -214,12 +229,15 @@ export default {
     },
     recommendPercent() {
       if (!this.localReviews.length) return 0
-      const good = this.localReviews.filter(r => r.rating >= 4).length
+      const good = this.localReviews.filter((r) => r.rating >= 4).length
       return Math.round((good / this.localReviews.length) * 100)
     },
     ratingLabel() {
       const active = this.hoverRating || this.form.rating
-      return ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'][active] ?? 'Toque nas estrelas para avaliar'
+      return (
+        ['', 'Péssimo', 'Ruim', 'Regular', 'Bom', 'Excelente'][active] ??
+        'Toque nas estrelas para avaliar'
+      )
     },
   },
 
@@ -262,36 +280,31 @@ export default {
       this.sucessoEnvio = false
 
       try {
-        const res = await fetch(
-          `${BASE_URL}/properties/${this.propertyId}/reviews`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify({
-              rating:  this.form.rating,
-              title:   this.form.title,
-              comment: this.form.comment,   // ✅ campo correto
-            }),
-          }
-        )
+        const res = await fetch(`${BASE_URL}/properties/${this.propertyId}/reviews`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({
+            rating: this.form.rating,
+            title: this.form.title,
+            comment: this.form.comment,
+          }),
+        })
 
         const data = await res.json()
         if (!res.ok) throw new Error(data.message ?? `Erro ${res.status}`)
 
-        // Adiciona a nova avaliação no topo da lista sem recarregar
         this.localReviews.unshift(data.data)
         this.sucessoEnvio = true
         this.$emit('review-sent', data.data)
 
         setTimeout(() => {
-          this.drawerOpen   = false
+          this.drawerOpen = false
           this.sucessoEnvio = false
           this.form = { rating: 0, title: '', comment: '' }
         }, 1800)
-
       } catch (e) {
         this.erroEnvio = e.message ?? 'Erro ao enviar avaliação.'
         console.error('[enviarAvaliacao]', e)
@@ -310,7 +323,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 28px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   position: relative;
   margin-top: 2rem;
 }
@@ -342,29 +355,31 @@ export default {
   position: relative;
 }
 
-.reviews-section__title span { color: #1a2fa8; }
+.reviews-section__title span {
+  color: #1a2fa8;
+}
 
-  h2::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    height: 3px;
-    width: 75%;
-    background-color: var(--color-primary);
-    border-radius: 15px;
-  }
+h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 75%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
+}
 
-  h2::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: -3px;
-    height: 3px;
-    width: 20%;
-    background-color: var(--color-primary);
-    border-radius: 15px;
-  }
+h2::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 20%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
+}
 
 .reviews-section__avaliar-btn {
   display: flex;
@@ -377,13 +392,18 @@ export default {
   border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: background 0.18s ease;
 }
 
-.reviews-section__avaliar-btn:hover { background: #1527a0; }
-.reviews-section__avaliar-btn svg { width: 16px; height: 16px; }
+.reviews-section__avaliar-btn:hover {
+  background: #1527a0;
+}
+.reviews-section__avaliar-btn svg {
+  width: 16px;
+  height: 16px;
+}
 
 /* ── Swiper ── */
 .reviews-swiper {
@@ -434,16 +454,59 @@ export default {
   background: #e5e7eb;
 }
 
-.reviews-summary__icon { color: #1a1a2e; display: flex; align-items: center; flex-shrink: 0; }
-.reviews-summary__icon svg { width: 22px; height: 22px; }
-.reviews-summary__divider { width: 1px; height: 36px; background: #e5e7eb; flex-shrink: 0; }
-.reviews-summary__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.reviews-summary__label { font-size: 12px; color: #9ca3af; white-space: nowrap; }
-.reviews-summary__value { font-size: 16px; font-weight: 700; color: #1a1a2e; }
-.reviews-summary__value small { font-size: 12px; font-weight: 400; color: #9ca3af; }
-.reviews-summary__item--price { justify-content: center; flex-direction: column; align-items: flex-start; gap: 0; }
-.reviews-summary__price { font-size: 18px; font-weight: 800; color: #1a1a2e; line-height: 1.1; }
-.reviews-summary__price-label { font-size: 12px; color: #9ca3af; }
+.reviews-summary__icon {
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.reviews-summary__icon svg {
+  width: 22px;
+  height: 22px;
+}
+.reviews-summary__divider {
+  width: 1px;
+  height: 36px;
+  background: #e5e7eb;
+  flex-shrink: 0;
+}
+.reviews-summary__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.reviews-summary__label {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+.reviews-summary__value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.reviews-summary__value small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #9ca3af;
+}
+.reviews-summary__item--price {
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+.reviews-summary__price {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.1;
+}
+.reviews-summary__price-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
 
 /* ── Overlay ── */
 .drawer-overlay {
@@ -454,9 +517,13 @@ export default {
 }
 
 .drawer-overlay-enter-active,
-.drawer-overlay-leave-active { transition: opacity 0.28s ease; }
+.drawer-overlay-leave-active {
+  transition: opacity 0.28s ease;
+}
 .drawer-overlay-enter-from,
-.drawer-overlay-leave-to { opacity: 0; }
+.drawer-overlay-leave-to {
+  opacity: 0;
+}
 
 /* ── Drawer ── */
 .drawer {
@@ -475,14 +542,18 @@ export default {
   flex-direction: column;
   gap: 2rem;
   box-shadow: var(--shadow-sm);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: #1a1a2e;
 }
 
 .drawer-enter-active,
-.drawer-leave-active { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.drawer-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 .drawer-enter-from,
-.drawer-leave-to { transform: translateX(100%); }
+.drawer-leave-to {
+  transform: translateX(100%);
+}
 
 .drawer__header {
   width: 100%;
@@ -492,7 +563,11 @@ export default {
   cursor: pointer;
 }
 
-.drawer__header svg:first-child { width: 28px; height: 28px; flex-shrink: 0; }
+.drawer__header svg:first-child {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
 
 .drawer__header-icon {
   width: 40px;
@@ -505,15 +580,40 @@ export default {
   flex-shrink: 0;
 }
 
-.drawer__header-icon svg { width: 18px; height: 18px; color: #1a2fa8; }
+.drawer__header-icon svg {
+  width: 18px;
+  height: 18px;
+  color: #1a2fa8;
+}
 
-.drawer__header p { margin: 0; font-size: 1.1rem; font-weight: 650; }
+.drawer__header p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 650;
+}
 
-.drawer__stars-section { display: flex; flex-direction: column; gap: 10px; }
-.drawer__section-title { margin: 0; font-size: 1.1rem; font-weight: 650; }
-.drawer__section-sub { margin: 0; font-size: 0.85rem; opacity: 0.6; font-weight: 500; }
+.drawer__stars-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.drawer__section-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+.drawer__section-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  font-weight: 500;
+}
 
-.drawer__stars { display: flex; gap: 8px; margin-top: 4px; }
+.drawer__stars {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
 
 .drawer__star-btn {
   background: none;
@@ -523,7 +623,9 @@ export default {
   transition: transform 0.15s ease;
 }
 
-.drawer__star-btn:hover { transform: scale(1.15); }
+.drawer__star-btn:hover {
+  transform: scale(1.15);
+}
 
 .drawer__star-btn svg {
   width: 36px;
@@ -532,7 +634,9 @@ export default {
   transition: color 0.15s ease;
 }
 
-.drawer__star-btn--filled svg { color: #f59e0b; }
+.drawer__star-btn--filled svg {
+  color: #f59e0b;
+}
 
 .drawer__rating-label {
   margin: 0;
@@ -542,9 +646,21 @@ export default {
   min-height: 20px;
 }
 
-.drawer__fields { display: flex; flex-direction: column; gap: 1.2rem; }
-.drawer__field { display: flex; flex-direction: column; gap: 6px; }
-.drawer__label { font-size: 0.85rem; font-weight: 600; color: #1a1a2e; }
+.drawer__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.drawer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.drawer__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
 
 .drawer__input,
 .drawer__textarea {
@@ -553,7 +669,7 @@ export default {
   border: 1.5px solid #e5e7eb;
   border-radius: 10px;
   padding: 0.75rem 1rem;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   color: #1a1a2e;
   background: #fff;
@@ -563,8 +679,12 @@ export default {
 }
 
 .drawer__input:focus,
-.drawer__textarea:focus { border-color: #1a2fa8; }
-.drawer__textarea { resize: none; }
+.drawer__textarea:focus {
+  border-color: #1a2fa8;
+}
+.drawer__textarea {
+  resize: none;
+}
 
 .drawer__aviso {
   width: 100%;
@@ -575,8 +695,16 @@ export default {
   margin: 0;
 }
 
-.drawer__aviso--erro    { background: #fff8e1; border: 1px solid #ffe082; color: #7a5800; }
-.drawer__aviso--sucesso { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+.drawer__aviso--erro {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  color: #7a5800;
+}
+.drawer__aviso--sucesso {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
 
 .drawer__confirm-btn {
   width: 100%;
@@ -587,19 +715,34 @@ export default {
   border-radius: 15px;
   cursor: pointer;
   font-weight: 600;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
-  transition: opacity 0.2s, background 0.18s;
+  transition:
+    opacity 0.2s,
+    background 0.18s;
   margin-top: auto;
 }
 
-.drawer__confirm-btn:hover:not(:disabled) { background: #1527a0; }
-.drawer__confirm-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.drawer__confirm-btn:hover:not(:disabled) {
+  background: #1527a0;
+}
+.drawer__confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 @media (max-width: 600px) {
-  .reviews-summary { flex-wrap: wrap; }
-  .reviews-summary__item { flex: 1 1 45%; }
-  .reviews-summary__item::after { display: none; }
-  .drawer { max-width: 100%; }
+  .reviews-summary {
+    flex-wrap: wrap;
+  }
+  .reviews-summary__item {
+    flex: 1 1 45%;
+  }
+  .reviews-summary__item::after {
+    display: none;
+  }
+  .drawer {
+    max-width: 100%;
+  }
 }
 </style>

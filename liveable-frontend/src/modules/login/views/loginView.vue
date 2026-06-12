@@ -1,8 +1,6 @@
 <script setup lang="ts">
-
-import LoginBanner from '../components/loginBanner.vue';
-import LoginInputs from '../components/loginInputs.vue';
-
+import LoginBanner from '../components/loginBanner.vue'
+import LoginInputs from '../components/loginInputs.vue'
 </script>
 
 <template>
@@ -13,22 +11,22 @@ import LoginInputs from '../components/loginInputs.vue';
 </template>
 
 <style scoped>
+.container-large {
+  display: flex;
+  justify-content: space-around;
+
+  width: 100%;
+  min-height: 90vh;
+}
+
+@media (max-width: 768px) {
   .container-large {
-    display: flex;
-    justify-content: space-around;
-
-    width: 100%;
-    min-height: 90vh;
+    flex-direction: column;
+    width: 90%;
   }
 
-  @media (max-width: 768px) {
-    .container-large {
-      flex-direction: column;
-      width: 90%;
-    }
-
-    .banner {
-      display: none;
-    }
+  .banner {
+    display: none;
   }
+}
 </style>

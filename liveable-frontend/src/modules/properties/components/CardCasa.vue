@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhHeart } from "@phosphor-icons/vue"
+import { PhHeart } from '@phosphor-icons/vue'
 import { useRouter } from 'vue-router'
 import { useFavorites } from '@/modules/favorites/composables/useFavorites'
 
@@ -13,7 +13,7 @@ interface Property {
 
 defineProps<{ casa: Property }>()
 
-const router   = useRouter()
+const router = useRouter()
 const { isFavorite, toggleFavorite } = useFavorites()
 
 function goToDetails(id: number) {
@@ -33,8 +33,13 @@ async function handleFav(e: Event, id: number) {
 
 <template>
   <div class="card">
-    <div class="cima" @click="goToDetails(casa.id)"
-      :style="casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}">
+    <div
+      class="cima"
+      @click="goToDetails(casa.id)"
+      :style="
+        casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}
+      "
+    >
       <div class="fav" @click="handleFav($event, casa.id)" :class="{ ativo: isFavorite(casa.id) }">
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>
@@ -65,8 +70,8 @@ async function handleFav(e: Event, id: number) {
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  font-family: "Poppins", sans-serif;
-  box-shadow: var(--shadow-sm, 0 4px 16px rgba(0,0,0,0.10));
+  font-family: 'Poppins', sans-serif;
+  box-shadow: var(--shadow-sm, 0 4px 16px rgba(0, 0, 0, 0.1));
   color: var(--color-black-text, #1a1a1a);
   overflow: hidden;
 }
@@ -93,19 +98,26 @@ async function handleFav(e: Event, id: number) {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: box-shadow 0.3s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    box-shadow 0.3s,
+    transform 0.2s;
   cursor: pointer;
 }
 
-.fav:hover { box-shadow: var(--shadow-hover-blue); transform: scale(1.1); }
+.fav:hover {
+  box-shadow: var(--shadow-hover-blue);
+  transform: scale(1.1);
+}
 
 .icon-fav {
   color: #d1d5db;
   transition: color 0.2s;
 }
 
-.fav.ativo .icon-fav { color: var(--color-primary); }
+.fav.ativo .icon-fav {
+  color: var(--color-primary);
+}
 
 .baixo {
   display: flex;
@@ -114,9 +126,16 @@ async function handleFav(e: Event, id: number) {
   padding: 15px;
 }
 
-.textos { display: flex; flex-direction: column; }
+.textos {
+  display: flex;
+  flex-direction: column;
+}
 
-.titulo { margin: 0; font-size: 15px; font-weight: 600; }
+.titulo {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
 
 .subtexto {
   font-size: 13px;
@@ -126,7 +145,12 @@ async function handleFav(e: Event, id: number) {
   font-size: clamp(0.7rem, 0.81vw, 0.85rem);
 }
 
-.actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
 
 .btn-confirm {
   width: 100%;
@@ -134,7 +158,7 @@ async function handleFav(e: Event, id: number) {
   border-radius: 14px;
   cursor: pointer;
   border: none;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: 14px;
   background-color: var(--color-primary, #3b82f6);
@@ -142,5 +166,7 @@ async function handleFav(e: Event, id: number) {
   transition: background-color 0.3s;
 }
 
-.btn-confirm:hover { background-color: var(--color-primary-hover, #2563eb); }
+.btn-confirm:hover {
+  background-color: var(--color-primary-hover, #2563eb);
+}
 </style>

@@ -34,7 +34,7 @@ class PaymentController extends Controller
             ->where('status', 'pending_payment')
             ->with(['property:id,property_title,pricePerDay', 'property.images', 'rent'])
             ->get()
-            ->map(fn (Payment $p) => $this->formatPayment($p));
+            ->map(fn(Payment $p) => $this->formatPayment($p));
 
         return response()->json($payments);
     }
@@ -49,8 +49,6 @@ class PaymentController extends Controller
             return response()->json(['message' => 'QR Code ainda não gerado.'], 422);
         }
 
-        // URL correta: /transparents/simulate-payment
-        // id vai como query parameter, body é objeto vazio
         $res = $this->http()
             ->post("{$this->abacateBase}/transparents/simulate-payment?id={$payment->abacatepay_id}", [
                 'metadata' => [],

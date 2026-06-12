@@ -1,4 +1,3 @@
-// src/shared/composables/useFavorites.ts
 import { ref, onMounted } from 'vue'
 
 const favorites = ref<number[]>([])
@@ -9,17 +8,19 @@ export function useFavorites() {
     const token = localStorage.getItem('token')
     if (!token || carregado.value) return
     try {
-      const res  = await fetch('http://127.0.0.1:8000/api/favorites', {
+      const res = await fetch('http://127.0.0.1:8000/api/favorites', {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
         },
       })
       if (!res.ok) return
       const data = await res.json()
       favorites.value = data.map((p: { id: number }) => p.id)
       carregado.value = true
-    } catch (e) { console.error('[useFavorites]', e) }
+    } catch (e) {
+      console.error('[useFavorites]', e)
+    }
   }
 
   async function toggleFavorite(propertyId: number) {
@@ -30,15 +31,15 @@ export function useFavorites() {
       const res = await fetch(`http://127.0.0.1:8000/api/property/${propertyId}/like`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
         },
       })
       if (!res.ok) return false
 
       const isFav = favorites.value.includes(propertyId)
       if (isFav) {
-        favorites.value = favorites.value.filter(id => id !== propertyId)
+        favorites.value = favorites.value.filter((id) => id !== propertyId)
       } else {
         favorites.value.push(propertyId)
       }

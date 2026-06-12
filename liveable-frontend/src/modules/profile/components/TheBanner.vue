@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
-import { getToken } from "@/services/auth";
+import { onMounted, ref, computed } from 'vue'
+import { getToken } from '@/services/auth'
 
-const user = ref<any>(null);
+const user = ref<any>(null)
 const fileInputPhoto = ref<HTMLInputElement | null>(null)
 const fileInputBanner = ref<HTMLInputElement | null>(null)
 const salvando = ref(false)
@@ -34,19 +34,20 @@ onMounted(async () => {
   try {
     const res = await fetch('http://127.0.0.1:8000/api/user', {
       headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Accept': 'application/json',
-      }
+        Authorization: `Bearer ${getToken()}`,
+        Accept: 'application/json',
+      },
     })
     user.value = await res.json()
   } catch (error) {
-    console.error("Erro ao buscar usuário", error);
+    console.error('Erro ao buscar usuário', error)
   }
-});
+})
 
 const profilePicture = computed(() => {
   if (novaFotoPreview.value) return novaFotoPreview.value
-  if (user.value?.profile_picture) return `http://127.0.0.1:8000/storage/${user.value.profile_picture}`
+  if (user.value?.profile_picture)
+    return `http://127.0.0.1:8000/storage/${user.value.profile_picture}`
   return randomAvatar
 })
 
@@ -83,8 +84,8 @@ async function onBannerSelecionado(e: Event) {
     const res = await fetch('http://127.0.0.1:8000/api/user/banner', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Accept': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+        Accept: 'application/json',
       },
       body: formData,
     })
@@ -105,16 +106,14 @@ async function salvar() {
     const res = await fetch('http://127.0.0.1:8000/api/user/photo', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getToken()}`,
-        'Accept': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+        Accept: 'application/json',
       },
       body: formData,
     })
     if (!res.ok) throw new Error()
 
-    // Recarrega a página após salvar
     window.location.reload()
-
   } catch {
     console.error('Erro ao salvar foto')
   } finally {
@@ -125,13 +124,22 @@ async function salvar() {
 
 <template>
   <div class="all">
-
     <!-- Banner -->
     <div class="banner" :style="{ backgroundImage: `url('${bannerAtual}')` }">
       <button class="banner-edit" @click="selecionarBanner" title="Trocar banner">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
         </svg>
       </button>
     </div>
@@ -144,20 +152,46 @@ async function salvar() {
       title="Trocar foto"
     >
       <div class="profile-image__overlay">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+          />
+          <circle cx="12" cy="13" r="4" />
         </svg>
       </div>
     </div>
 
     <!-- Inputs ocultos -->
-    <input ref="fileInputPhoto" type="file" accept="image/*" style="display:none" @change="onFotoSelecionada" />
-    <input ref="fileInputBanner" type="file" accept="image/*" style="display:none" @change="onBannerSelecionado" />
+    <input
+      ref="fileInputPhoto"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="onFotoSelecionada"
+    />
+    <input
+      ref="fileInputBanner"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="onBannerSelecionado"
+    />
 
     <div class="padding">
       <div class="inform-texts">
-        <p class="title">Aparência de Perfil - <span v-if="user">{{ user.name }} {{ user.last_name }}</span></p>
+        <p class="title">
+          Aparência de Perfil - <span v-if="user">{{ user.name }} {{ user.last_name }}</span>
+        </p>
         <p class="subtitle">Está foto é mostrada públicamente à outros usuários.</p>
       </div>
 
@@ -179,7 +213,7 @@ async function salvar() {
   height: auto;
   display: flex;
   flex-direction: column;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   gap: 1rem;
   position: relative;
@@ -284,7 +318,7 @@ async function salvar() {
   cursor: pointer;
   border-radius: 10px;
   border: none;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   transition: background-color 0.5s;
 }

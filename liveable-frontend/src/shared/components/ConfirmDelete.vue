@@ -22,8 +22,7 @@ const emit = defineEmits<{
           <h3>Deletar imóvel</h3>
           <p>
             Tem certeza que deseja deletar
-            <strong>"{{ titulo }}"</strong>?
-            Esta ação não pode ser desfeita.
+            <strong>"{{ titulo }}"</strong>? Esta ação não pode ser desfeita.
           </p>
           <div class="btns">
             <button class="btn-cancel" @click="emit('cancelar')" :disabled="deletando">
@@ -65,18 +64,18 @@ import { PhTrash } from '@phosphor-icons/vue'
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .icon-wrap {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #FCEBEB;
+  background: #fcebeb;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A32D2D;
+  color: #a32d2d;
   flex-shrink: 0;
 }
 
@@ -115,11 +114,13 @@ p strong {
   flex: 1;
   padding: 0.7rem;
   border-radius: 12px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s, opacity 0.18s;
+  transition:
+    background 0.18s,
+    opacity 0.18s;
 }
 
 .btn-cancel {
@@ -128,23 +129,45 @@ p strong {
   color: var(--color-black-text);
 }
 
-.btn-cancel:hover:not(:disabled) { background: var(--color-bg); }
+.btn-cancel:hover:not(:disabled) {
+  background: var(--color-bg);
+}
 
 .btn-confirm {
-  background: #E24B4A;
+  background: #e24b4a;
   border: none;
   color: #fff;
 }
 
-.btn-confirm:hover:not(:disabled) { background: #A32D2D; }
+.btn-confirm:hover:not(:disabled) {
+  background: #a32d2d;
+}
 
 .btn-cancel:disabled,
-.btn-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* Animações */
-.overlay-enter-active, .overlay-leave-active { transition: opacity 0.25s ease; }
-.overlay-enter-from,  .overlay-leave-to      { opacity: 0; }
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.25s ease;
+}
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}
 
-.modal-enter-active, .modal-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
-.modal-enter-from, .modal-leave-to       { opacity: 0; transform: scale(0.95) translateY(8px); }
+.modal-enter-active,
+.modal-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(8px);
+}
 </style>
