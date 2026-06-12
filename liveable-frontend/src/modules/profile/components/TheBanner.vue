@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { getToken } from '@/services/auth'
+import TheBannerSkeleton from './TheBannerSkeleton.vue'
 
 const user = ref<any>(null)
 const fileInputPhoto = ref<HTMLInputElement | null>(null)
@@ -9,6 +10,7 @@ const salvando = ref(false)
 const novaFotoPreview = ref<string | null>(null)
 const novoBannerPreview = ref<string | null>(null)
 const novaFotoFile = ref<File | null>(null)
+const loadingBanner = ref<boolean>(true)
 
 const banners = [
   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
@@ -41,6 +43,8 @@ onMounted(async () => {
     user.value = await res.json()
   } catch (error) {
     console.error('Erro ao buscar usuário', error)
+  } finally {
+    loadingBanner.value = false
   }
 })
 
@@ -123,7 +127,9 @@ async function salvar() {
 </script>
 
 <template>
-  <div class="all">
+  <TheBannerSkeleton v-if="loadingBanner === true" />
+
+  <div v-else class="all">
     <!-- Banner -->
     <div class="banner" :style="{ backgroundImage: `url('${bannerAtual}')` }">
       <button class="banner-edit" @click="selecionarBanner" title="Trocar banner">

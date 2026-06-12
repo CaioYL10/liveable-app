@@ -257,8 +257,8 @@ function goToFavs() {
       <ul>
         <li
           @click="
-            goToHome()
-            menuAberto = false
+            goToHome();
+            menuAberto = false;
           "
           :class="{ active: ativo === 'inicio' }"
         >
@@ -291,8 +291,8 @@ function goToFavs() {
 
         <li
           @click="
-            goToPendencies()
-            menuAberto = false
+            goToPendencies();
+            menuAberto = false;
           "
           :class="{ active: ativo === 'historico' }"
         >
@@ -301,7 +301,7 @@ function goToFavs() {
 
         <li
           @click="
-            goToProps()
+            goToProps();
             menuAberto = false
           "
           :class="{ active: ativo === 'minhas' }"
@@ -311,7 +311,7 @@ function goToFavs() {
 
         <li
           @click="
-            goToDetails()
+            goToDetails();
             menuAberto = false
           "
           :class="{ active: ativo === 'perfil' }"
@@ -321,7 +321,7 @@ function goToFavs() {
 
         <li
           @click="
-            goToFavs()
+            goToFavs();
             menuAberto = false
           "
           :class="{ active: ativo === 'favoritos' }"

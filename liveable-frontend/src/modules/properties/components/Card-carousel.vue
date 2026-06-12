@@ -9,6 +9,7 @@ import 'swiper/css/navigation'
 import { Navigation } from 'swiper/modules'
 
 import CardCasa from './CardCasa.vue'
+import CardCasaSkeleton from './CardCasaSkeleton.vue'
 
 const prevButton = ref(null)
 const nextButton = ref(null)
@@ -28,6 +29,8 @@ const onSwiper = (swiper: any) => {
 
 // Logica de receber dados
 
+const carregando = ref<boolean>(true)
+
 interface Property {
   id: number
   property_title: string
@@ -44,9 +47,12 @@ onMounted(async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/properties')
     const data = await response.json()
+
     properties.value = data
   } catch (error) {
     console.error(error)
+  } finally {
+    carregando.value = false
   }
 })
 </script>
@@ -87,9 +93,23 @@ onMounted(async () => {
       @swiper="onSwiper"
       class="mySwiper"
     >
-      <SwiperSlide v-for="casa in properties" :key="casa.id">
-        <CardCasa :casa="casa" />
-      </SwiperSlide>
+      <template v-if="carregando">
+        <SwiperSlide
+          v-for="n in 6"
+          :key="n"
+        >
+          <CardCasaSkeleton />
+        </SwiperSlide>
+      </template>
+
+      <template v-else>
+        <SwiperSlide
+          v-for="casa in properties"
+          :key="casa.id"
+        >
+          <CardCasa v-if="casa" :casa="casa" />
+        </SwiperSlide>
+      </template>
     </Swiper>
   </div>
 </template>

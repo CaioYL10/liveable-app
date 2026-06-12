@@ -25,6 +25,8 @@ class User extends Authenticatable
         'instagram',
         'facebook',
         'share_socials',
+        'provider',
+        'provider_id',
     ];
 
     protected function casts(): array

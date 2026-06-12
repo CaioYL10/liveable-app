@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import ProfileSocialLinksSkeleton from './ProfileSocialLinksSkeleton.vue'
 
 const BASE = 'http://127.0.0.1:8000/api'
 
@@ -8,6 +9,7 @@ const links = ref({ twitter: '', instagram: '', facebook: '' })
 const salvando = ref(false)
 const sucesso = ref(false)
 const erro = ref<string | null>(null)
+const loadingProfileSocial = ref<boolean>(true)
 
 onMounted(async () => {
   try {
@@ -24,6 +26,8 @@ onMounted(async () => {
     compartilhar.value = data.share_socials ?? true
   } catch (e) {
     console.error('[ProfileSocialLinks]', e)
+  } finally {
+    loadingProfileSocial.value = false
   }
 })
 
@@ -77,7 +81,9 @@ const socials = [
 </script>
 
 <template>
-  <section class="profile-social">
+  <ProfileSocialLinksSkeleton v-if="loadingProfileSocial === true" />
+
+  <section v-else class="profile-social">
     <div class="profile-social__head">
       <h2 class="profile-social__title">Redes Sociais</h2>
       <label class="profile-social__toggle">

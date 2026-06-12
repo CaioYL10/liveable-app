@@ -6,65 +6,89 @@ import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfi
 </script>
 
 <template>
-  <div class="cima-title">
-    <h2>Suas Propriedades</h2>
-    <button @click="exibirConfirm()">+</button>
+  <div class="container-organization">
+    <div class="organization">
+        <div class="escrita">
+          <p class="title">Meus <span>Imóveis</span></p>
+          <div class="button-circle" @click="exibirConfirm">
+            +
+          </div>
+        </div>
+      </div>
+    <OrganizationCardMinhasprops />
+    <TheCreator v-if="exibir" />
   </div>
-  <OrganizationCardMinhasprops />
-  <TheCreator v-if="exibir" />
 </template>
 
 <style scoped>
 .container-organization {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 350px));
-  gap: 30px;
   width: 100%;
-  justify-content: center;
-}
-
-.cima-title {
+  margin: 0 auto;
   display: flex;
-  gap: 1rem;
-  align-self: flex-start;
-  align-items: center
+  flex-direction: column;
+  gap: 2rem;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem 0;
 }
 
-.cima-title button {
-  aspect-ratio: 1/1;
+.organization-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.escrita {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.button-circle {
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 0;
-  font-size: 1.2rem;
-  background-color: var(--color-primary);
-  color: var(--color-primary-text);
+  background-color: var(--color-primary, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-h2 {
-  align-self: flex-start;
-  font-family: "Poppins", sans-serif;
+p {
   position: relative;
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
 }
 
-h2::before {
+p span {
+  color: var(--color-primary, #3b82f6);
+}
+
+.title::before {
   content: '';
   position: absolute;
   left: 0;
   bottom: -3px;
   height: 3px;
   width: 75%;
-  background-color: var(--color-primary);
+  background-color: var(--color-primary, #3b82f6);
   border-radius: 15px;
 }
 
-h2::after {
+.title::after {
   content: '';
   position: absolute;
   right: 0;
   bottom: -3px;
   height: 3px;
   width: 20%;
-  background-color: var(--color-primary);
+  background-color: var(--color-primary, #3b82f6);
   border-radius: 15px;
 }
 

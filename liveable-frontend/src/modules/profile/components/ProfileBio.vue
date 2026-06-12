@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import ProfileBioSkeleton from './ProfileBioSkeleton.vue'
 
 const BASE = 'http://127.0.0.1:8000/api'
 
@@ -7,6 +8,7 @@ const bio = ref('')
 const salvando = ref(false)
 const sucesso = ref(false)
 const erro = ref<string | null>(null)
+const loadingBio = ref<boolean>(true)
 
 onMounted(async () => {
   try {
@@ -20,6 +22,8 @@ onMounted(async () => {
     bio.value = data.bio ?? ''
   } catch (e) {
     console.error('[ProfileBio]', e)
+  } finally {
+    loadingBio.value = false
   }
 })
 
@@ -52,7 +56,9 @@ async function salvar() {
 </script>
 
 <template>
-  <section class="profile-bio">
+  <ProfileBioSkeleton v-if="loadingBio === true" />
+
+  <section v-else class="profile-bio">
     <h2 class="profile-bio__title">Bio</h2>
 
     <textarea

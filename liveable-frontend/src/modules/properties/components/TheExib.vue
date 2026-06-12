@@ -12,6 +12,8 @@ import AvaliationSession from './avaliation-session.vue'
 import TheEditProperty from './TheEditor.vue'
 import ConfirmDelete from '@/shared/components/ConfirmDelete.vue'
 
+const carregando = ref<boolean>(true)
+
 interface Property {
   id: number
   property_title: string
@@ -60,23 +62,27 @@ const podeGerenciar = computed(() => isAdmin.value || isOwner.value)
 onMounted(async () => {
   const token = localStorage.getItem('token')
   const headers: Record<string, string> = { Accept: 'application/json' }
+
   if (token) headers['Authorization'] = `Bearer ${token}`
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/property/${propertyId}`, { headers })
-    const data = await res.json()
-    property.value = data.Propriedade
-  } catch (error) {
-    console.error(error)
-  }
+    const [resProperty, resMe] = await Promise.all([
+      fetch(`http://127.0.0.1:8000/api/property/${propertyId}`, { headers }),
+      token
+        ? fetch(`http://127.0.0.1:8000/api/user`, { headers })
+        : null
+    ])
 
-  if (token) {
-    try {
-      const res = await fetch('http://127.0.0.1:8000/api/user', { headers })
-      me.value = await res.json()
-    } catch (error) {
-      console.error('[TheExib] carregar usuário', error)
+    const dataProperty = await resProperty.json()
+    property.value = dataProperty.Propriedade
+
+    if (resMe && resMe.ok) {
+      me.value = await resMe.json()
     }
+  } catch (error) {
+    console.error("Erro ao carregar dados da página de detalhes:", error)
+  } finally {
+    carregando.value = false
   }
 })
 
@@ -152,7 +158,24 @@ function handleSolicitar() {
 </script>
 
 <template>
-  <div class="all">
+  <div v-if="carregando" class="skeleton-container">
+    <div class="skeleton-title"></div>
+
+    <div class="skeleton-details">
+      <div class="skeleton-image"></div>
+
+      <div class="skeleton-info">
+        <div class="skeleton-line grande"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+
+        <div class="skeleton-button"></div>
+      </div>
+    </div>
+  </div>
+
+  <div v-else class="all">
     <div class="home-title">
       <p>{{ property?.property_title }}</p>
       <div v-if="podeGerenciar" class="gerenciar-btns">
@@ -274,13 +297,11 @@ function handleSolicitar() {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 .all {
-  width: 95%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   font-family: 'Poppins', sans-serif;
   gap: 20px;
-  margin-top: 1vw;
-  margin-bottom: 1vw;
 }
 
 .home-title {
@@ -633,5 +654,77 @@ function handleSolicitar() {
     padding-bottom: 40px;
     padding-top: 40px;
   }
+}
+
+/* O skeleton loading */
+
+.skeleton-title,
+.skeleton-image,
+.skeleton-line,
+.skeleton-button {
+  background: linear-gradient(
+    90deg,
+    #e5e5e5 25%,
+    #f5f5f5 50%,
+    #e5e5e5 75%
+  );
+
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-container {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-title {
+  width: 40%;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.skeleton-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skeleton-image {
+  width: 64%;
+  aspect-ratio: 16/9;
+  border-radius: 30px;
+}
+
+.skeleton-info {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-line {
+  height: 50px;
+  border-radius: 15px;
+}
+
+.skeleton-line.grande {
+  height: 80px;
+}
+
+.skeleton-button {
+  height: 65px;
+  border-radius: 20px;
 }
 </style>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { PhHeart } from '@phosphor-icons/vue'
 import { useRouter } from 'vue-router'
 import { useFavorites } from '@/modules/favorites/composables/useFavorites'
@@ -15,6 +16,8 @@ defineProps<{ casa: Property }>()
 
 const router = useRouter()
 const { isFavorite, toggleFavorite } = useFavorites()
+
+const imagemCarregada = ref(false)
 
 function goToDetails(id: number) {
   router.push(`/property-details/${id}`)
@@ -33,14 +36,29 @@ async function handleFav(e: Event, id: number) {
 
 <template>
   <div class="card">
+    <img
+      v-if="casa.images?.[0]?.url"
+      :src="casa.images[0].url"
+      @load="imagemCarregada = true"
+      style="display: none"
+    />
+
     <div
       class="cima"
+      :class="{ 'skeleton-loading': !imagemCarregada }"
       @click="goToDetails(casa.id)"
       :style="
-        casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}
+        casa.images?.[0]?.url && imagemCarregada
+          ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` }
+          : {}
       "
     >
-      <div class="fav" @click="handleFav($event, casa.id)" :class="{ ativo: isFavorite(casa.id) }">
+      <div
+        v-if="imagemCarregada"
+        class="fav"
+        @click="handleFav($event, casa.id)"
+        :class="{ ativo: isFavorite(casa.id) }"
+      >
         <PhHeart weight="fill" class="icon-fav" :size="20" />
       </div>
     </div>
@@ -85,6 +103,22 @@ async function handleFav(e: Event, id: number) {
   border-radius: 20px;
   position: relative;
   cursor: pointer;
+  transition: background-image 0.3s ease-in-out;
+}
+
+.skeleton-loading {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .fav {
@@ -138,7 +172,6 @@ async function handleFav(e: Event, id: number) {
 }
 
 .subtexto {
-  font-size: 13px;
   opacity: 0.6;
   display: flex;
   gap: 10px;

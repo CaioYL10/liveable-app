@@ -51,7 +51,7 @@ import ProfileSocialLinks from '../components/ProfileSocialinfos.vue'
 .page {
   width: 100%;
   min-height: 100vh;
-  padding: 2rem 3rem;
+  padding: 2rem 0rem;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   background: var(--color-bg, #f4f6fb);

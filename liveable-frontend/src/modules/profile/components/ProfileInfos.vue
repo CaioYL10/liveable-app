@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import ProfileInfosSkeleton from './ProfileInfosSkeleton.vue'
 
 const BASE = 'http://127.0.0.1:8000/api'
 
@@ -7,6 +8,7 @@ const form = ref({ name: '', email: '', phone: '' })
 const salvando = ref(false)
 const sucesso = ref(false)
 const erro = ref<string | null>(null)
+const loadingProfileInfos = ref<boolean>(true)
 
 onMounted(async () => {
   try {
@@ -22,6 +24,8 @@ onMounted(async () => {
     form.value.phone = data.phone ?? ''
   } catch (e) {
     console.error('[ProfileInfos]', e)
+  } finally {
+    loadingProfileInfos.value = false
   }
 })
 
@@ -54,7 +58,9 @@ async function salvar() {
 </script>
 
 <template>
-  <section class="profile-infos">
+  <ProfileInfosSkeleton v-if="loadingProfileInfos === true" />
+
+  <section v-else class="profile-infos">
     <div class="profile-infos__head">
       <h2 class="profile-infos__title">Informações pessoais</h2>
       <p class="profile-infos__sub">Preencha com seus verdadeiros dados.</p>

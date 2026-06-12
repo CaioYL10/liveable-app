@@ -58,7 +58,6 @@ const routes = [
       }
     ]
   },
-
   {
     path: '/baselogin',
     component: BaseLogin,
@@ -74,7 +73,11 @@ const routes = [
         name: 'cadastrarPage',
         component: CadastroView,
         meta: { guestOnly: true }
-      }
+      },
+      {
+        path: '/auth/callback',
+        component: () => import('@/modules/login/views/AuthCallback.vue'),
+      },
     ]
   }
 ]
@@ -82,6 +85,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0, behavior: 'smooth' }
+    }
+  }
 })
 
 router.beforeEach((to, from, next) => {

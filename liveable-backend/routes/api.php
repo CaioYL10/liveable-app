@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyReviewController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Auth\SocialAuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,6 +30,8 @@ Route::get('/property/{property}',             [PropertyController::class,      
 Route::get('/properties/{property}/reviews',   [PropertyReviewController::class, 'index']);
 Route::get('/user/{user}',                     [UserController::class,           'show']);
 Route::post('/webhooks/abacatepay', [PaymentController::class, 'webhook']);
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback']);
 
 // Autenticadas
 Route::middleware('auth:sanctum')->group(function () {

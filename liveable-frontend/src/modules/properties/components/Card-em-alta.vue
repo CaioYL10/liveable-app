@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { PhFire, PhArrowRight } from '@phosphor-icons/vue'
 import { useRouter } from 'vue-router'
 
@@ -18,41 +19,59 @@ defineProps<{
 
 const router = useRouter()
 
+const imagemCarregada = ref(false)
+
 function goToDetails() {
   router.push('/property-details')
 }
 </script>
 
 <template>
-  <div
-    class="all"
-    :style="
-      casa.images?.[0]?.url ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` } : {}
-    "
-  >
-    <div class="informs">
-      <div class="informs-texts">
-        <h3>{{ casa?.property_title }}</h3>
-        <div class="subs">
-          <p class="subtitle opacity">
-            R${{ casa?.pricePerDay }} p/ noites • ★ {{ casa?.avaliation }}
-          </p>
-          <p class="subtitle">
-            Mais de {{ casa?.clicks }} mil cliques!
-            <PhFire weight="fill" class="fire" :size="15" />
-          </p>
-        </div>
-      </div>
+  <div class="card-container">
+    <img
+      v-if="casa.images?.[0]?.url"
+      :src="casa.images[0].url"
+      @load="imagemCarregada = true"
+      style="display: none"
+    />
 
-      <button @click="goToDetails">
-        <PhArrowRight weight="bold" :size="26" />
-      </button>
+    <div
+      class="all"
+      :class="{ 'skeleton-bg': !imagemCarregada }"
+      :style="
+        casa.images?.[0]?.url && imagemCarregada
+          ? { backgroundImage: `url('${encodeURI(casa.images[0].url)}')` }
+          : {}
+      "
+    >
+      <div v-if="imagemCarregada" class="informs">
+        <div class="informs-texts">
+          <h3>{{ casa?.property_title }}</h3>
+          <div class="subs">
+            <p class="subtitle opacity">
+              R${{ casa?.pricePerDay }} p/ noites • ★ {{ casa?.avaliation }}
+            </p>
+            <p class="subtitle">
+              Mais de {{ casa?.clicks }} mil cliques!
+              <PhFire weight="fill" class="fire" :size="15" />
+            </p>
+          </div>
+        </div>
+
+        <button @click="goToDetails">
+          <PhArrowRight weight="bold" :size="26" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.card-container {
+  width: 100%;
+}
 
 .all {
   width: 100%;
@@ -66,6 +85,22 @@ function goToDetails() {
   color: var(--color-primary-text);
   background-size: cover;
   background-position: center;
+  transition: background-image 0.4s ease-in-out;
+}
+
+.skeleton-bg {
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .informs {
@@ -79,6 +114,18 @@ function goToDetails() {
   padding: 0 25px;
   align-items: center;
   border-radius: 22px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .informs-texts {
