@@ -15,48 +15,112 @@ import TheCalendary from '@/shared/components/TheCalendary.vue'
 import { useReservas } from '@/modules/properties/composables/useReservas'
 import { useRoute } from 'vue-router'
 
-// Pega o ID da propriedade direto da rota /property-details/:id
 const route = useRoute()
 const propertyId = Number(route.params.id)
 
-// Reservas / períodos bloqueados
 const { periodosBloqueados, carregando, erro, buscarReservas } = useReservas()
 
+// ─── Comodidades ─────────────────────────────────────────────────────────────
+interface PropertyAmenities {
+  wifi: boolean
+  tv: boolean
+  cooler: boolean
+  air_conditioning: boolean
+  washer: boolean
+  microwave: boolean
+  smoker: boolean
+}
+
+const amenities = ref<PropertyAmenities | null>(null)
+const carregandoProperty = ref(false)
+
+async function buscarDadosProperty() {
+  carregandoProperty.value = true
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/property/${propertyId}`)
+    const data = await response.json()
+
+    if (response.ok) {
+      const prop = data.Propriedade ?? data
+      amenities.value = {
+        wifi:             Boolean(prop.wifi),
+        tv:               Boolean(prop.tv),
+        cooler:           Boolean(prop.cooler),
+        air_conditioning: Boolean(prop.air_conditioning),
+        washer:           Boolean(prop.washer),
+        microwave:        Boolean(prop.microwave),
+        smoker:           Boolean(prop.smoker),
+      }
+    }
+  } catch (e) {
+    console.error('[buscarDadosProperty]', e)
+  } finally {
+    carregandoProperty.value = false
+  }
+}
+
+// ─── Reserva já existente ────────────────────────────────────────────────────
+const jaTemReserva = ref(false)
+const carregandoReservaUsuario = ref(false)
+
+async function verificarReservaUsuario() {
+  carregandoReservaUsuario.value = true
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/properties/${propertyId}/my-rent`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+    const data = await response.json()
+    if (response.ok) {
+      jaTemReserva.value = Boolean(data.has_rent)
+    }
+  } catch (e) {
+    console.error('[verificarReservaUsuario]', e)
+  } finally {
+    carregandoReservaUsuario.value = false
+  }
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
 onMounted(() => {
   if (!propertyId || isNaN(propertyId)) {
     console.error('[ConfirmarSolicitacao] ID inválido na rota:', route.params.id)
     return
   }
   buscarReservas(propertyId)
+  buscarDadosProperty()
+  verificarReservaUsuario()
 })
 
-// Datas selecionadas no calendário
-const checkin = ref<string | null>(null)
+// ─── Calendário ───────────────────────────────────────────────────────────────
+const checkin  = ref<string | null>(null)
 const checkout = ref<string | null>(null)
 
 function handleDatas(datas: { checkin: string; checkout: string }) {
-  checkin.value = datas.checkin
+  checkin.value  = datas.checkin
   checkout.value = datas.checkout
 }
 
-// Outros campos do formulário
+// ─── Formulário ───────────────────────────────────────────────────────────────
 const numPersons = ref<number | null>(null)
-const details = ref<string>('')
-const has_pet = ref<boolean | undefined>(undefined)
+const details    = ref<string>('')
+const has_pet    = ref<boolean | undefined>(undefined)
 
-// Envio da reserva
-const enviando = ref(false)
-const erroReserva = ref<string | null>(null)
+// ─── Envio ────────────────────────────────────────────────────────────────────
+const enviando       = ref(false)
+const erroReserva    = ref<string | null>(null)
 const sucessoReserva = ref(false)
 
 async function reservar() {
+  if (jaTemReserva.value) return
+
+  // Validação no frontend antes de chamar a API
   if (!checkin.value || !checkout.value) {
     erroReserva.value = 'Selecione as datas de check-in e check-out.'
     return
   }
 
-  enviando.value = true
-  erroReserva.value = null
+  enviando.value       = true
+  erroReserva.value    = null
   sucessoReserva.value = false
 
   try {
@@ -67,22 +131,39 @@ async function reservar() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify({
-        checkin: checkin.value,
-        checkout: checkout.value,
+        checkin:      checkin.value,
+        checkout:     checkout.value,
         guests_count: numPersons.value,
-        has_pet: has_pet.value,
-        details: details.value,
+        has_pet:      has_pet.value,
+        details:      details.value,
       }),
     })
+
+    // Garante que a resposta é JSON antes de fazer parse
+    const contentType = response.headers.get('content-type') ?? ''
+    if (!contentType.includes('application/json')) {
+      throw new Error('Erro interno no servidor. Tente novamente.')
+    }
 
     const data = await response.json()
 
     if (!response.ok) {
+      // Laravel retorna { message } ou { errors: { campo: [...] } }
+      if (data.errors) {
+        const primeiro = Object.values(data.errors as Record<string, string[]>)[0]
+        throw new Error(Array.isArray(primeiro) ? primeiro[0] : String(primeiro))
+      }
       throw new Error(data.message ?? `Erro ${response.status}`)
     }
 
     sucessoReserva.value = true
-    console.log('Reserva criada:', data)
+    jaTemReserva.value   = true
+
+    // Fecha o painel após 2 segundos
+    setTimeout(() => {
+      exibirConfirm()
+    }, 2000)
+
   } catch (e: any) {
     erroReserva.value = e.message ?? 'Erro ao confirmar reserva.'
     console.error('[reservar]', e)
@@ -107,34 +188,49 @@ async function reservar() {
     <div style="width: 100%">
       <p v-if="carregando">Carregando disponibilidade...</p>
       <p v-else-if="erro" style="color: red">{{ erro }}</p>
-
       <TheCalendary v-else :periodosBloqueados="periodosBloqueados" @updateDates="handleDatas" />
     </div>
 
-    <!-- Mais detalhes / comodidades -->
+    <!-- Comodidades -->
     <div class="mais-detalhes">
       <div class="mais-detalhes-title">
         <p class="title-principal">Mais detalhes</p>
         <p class="subtitulo">Comodidades da acomodação.</p>
       </div>
 
-      <div class="mais-detalhes-options">
+      <p v-if="carregandoProperty" class="amenidades-loading">Carregando comodidades...</p>
+
+      <div v-else class="mais-detalhes-options">
         <div class="esquerda">
-          <label><PhWifiHigh class="mais-detalhes-icons" /> Wi-fi</label>
-          <label><PhMonitor class="mais-detalhes-icons" /> TV</label>
-          <label><PhSidebar class="mais-detalhes-icons" /> Refrigerador</label>
-          <label><PhCigarette class="mais-detalhes-icons" /> Detector de fumaça</label>
+          <label :class="{ indisponivel: amenities && !amenities.wifi }">
+            <PhWifiHigh class="mais-detalhes-icons" /> Wi-fi
+          </label>
+          <label :class="{ indisponivel: amenities && !amenities.tv }">
+            <PhMonitor class="mais-detalhes-icons" /> TV
+          </label>
+          <label :class="{ indisponivel: amenities && !amenities.cooler }">
+            <PhSidebar class="mais-detalhes-icons" /> Refrigerador
+          </label>
+          <label :class="{ indisponivel: amenities && !amenities.smoker }">
+            <PhCigarette class="mais-detalhes-icons" /> Detector de fumaça
+          </label>
         </div>
         <div class="direita">
-          <label><PhSnowflake class="mais-detalhes-icons" /> Ar condicionado</label>
-          <label><PhWashingMachine class="mais-detalhes-icons" /> Máquina de lavar</label>
-          <label><PhHardDrive class="mais-detalhes-icons" /> Micro-ondas</label>
+          <label :class="{ indisponivel: amenities && !amenities.air_conditioning }">
+            <PhSnowflake class="mais-detalhes-icons" /> Ar condicionado
+          </label>
+          <label :class="{ indisponivel: amenities && !amenities.washer }">
+            <PhWashingMachine class="mais-detalhes-icons" /> Máquina de lavar
+          </label>
+          <label :class="{ indisponivel: amenities && !amenities.microwave }">
+            <PhHardDrive class="mais-detalhes-icons" /> Micro-ondas
+          </label>
         </div>
       </div>
     </div>
 
     <!-- Informações ao proprietário -->
-    <div class="infos-prop">
+    <div class="infos-prop" :class="{ bloqueado: jaTemReserva }">
       <p>Informações ao proprietário</p>
       <div class="inputs-prop">
         <div class="esquerda-infos">
@@ -143,8 +239,8 @@ async function reservar() {
             type="number"
             placeholder="Nº de pessoas"
             v-model="numPersons"
+            :disabled="jaTemReserva"
           />
-
           <div class="pet-input">
             <div class="pet-title">
               <i class="fa-solid fa-paw"></i>
@@ -152,24 +248,42 @@ async function reservar() {
             </div>
             <div class="inputs-radio">
               <label>Sim</label>
-              <input type="checkbox" :checked="has_pet === true" @click="has_pet = true" />
+              <input type="checkbox" :checked="has_pet === true"  @click="has_pet = true"  :disabled="jaTemReserva" />
             </div>
             <div class="inputs-radio">
               <label>Não</label>
-              <input type="checkbox" :checked="has_pet === false" @click="has_pet = false" />
+              <input type="checkbox" :checked="has_pet === false" @click="has_pet = false" :disabled="jaTemReserva" />
             </div>
           </div>
         </div>
-
-        <textarea placeholder="Mais detalhes..." v-model="details"></textarea>
+        <textarea placeholder="Mais detalhes..." v-model="details" :disabled="jaTemReserva"></textarea>
       </div>
     </div>
 
-    <p v-if="erroReserva" class="aviso-erro">⚠️ {{ erroReserva }}</p>
-    <p v-if="sucessoReserva" class="aviso-sucesso">✅ Reserva confirmada com sucesso!</p>
+    <!-- Erro -->
+    <div v-if="erroReserva" class="aviso-erro">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      {{ erroReserva }}
+    </div>
 
-    <button class="confirm-button" @click="reservar" :disabled="enviando">
-      {{ enviando ? 'Enviando...' : 'Confirmar' }}
+    <!-- Sucesso -->
+    <div v-if="sucessoReserva" class="aviso-sucesso">
+      <i class="fa-solid fa-circle-check"></i>
+      <div>
+        <p class="aviso-titulo">Solicitação enviada!</p>
+        <p class="aviso-sub">Aguarde o proprietário aceitar. Fechando em instantes...</p>
+      </div>
+    </div>
+
+    <button
+      class="confirm-button"
+      @click="reservar"
+      :disabled="enviando || jaTemReserva || carregandoReservaUsuario"
+    >
+      <span v-if="carregandoReservaUsuario">Verificando...</span>
+      <span v-else-if="jaTemReserva && !sucessoReserva">Solicitação já enviada</span>
+      <span v-else-if="enviando">Enviando...</span>
+      <span v-else>Confirmar</span>
     </button>
   </div>
 </template>
@@ -216,11 +330,8 @@ async function reservar() {
   align-items: center;
 }
 
-.editor-icon {
-  width: clamp(35px, 1.5vw, 40px);
-}
+.editor-icon { width: clamp(35px, 1.5vw, 40px); }
 
-/* Mais detalhes */
 .mais-detalhes {
   width: 100%;
   display: flex;
@@ -228,10 +339,7 @@ async function reservar() {
   gap: 1.5rem;
 }
 
-.mais-detalhes-title {
-  display: flex;
-  flex-direction: column;
-}
+.mais-detalhes-title { display: flex; flex-direction: column; }
 
 .mais-detalhes-options {
   width: 100%;
@@ -253,24 +361,34 @@ async function reservar() {
   align-items: center;
   gap: 6px;
   font-size: 1.1rem;
+  transition: opacity 0.2s;
 }
 
-.mais-detalhes-icons {
-  width: clamp(35px, 1.5vw, 40px);
+.indisponivel {
+  opacity: 0.35;
+  text-decoration: line-through;
+  text-decoration-color: currentColor;
 }
 
-/* Informações ao proprietário */
+.mais-detalhes-icons { width: clamp(35px, 1.5vw, 40px); }
+
+.amenidades-loading { font-size: 0.9rem; opacity: 0.6; }
+
 .infos-prop {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  transition: opacity 0.2s;
 }
 
-.inputs-prop {
-  display: flex;
-  justify-content: space-between;
+.bloqueado {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
 }
+
+.inputs-prop { display: flex; justify-content: space-between; }
 
 .esquerda-infos {
   width: 48%;
@@ -308,61 +426,65 @@ async function reservar() {
   padding: 0.7rem;
 }
 
-.pet-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.pet-title { display: flex; align-items: center; gap: 10px; }
 
-.inputs-radio {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
+.inputs-radio { display: flex; gap: 5px; align-items: center; }
 
-/* Avisos */
-.aviso-erro {
+/* ── Avisos ── */
+.aviso-erro,
+.aviso-sucesso,
+.aviso-ja-reservado {
   width: 100%;
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  border-radius: 10px;
-  padding: 10px 16px;
+  border-radius: 12px;
+  padding: 14px 16px;
   font-size: 13px;
-  color: #7a5800;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
+
+.aviso-erro {
+  background: #fff3f3;
+  border: 1px solid #ffb3b3;
+  color: #c0392b;
+}
+
+.aviso-erro i { font-size: 16px; flex-shrink: 0; }
 
 .aviso-sucesso {
-  width: 100%;
-  background: #e8f5e9;
-  border: 1px solid #a5d6a7;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
-  color: #2e7d32;
+  background: #f0faf3;
+  border: 1px solid #6fcf97;
+  color: #1e7e44;
+}
+
+.aviso-sucesso i { font-size: 22px; flex-shrink: 0; }
+
+.aviso-titulo {
+  font-weight: 600;
+  font-size: 14px;
   margin: 0;
 }
 
-/* Globais */
-button,
-input,
-textarea {
-  font-family: 'Poppins', sans-serif;
+.aviso-sub {
+  font-size: 12px;
+  opacity: 0.75;
+  margin: 2px 0 0;
 }
 
-p {
-  margin: 0;
+.aviso-ja-reservado {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  color: #1565c0;
 }
 
-.title-principal {
-  font-size: 1.2rem;
-  font-weight: 650;
-}
+button, input, textarea { font-family: 'Poppins', sans-serif; }
 
-.subtitulo {
-  opacity: 0.6;
-  font-weight: 500;
-}
+p { margin: 0; }
+
+.title-principal { font-size: 1.2rem; font-weight: 650; }
+
+.subtitulo { opacity: 0.6; font-weight: 500; }
 
 .confirm-button {
   width: 100%;

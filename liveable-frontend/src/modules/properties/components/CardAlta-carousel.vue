@@ -9,6 +9,9 @@ import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
 
 import CardEmAlta from './Card-em-alta.vue'
 import CardEmAltaSkeleton from './CardEmAltaSkeleton.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const prevButton = ref(null)
 const nextButton = ref(null)
@@ -29,10 +32,10 @@ const carregando = ref<boolean>(true)
 
 interface Property {
   id: number
-  title: string
+  property_title: string
   pricePerDay: number
   avaliation: number
-  image: string
+  images: { url: string }[]
   clicks: number
 }
 
@@ -40,7 +43,7 @@ const properties = ref<Property[]>([])
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/properties')
+    const response = await fetch('http://127.0.0.1:8000/api/properties/featured')
     const data = await response.json()
     properties.value = Array.isArray(data) ? data : []
   } catch (error) {
@@ -49,34 +52,45 @@ onMounted(async () => {
     carregando.value = false
   }
 })
+
+function verTodas() {
+  router.push('/imoveis')
+}
 </script>
 
 <template>
   <div class="carousel-wrapper">
     <div class="escrita-cima">
       <div class="escrita">
-        <p>Propriedades em <span>Alta</span></p>
-        <div class="button-circle"><i class="fa-solid fa-angle-right"></i></div>
+        <p class="titulo">Propriedades em <span>Alta</span></p>
+        <div class="button-circle" @click="verTodas()">
+          <i class="fa-solid fa-angle-right"></i>
+        </div>
       </div>
 
       <div class="arrows">
         <button ref="prevButton" class="custom-prev">
           <PhCaretLeft :size="32" />
         </button>
-
         <button ref="nextButton" class="custom-next">
           <PhCaretRight :size="32" />
         </button>
       </div>
     </div>
 
+    <!-- Nenhuma propriedade em alta -->
+    <div v-if="!carregando && properties.length === 0" class="vazio">
+      <p>Nenhuma propriedade em destaque no momento.</p>
+    </div>
+
     <Swiper
+      v-else
       :modules="[Navigation]"
       :space-between="24"
       :slides-per-view="1"
-      :loop="true"
+      :loop="properties.length > 1"
       :breakpoints="{
-        '768': { slidesPerView: 2.1, spaceBetween: 20 },
+        '768':  { slidesPerView: 2.1, spaceBetween: 20 },
         '1024': { slidesPerView: 2.4, spaceBetween: 24 },
         '1440': { slidesPerView: 3.5, spaceBetween: 30 },
         '1920': { slidesPerView: 3.5, spaceBetween: 40 },
@@ -92,7 +106,7 @@ onMounted(async () => {
 
       <template v-else>
         <SwiperSlide v-for="casa in properties" :key="casa.id">
-          <CardEmAlta v-if="casa" :casa="casa" />
+          <CardEmAlta :casa="casa" />
         </SwiperSlide>
       </template>
     </Swiper>
@@ -134,7 +148,10 @@ onMounted(async () => {
   cursor: pointer;
   box-sizing: border-box;
   padding: 0.2rem;
+  transition: opacity 0.2s;
 }
+
+.button-circle:hover { opacity: 0.85; }
 
 p {
   position: relative;
@@ -143,11 +160,9 @@ p {
   font-weight: 600;
 }
 
-p span {
-  color: var(--color-primary);
-}
+p span { color: var(--color-primary); }
 
-p::before {
+.titulo::before {
   content: '';
   position: absolute;
   left: 0;
@@ -158,7 +173,7 @@ p::before {
   border-radius: 15px;
 }
 
-p::after {
+.titulo::after {
   content: '';
   position: absolute;
   right: 0;
@@ -174,6 +189,13 @@ p::after {
   gap: 10px;
 }
 
+.vazio {
+  padding: 3rem 0;
+  text-align: center;
+  opacity: 0.4;
+  font-size: 0.9rem;
+}
+
 .mySwiper {
   width: 100%;
   border-radius: 16px;
@@ -183,9 +205,7 @@ p::after {
 }
 
 .swiper-button-next::after,
-.swiper-button-prev::after {
-  display: none;
-}
+.swiper-button-prev::after { display: none; }
 
 .custom-prev,
 .custom-next {
@@ -206,39 +226,10 @@ p::after {
 }
 
 .custom-prev:hover,
-.custom-next:hover {
-  box-shadow: var(--shadow-hover-blue);
-}
+.custom-next:hover { box-shadow: var(--shadow-hover-blue); }
 
-.custom-prev {
-  right: 50px;
-}
-.custom-next {
-  right: 10px;
-}
-
-:deep(.swiper-pagination-bullet) {
-  background: #999;
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  transition: all 0.3s ease;
-}
-
-:deep(.swiper-pagination-bullet-active) {
-  background: blue;
-  width: 30px;
-}
-
-:deep(.swiper-pagination) {
-  background: rgba(255, 255, 255, 0.95);
-  width: fit-content;
-  padding: 10px 16px;
-  border-radius: 999px;
-  left: 50% !important;
-  transform: translateX(-50%);
-  bottom: 10px !important;
-}
+.custom-prev { right: 50px; }
+.custom-next { right: 10px; }
 
 :deep(.swiper-slide) {
   height: auto;

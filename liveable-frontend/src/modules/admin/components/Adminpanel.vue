@@ -29,11 +29,22 @@ interface UserRow {
   created_at: string
 }
 
+interface PropertyRow {
+  id: number
+  property_title: string
+  local: string
+  type: string
+  is_featured: boolean
+}
+
 // ── Estado ─────────────────────────────────────────────
 const stats = ref<Stats | null>(null)
 const users = ref<UserRow[]>([])
+const allProperties = ref<PropertyRow[]>([])
 const carregando = ref(true)
+const carregandoProps = ref(true)
 const filtro = ref('')
+const filtroProps = ref('')
 
 const form = ref({ name: '', last_name: '', email: '', password: '' })
 const criando = ref(false)
@@ -43,6 +54,11 @@ const okForm = ref(false)
 const usersVisiveis = () =>
   users.value.filter((u) =>
     `${u.name} ${u.last_name} ${u.email}`.toLowerCase().includes(filtro.value.toLowerCase()),
+  )
+
+const propsVisiveis = () =>
+  allProperties.value.filter((p) =>
+    `${p.property_title} ${p.local} ${p.type}`.toLowerCase().includes(filtroProps.value.toLowerCase()),
   )
 
 // ── Carregamento ───────────────────────────────────────
@@ -58,6 +74,15 @@ onMounted(async () => {
     console.error('[AdminPanel] carregar dados', e)
   } finally {
     carregando.value = false
+  }
+
+  try {
+    const res = await fetch(`${BASE}/properties`, { headers: headers() })
+    allProperties.value = await res.json()
+  } catch (e) {
+    console.error('[AdminPanel] carregar propriedades', e)
+  } finally {
+    carregandoProps.value = false
   }
 })
 
@@ -113,13 +138,28 @@ async function toggleRole(user: UserRow) {
     console.error('[toggleRole]', e)
   }
 }
+
+// ── Toggle featured ────────────────────────────────────
+async function toggleFeatured(prop: PropertyRow) {
+  const novoValor = !prop.is_featured
+  try {
+    const res = await fetch(`${BASE}/admin/properties/${prop.id}/featured`, {
+      method: 'PATCH',
+      headers: headers(),
+      body: JSON.stringify({ is_featured: novoValor }),
+    })
+    if (!res.ok) throw new Error()
+    prop.is_featured = novoValor
+  } catch (e) {
+    console.error('[toggleFeatured]', e)
+  }
+}
 </script>
 
 <template>
   <section class="admin">
     <div class="admin__title-row">
-      <h2 class="admin__title">Painel <span>Admin</span></h2>
-      <span class="admin__badge">Admin</span>
+      <h2 class="admin__title">Painel de <span>Gerenciamento</span></h2>
     </div>
 
     <!-- Stats -->
@@ -128,9 +168,7 @@ async function toggleRole(user: UserRow) {
     <div v-else-if="stats" class="admin__stats">
       <div class="admin__stat">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
-          />
+          <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
         </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Usuários</span>
@@ -152,9 +190,7 @@ async function toggleRole(user: UserRow) {
 
       <div class="admin__stat">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-          />
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
         </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Avaliações</span>
@@ -164,14 +200,56 @@ async function toggleRole(user: UserRow) {
 
       <div class="admin__stat">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
-          />
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
         </svg>
         <div class="admin__stat-info">
           <span class="admin__stat-label">Admins</span>
           <span class="admin__stat-value">{{ stats.total_admins }}</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Propriedades em Alta -->
+    <div class="admin__card">
+      <div class="admin__card-head">
+        <div>
+          <h3 class="admin__card-title">Propriedades em Alta</h3>
+          <p class="admin__card-desc">Marque as propriedades que aparecem no carrossel "Em Alta".</p>
+        </div>
+        <input class="admin__search" placeholder="Buscar imóvel..." v-model="filtroProps" />
+      </div>
+
+      <div v-if="carregandoProps" class="admin__loading">Carregando imóveis...</div>
+
+      <div v-else class="admin__table-wrap">
+        <table class="admin__table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Local</th>
+              <th>Tipo</th>
+              <th>Em Alta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="prop in propsVisiveis()" :key="prop.id">
+              <td>{{ prop.property_title }}</td>
+              <td class="admin__email">{{ prop.local }}</td>
+              <td>
+                <span class="admin__role-badge admin__role-badge--user">{{ prop.type }}</span>
+              </td>
+              <td>
+                <button
+                  class="admin__featured-btn"
+                  :class="prop.is_featured ? 'admin__featured-btn--on' : 'admin__featured-btn--off'"
+                  @click="toggleFeatured(prop)"
+                >
+                  {{ prop.is_featured ? '🔥 Em alta' : 'Destacar' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -182,16 +260,11 @@ async function toggleRole(user: UserRow) {
         <input class="admin__input" placeholder="Nome" v-model="form.name" />
         <input class="admin__input" placeholder="Sobrenome" v-model="form.last_name" />
         <input class="admin__input" placeholder="E-mail" type="email" v-model="form.email" />
-        <input
-          class="admin__input"
-          placeholder="Senha (mín. 6 caracteres)"
-          type="password"
-          v-model="form.password"
-        />
+        <input class="admin__input" placeholder="Senha (mín. 6 caracteres)" type="password" v-model="form.password" />
       </div>
 
       <p v-if="erroForm" class="admin__aviso admin__aviso--erro">⚠️ {{ erroForm }}</p>
-      <p v-if="okForm" class="admin__aviso admin__aviso--ok">✅ Admin criado com sucesso!</p>
+      <p v-if="okForm"   class="admin__aviso admin__aviso--ok">✅ Admin criado com sucesso!</p>
 
       <button class="admin__btn" @click="criarAdmin" :disabled="criando">
         {{ criando ? 'Criando...' : 'Criar admin' }}
@@ -223,9 +296,7 @@ async function toggleRole(user: UserRow) {
               <td>
                 <span
                   class="admin__role-badge"
-                  :class="
-                    u.role === 'admin' ? 'admin__role-badge--admin' : 'admin__role-badge--user'
-                  "
+                  :class="u.role === 'admin' ? 'admin__role-badge--admin' : 'admin__role-badge--user'"
                 >
                   {{ u.role }}
                 </span>
@@ -234,9 +305,7 @@ async function toggleRole(user: UserRow) {
               <td>
                 <button
                   class="admin__toggle-btn"
-                  :class="
-                    u.role === 'admin' ? 'admin__toggle-btn--demote' : 'admin__toggle-btn--promote'
-                  "
+                  :class="u.role === 'admin' ? 'admin__toggle-btn--demote' : 'admin__toggle-btn--promote'"
                   @click="toggleRole(u)"
                 >
                   {{ u.role === 'admin' ? 'Remover admin' : 'Tornar admin' }}
@@ -275,19 +344,35 @@ async function toggleRole(user: UserRow) {
   color: var(--color-black-text, #1a1a2e);
 }
 
-.admin__title span {
-  color: #1a2fa8;
+.admin__title span { color: #1a2fa8; }
+
+h2 {
+  position: relative;
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
-.admin__badge {
-  background: #1a2fa8;
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 75%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 20%;
+  background-color: var(--color-primary);
+  border-radius: 15px;
 }
 
 .admin__loading {
@@ -373,6 +458,12 @@ async function toggleRole(user: UserRow) {
   color: var(--color-black-text, #1a1a2e);
 }
 
+.admin__card-desc {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
 .admin__form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -400,13 +491,9 @@ async function toggleRole(user: UserRow) {
 }
 
 .admin__input::placeholder,
-.admin__search::placeholder {
-  color: #c0c0c0;
-}
+.admin__search::placeholder { color: #c0c0c0; }
 
-.admin__search {
-  width: 220px;
-}
+.admin__search { width: 220px; }
 
 .admin__aviso {
   margin: 0;
@@ -439,17 +526,10 @@ async function toggleRole(user: UserRow) {
   transition: background 0.18s;
 }
 
-.admin__btn:hover:not(:disabled) {
-  background: #1527a0;
-}
-.admin__btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.admin__btn:hover:not(:disabled) { background: #1527a0; }
+.admin__btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.admin__table-wrap {
-  overflow-x: auto;
-}
+.admin__table-wrap { overflow-x: auto; }
 
 .admin__table {
   width: 100%;
@@ -474,18 +554,10 @@ async function toggleRole(user: UserRow) {
   vertical-align: middle;
 }
 
-.admin__table tr:last-child td {
-  border-bottom: none;
-}
-.admin__email {
-  color: #6b7280;
-  font-size: 0.82rem;
-}
-.admin__date {
-  color: #9ca3af;
-  font-size: 0.8rem;
-  white-space: nowrap;
-}
+.admin__table tr:last-child td { border-bottom: none; }
+
+.admin__email { color: #6b7280; font-size: 0.82rem; }
+.admin__date  { color: #9ca3af; font-size: 0.8rem; white-space: nowrap; }
 
 .admin__role-badge {
   display: inline-block;
@@ -497,14 +569,8 @@ async function toggleRole(user: UserRow) {
   letter-spacing: 0.04em;
 }
 
-.admin__role-badge--admin {
-  background: #e8eaf6;
-  color: #1a2fa8;
-}
-.admin__role-badge--user {
-  background: #f3f4f6;
-  color: #6b7280;
-}
+.admin__role-badge--admin { background: #e8eaf6; color: #1a2fa8; }
+.admin__role-badge--user  { background: #f3f4f6; color: #6b7280; }
 
 .admin__toggle-btn {
   border: 1.5px solid #e5e7eb;
@@ -519,27 +585,48 @@ async function toggleRole(user: UserRow) {
   white-space: nowrap;
 }
 
-.admin__toggle-btn--promote:hover {
-  border-color: #1a2fa8;
-  color: #1a2fa8;
+.admin__toggle-btn--promote:hover { border-color: #1a2fa8; color: #1a2fa8; }
+.admin__toggle-btn--demote:hover  { border-color: #dc2626; color: #dc2626; }
+
+/* ── Featured button ── */
+.admin__featured-btn {
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
 }
-.admin__toggle-btn--demote:hover {
-  border-color: #dc2626;
-  color: #dc2626;
+
+.admin__featured-btn--on {
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.admin__featured-btn--on:hover {
+  background: #ffedd5;
+}
+
+.admin__featured-btn--off {
+  color: #6b7280;
+}
+
+.admin__featured-btn--off:hover {
+  border-color: #f97316;
+  color: #f97316;
 }
 
 @media (max-width: 900px) {
-  .admin__stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .admin__form {
-    grid-template-columns: 1fr;
-  }
+  .admin__stats    { grid-template-columns: repeat(2, 1fr); }
+  .admin__form     { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
-  .admin__stats {
-    grid-template-columns: 1fr 1fr;
-  }
+  .admin__stats { grid-template-columns: 1fr 1fr; }
 }
 </style>

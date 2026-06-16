@@ -21,30 +21,31 @@ const routes = [
       {
         path: '',
         name: 'home',
-        component: HomeView
+        component: HomeView,
       },
       {
         path: '/property-details/:id',
         name: 'propertyDetails',
-        component: PropertyDetails
+        component: PropertyDetails,
+        meta: { requiresAuth: true },
       },
       {
         path: 'pendencias',
         name: 'pendenciasPage',
         component: ImoveisPendentes,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: 'minhasProps',
         name: 'minhasPropspage',
         component: MinhasProps,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: 'perfil',
         name: 'perfilPage',
         component: ViewProfile,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: 'perfil/:id',
@@ -55,8 +56,27 @@ const routes = [
         path: '/favoritos',
         name: 'favorites',
         component: () => import('@/modules/favorites/views/FavoritesView.vue'),
-      }
-    ]
+      },
+      {
+        // ?type=casa|apartamento|chacara  &q=texto
+        path: '/imoveis',
+        name: 'todasPropriedades',
+        component: () => import('@/modules/properties/views/TodasPropriedades.vue'),
+      },
+
+      {
+        path: '/esqueci-senha',
+        name: 'forgotPassword',
+        component: () => import('@/modules/login/views/ForgotPasswordView.vue'),
+        meta: { guestOnly: true },
+      },
+      {
+        path: '/reset-password',
+        name: 'resetPassword',
+        component: () => import('@/modules/login/views/ResetPasswordView.vue'),
+        meta: { guestOnly: true },
+      },
+    ],
   },
   {
     path: '/baselogin',
@@ -66,20 +86,20 @@ const routes = [
         path: '',
         name: 'loginPage',
         component: LoginView,
-        meta: { guestOnly: true }
+        meta: { guestOnly: true },
       },
       {
         path: 'cadastrar',
         name: 'cadastrarPage',
         component: CadastroView,
-        meta: { guestOnly: true }
+        meta: { guestOnly: true },
       },
       {
         path: '/auth/callback',
         component: () => import('@/modules/login/views/AuthCallback.vue'),
       },
-    ]
-  }
+    ],
+  },
 ]
 
 const router = createRouter({
@@ -91,7 +111,7 @@ const router = createRouter({
     } else {
       return { top: 0, behavior: 'smooth' }
     }
-  }
+  },
 })
 
 router.beforeEach((to, from, next) => {

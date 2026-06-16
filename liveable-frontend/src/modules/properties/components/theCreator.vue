@@ -106,6 +106,7 @@ async function salvarImovel() {
     formData.append('air_conditioning', ar.value ? '1' : '0')
     formData.append('washer', maquina_lavar.value ? '1' : '0')
     formData.append('microwave', micro_ondas.value ? '1' : '0')
+    formData.append('smoker', fumaca.value ? '1' : '0')
 
     if (imagem.value) formData.append('images[]', imagem.value)
 

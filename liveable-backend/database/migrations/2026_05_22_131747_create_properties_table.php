@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->boolean('air_conditioning');
             $table->boolean('washer');
             $table->boolean('microwave');
+            $table->boolean('smoker');
             $table->string('contract')->nullable();
             $table->string('status');
             $table->integer('pricePerDay');

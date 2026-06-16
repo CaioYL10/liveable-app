@@ -26,10 +26,12 @@ class Property extends Model
         'air_conditioning',
         'washer',
         'microwave',
+        'smoker',
         'pricePerDay',
         'status',
         'contract',
         'property_image_id',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -39,6 +41,7 @@ class Property extends Model
         'air_conditioning' => 'boolean',
         'washer' => 'boolean',
         'microwave' => 'boolean',
+        'is_featured'      => 'boolean',
     ];
 
     public function likes(): HasMany

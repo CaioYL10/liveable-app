@@ -115,7 +115,7 @@ const loginWithGoogle = () => {
 
     <div class="input-password">
       <input class="input-large input" type="text" placeholder="Senha" v-model="password" />
-      <a href="">Esqueceu sua senha?</a>
+      <a @click="router.push('/esqueci-senha')">Esqueceu sua senha?</a>
     </div>
 
     <div class="save-informations-text">

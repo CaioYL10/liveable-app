@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca
+class ComposerStaticInit5e7eb043812f579c86619f0593cdda20
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -646,6 +646,7 @@ class ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca
         'Carbon\\Laravel\\ServiceProvider' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Laravel/ServiceProvider.php',
         'Carbon\\MessageFormatter\\MessageFormatterMapper' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/MessageFormatter/MessageFormatterMapper.php',
         'Carbon\\Month' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Month.php',
+        'Carbon\\OverflowMode' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/OverflowMode.php',
         'Carbon\\PHPStan\\MacroExtension' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/PHPStan/MacroExtension.php',
         'Carbon\\PHPStan\\MacroMethodReflection' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/PHPStan/MacroMethodReflection.php',
         'Carbon\\Traits\\Boundaries' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Boundaries.php',
@@ -7468,9 +7469,9 @@ class ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc711689b70186f1bc07879a1d87fe9ca::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5e7eb043812f579c86619f0593cdda20::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5e7eb043812f579c86619f0593cdda20::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5e7eb043812f579c86619f0593cdda20::$classMap;
 
         }, null, ClassLoader::class);
     }

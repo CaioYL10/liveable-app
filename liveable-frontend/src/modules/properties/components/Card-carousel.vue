@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { Swiper, SwiperSlide } from 'swiper/vue'
-
 import 'swiper/css'
 import 'swiper/css/navigation'
-
 import { Navigation } from 'swiper/modules'
 
 import CardCasa from './CardCasa.vue'
 import CardCasaSkeleton from './CardCasaSkeleton.vue'
+
+const router = useRouter()
 
 const prevButton = ref(null)
 const nextButton = ref(null)
@@ -20,14 +21,11 @@ const onSwiper = (swiper: any) => {
       swiper.params.navigation.prevEl = prevButton.value
       swiper.params.navigation.nextEl = nextButton.value
     }
-
     swiper.navigation.destroy()
     swiper.navigation.init()
     swiper.navigation.update()
   })
 }
-
-// Logica de receber dados
 
 const carregando = ref<boolean>(true)
 
@@ -36,9 +34,7 @@ interface Property {
   property_title: string
   pricePerDay: number
   avaliation: number
-  images: {
-    url: string
-  }[]
+  images: { url: string }[]
 }
 
 const properties = ref<Property[]>([])
@@ -47,7 +43,6 @@ onMounted(async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/properties')
     const data = await response.json()
-
     properties.value = data
   } catch (error) {
     console.error(error)
@@ -55,6 +50,10 @@ onMounted(async () => {
     carregando.value = false
   }
 })
+
+function verTodas() {
+  router.push('/imoveis')
+}
 </script>
 
 <template>
@@ -62,23 +61,22 @@ onMounted(async () => {
     <div class="escrita-cima">
       <div class="escrita">
         <p>Sugestões para <span>Você</span></p>
-        <div class="button-circle"><i class="fa-solid fa-angle-right"></i></div>
+        <!-- Botão que vai pra /imoveis sem filtro -->
+        <div class="button-circle" @click="verTodas">
+          <i class="fa-solid fa-angle-right"></i>
+        </div>
       </div>
 
       <div class="arrows">
-        <!-- SETA ESQUERDA -->
         <button ref="prevButton" class="custom-prev">
           <PhCaretLeft :size="32" />
         </button>
-
-        <!-- SETA DIREITA -->
         <button ref="nextButton" class="custom-next">
           <PhCaretRight :size="32" />
         </button>
       </div>
     </div>
 
-    <!-- CARROSSEL -->
     <Swiper
       :modules="[Navigation]"
       :slides-per-view="1"
@@ -94,19 +92,13 @@ onMounted(async () => {
       class="mySwiper"
     >
       <template v-if="carregando">
-        <SwiperSlide
-          v-for="n in 6"
-          :key="n"
-        >
+        <SwiperSlide v-for="n in 6" :key="n">
           <CardCasaSkeleton />
         </SwiperSlide>
       </template>
 
       <template v-else>
-        <SwiperSlide
-          v-for="casa in properties"
-          :key="casa.id"
-        >
+        <SwiperSlide v-for="casa in properties" :key="casa.id">
           <CardCasa v-if="casa" :casa="casa" />
         </SwiperSlide>
       </template>
@@ -149,6 +141,11 @@ onMounted(async () => {
   cursor: pointer;
   box-sizing: border-box;
   padding: 0.2rem;
+  transition: opacity 0.2s;
+}
+
+.button-circle:hover {
+  opacity: 0.85;
 }
 
 p {
@@ -197,33 +194,24 @@ p::after {
   padding: 1rem 0;
 }
 
-/* Escondendo as setas padrões do swiper */
-
 .swiper-button-next::after,
 .swiper-button-prev::after {
   display: none;
 }
 
-/* Novas setas */
-
 .custom-prev,
 .custom-next {
   z-index: 20;
-
   width: 29px;
   height: 29px;
   box-shadow: var(--shadow-sm);
   border: 0;
   border-radius: 50%;
-
   background: rgba(255, 255, 255, 0.7);
   color: rgb(0, 0, 0);
-
   font-size: 24px;
   cursor: pointer;
-
   transition: 0.3s;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,45 +222,8 @@ p::after {
   box-shadow: var(--shadow-hover-blue);
 }
 
-.custom-prev {
-  right: 50px;
-}
-
-.custom-next {
-  right: 10px;
-}
-
-:deep(.swiper-pagination-bullet) {
-  background: #999;
-
-  width: 10px;
-  height: 10px;
-
-  border-radius: 999px;
-
-  transition: all 0.3s ease;
-}
-
-:deep(.swiper-pagination-bullet-active) {
-  background: blue;
-
-  width: 30px;
-}
-
-:deep(.swiper-pagination) {
-  background: rgba(255, 255, 255, 0.95);
-
-  width: fit-content;
-
-  padding: 10px 16px;
-
-  border-radius: 999px;
-
-  left: 50% !important;
-  transform: translateX(-50%);
-
-  bottom: 10px !important;
-}
+.custom-prev { right: 50px; }
+.custom-next { right: 10px; }
 
 :deep(.swiper-slide) {
   height: auto;

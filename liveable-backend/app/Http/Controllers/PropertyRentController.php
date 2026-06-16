@@ -17,19 +17,47 @@ class PropertyRentController extends Controller
 
     public function store(Request $request, Property $property)
     {
+        // Impede duplicata: uma reserva por usuário por propriedade
+        $jaExiste = $property->rents()
+            ->where('user_id', $request->user()->id)
+            ->exists();
+
+        if ($jaExiste) {
+            return response()->json([
+                'message' => 'Você já possui uma solicitação para este imóvel.',
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'checkin'      => 'required|date',
+            'checkout'     => 'required|date|after:checkin',
+            'guests_count' => 'nullable|integer|min:1',
+            'has_pet'      => 'nullable|boolean',
+            'details'      => 'nullable|string|max:1000',
+        ]);
+
         $rent = $property->rents()->create([
             'user_id'      => $request->user()->id,
-            'checkin'      => $request->checkin,
-            'checkout'     => $request->checkout,
-            'guests_count' => $request->guests_count,
-            'details'      => $request->details ?? '',
-            'has_pet'      => $request->has_pet ?? false,
+            'checkin'      => $validated['checkin'],
+            'checkout'     => $validated['checkout'],
+            'guests_count' => $validated['guests_count'] ?? null,
+            'details'      => $validated['details'] ?? '',
+            'has_pet'      => $validated['has_pet'] ?? false,
         ]);
 
         return response()->json([
             'message' => 'Solicitação enviada com sucesso! Aguarde o dono aceitar.',
             'rent'    => $rent,
         ], 201);
+    }
+
+    public function myRent(Property $property)
+    {
+        $hasRent = $property->rents()
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        return response()->json(['has_rent' => $hasRent]);
     }
 
     public function pendingRents(Request $request)

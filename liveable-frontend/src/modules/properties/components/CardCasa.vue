@@ -67,7 +67,7 @@ async function handleFav(e: Event, id: number) {
       <div class="textos">
         <p class="titulo">{{ casa?.property_title }}</p>
         <div class="subtexto">
-          <p>R${{ casa?.pricePerDay }} p/noite</p>
+          <p>R${{ casa?.pricePerDay }} p/ dia</p>
           <p>•</p>
           <p>★ {{ casa?.avaliation }}</p>
         </div>

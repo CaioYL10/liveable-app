@@ -48,12 +48,13 @@ const form = ref({
   air_conditioning: false,
   washer: false,
   microwave: false,
+  smoker: false,
   pricePerDay: '',
   pricePerWeek: '',
   pricePerMonth: '',
 })
 
-const tiposAtivos = ref<string[]>([]) 
+const tiposAtivos = ref<string[]>([])
 const tipoProp = ref<string | null>(null)
 
 watch(
@@ -86,6 +87,7 @@ watch(
         air_conditioning: !!p.air_conditioning,
         washer: !!p.washer,
         microwave: !!p.microwave,
+        smoker: !!p.smoker,
         pricePerDay: p.pricePerDay ?? '',
         pricePerWeek: p.pricePerWeek ?? '',
         pricePerMonth: p.pricePerMonth ?? '',
@@ -144,6 +146,7 @@ async function salvar() {
     air_conditioning: form.value.air_conditioning,
     washer: form.value.washer,
     microwave: form.value.microwave,
+    smoker: form.value.smoker,
   }
 
   if (tiposAtivos.value.includes('dia')) body.pricePerDay = Number(form.value.pricePerDay)
@@ -354,7 +357,7 @@ async function salvar() {
               Refrigerador</label
             >
             <label
-              ><input type="checkbox" /><PhCigarette class="mais-detalhes-icons" /> Det.
+              ><input type="checkbox" v-model="form.smoker" /><PhCigarette class="mais-detalhes-icons" /> Det.
               fumaça</label
             >
           </div>

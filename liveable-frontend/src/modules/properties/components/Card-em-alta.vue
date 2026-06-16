@@ -4,25 +4,21 @@ import { PhFire, PhArrowRight } from '@phosphor-icons/vue'
 import { useRouter } from 'vue-router'
 
 interface Property {
+  id: number
   property_title: string
   pricePerDay: number
   avaliation: number
-  images: {
-    url: string
-  }[]
+  images: { url: string }[]
   clicks: number
 }
 
-defineProps<{
-  casa: Property
-}>()
+const props = defineProps<{ casa: Property }>()
 
 const router = useRouter()
-
 const imagemCarregada = ref(false)
 
 function goToDetails() {
-  router.push('/property-details')
+  router.push(`/property-details/${props.casa.id}`)
 }
 </script>
 
@@ -49,11 +45,7 @@ function goToDetails() {
           <h3>{{ casa?.property_title }}</h3>
           <div class="subs">
             <p class="subtitle opacity">
-              R${{ casa?.pricePerDay }} p/ noites • ★ {{ casa?.avaliation }}
-            </p>
-            <p class="subtitle">
-              Mais de {{ casa?.clicks }} mil cliques!
-              <PhFire weight="fill" class="fire" :size="15" />
+              R${{ casa?.pricePerDay }} p/ dia • ★ {{ casa?.avaliation }}
             </p>
           </div>
         </div>
@@ -95,12 +87,8 @@ function goToDetails() {
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .informs {
@@ -118,14 +106,8 @@ function goToDetails() {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .informs-texts {
@@ -136,13 +118,9 @@ function goToDetails() {
 }
 
 .informs-texts p,
-h3 {
-  margin: 0;
-}
+h3 { margin: 0; }
 
-.informs-texts .fire {
-  color: var(--color-primary);
-}
+.informs-texts .fire { color: var(--color-primary); }
 
 .subs {
   display: flex;
@@ -170,9 +148,7 @@ button {
   transition: background-color 0.5s;
 }
 
-button:hover {
-  background-color: var(--color-primary-hover);
-}
+button:hover { background-color: var(--color-primary-hover); }
 
 .opacity {
   opacity: 0.7;

@@ -97,6 +97,7 @@ return array(
     'Carbon\\Laravel\\ServiceProvider' => $vendorDir . '/nesbot/carbon/src/Carbon/Laravel/ServiceProvider.php',
     'Carbon\\MessageFormatter\\MessageFormatterMapper' => $vendorDir . '/nesbot/carbon/src/Carbon/MessageFormatter/MessageFormatterMapper.php',
     'Carbon\\Month' => $vendorDir . '/nesbot/carbon/src/Carbon/Month.php',
+    'Carbon\\OverflowMode' => $vendorDir . '/nesbot/carbon/src/Carbon/OverflowMode.php',
     'Carbon\\PHPStan\\MacroExtension' => $vendorDir . '/nesbot/carbon/src/Carbon/PHPStan/MacroExtension.php',
     'Carbon\\PHPStan\\MacroMethodReflection' => $vendorDir . '/nesbot/carbon/src/Carbon/PHPStan/MacroMethodReflection.php',
     'Carbon\\Traits\\Boundaries' => $vendorDir . '/nesbot/carbon/src/Carbon/Traits/Boundaries.php',

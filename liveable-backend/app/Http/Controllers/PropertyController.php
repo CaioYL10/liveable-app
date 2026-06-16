@@ -48,6 +48,7 @@ class PropertyController extends Controller
             'air_conditioning' => 'boolean',
             'washer'          => 'boolean',
             'microwave'       => 'boolean',
+            'smoker'       => 'boolean',
             'pricePerDay'     => 'required|integer',
             'pricePerWeek'    => 'integer',
             'pricePerMonth'   => 'integer',
@@ -72,6 +73,7 @@ class PropertyController extends Controller
             'air_conditioning',
             'washer',
             'microwave',
+            'smoker',
             'pricePerDay',
             'status',
         ]));
@@ -127,6 +129,7 @@ class PropertyController extends Controller
             'air_conditioning' => 'sometimes|boolean',
             'washer'           => 'sometimes|boolean',
             'microwave'        => 'sometimes|boolean',
+            'smoker'        => 'sometimes|boolean',
             'pricePerDay'      => 'sometimes|nullable|numeric|min:0',
             'pricePerWeek'     => 'sometimes|nullable|numeric|min:0',
             'pricePerMonth'    => 'sometimes|nullable|numeric|min:0',
@@ -149,6 +152,7 @@ class PropertyController extends Controller
             'air_conditioning',
             'washer',
             'microwave',
+            'smoker',
             'pricePerDay',
             'pricePerWeek',
             'pricePerMonth',
@@ -201,5 +205,52 @@ class PropertyController extends Controller
         });
 
         return response()->json($properties, 200);
+    }
+
+    public function myRent(Property $property)
+    {
+        $hasRent = $property->rents()
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        return response()->json(['has_rent' => $hasRent]);
+    }
+
+    // GET /api/properties/featured — retorna só as em alta
+    public function featured()
+    {
+        $properties = Property::with('images', 'reviews')
+            ->where('is_featured', true)
+            ->get();
+
+        $properties->transform(function ($property) {
+            $property->images->transform(function ($image) {
+                $image->url = asset('storage/' . $image->path);
+                return $image;
+            });
+
+            $property->avaliation = $property->reviews->count()
+                ? round($property->reviews->avg('rating'), 1)
+                : 0;
+
+            return $property;
+        });
+
+        return response()->json($properties, 200);
+    }
+
+    // PATCH /api/properties/{id}/featured — admin toggle
+    public function toggleFeatured(Request $request, Property $property)
+    {
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Sem permissão.'], 403);
+        }
+
+        $property->update(['is_featured' => $request->boolean('is_featured')]);
+
+        return response()->json([
+            'message'    => 'Atualizado com sucesso!',
+            'is_featured' => $property->is_featured,
+        ]);
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyReviewController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Auth\SocialAuthController;
 
 Route::get('/user', function (Request $request) {
@@ -26,12 +27,15 @@ Route::get('/logout',    [UserController::class, 'logout'])->middleware('auth:sa
 
 // Públicas
 Route::get('/properties',                      [PropertyController::class,       'index']);
+Route::get('/properties/featured',             [PropertyController::class,       'featured']);
 Route::get('/property/{property}',             [PropertyController::class,       'show']);
 Route::get('/properties/{property}/reviews',   [PropertyReviewController::class, 'index']);
 Route::get('/user/{user}',                     [UserController::class,           'show']);
 Route::post('/webhooks/abacatepay', [PaymentController::class, 'webhook']);
 Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback']);
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
+Route::post('/reset-password',  [PasswordResetController::class, 'resetPassword']);
 
 // Autenticadas
 Route::middleware('auth:sanctum')->group(function () {
@@ -42,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/property/delete/{property}', [PropertyController::class, 'destroy']);
     Route::get('/my-properties', [PropertyController::class, 'myProperties']);
     Route::patch('/property/{property}/toggle-enabled', [PropertyController::class, 'toggleEnableProperty']);
+    Route::get('/properties/{property}/my-rent', [PropertyController::class, 'myRent']);
 
     // Rents
     Route::post('/properties/{property}/rent', [PropertyRentController::class, 'store']);
@@ -62,20 +67,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin
     Route::prefix('admin')->group(function () {
-        Route::get('/stats',[AdminController::class, 'stats']);
-        Route::get('/users',[AdminController::class, 'listUsers']);
-        Route::post('/create-admin',[AdminController::class, 'createAdmin']);
-        Route::patch('/users/{user}/role', [AdminController::class, 'changeRole']);
+        Route::get('/stats',                                [AdminController::class,    'stats']);
+        Route::get('/users',                                [AdminController::class,    'listUsers']);
+        Route::post('/create-admin',                        [AdminController::class,    'createAdmin']);
+        Route::patch('/users/{user}/role',                  [AdminController::class,    'changeRole']);
+        Route::patch('/properties/{property}/featured',     [PropertyController::class, 'toggleFeatured']); // ← aqui
     });
 
     // Likes
     Route::get('/favorites', [PropertyLikeController::class, 'myLikes']);
 
     // Payments
-    Route::get('/payments/my',[PaymentController::class, 'myPayments']);
-    Route::get('/payments/{payment}/qrcode',[PaymentController::class, 'getQrCode']);
-    Route::post('/payments/{payment}/check',[PaymentController::class, 'checkStatus']);
-    Route::post('/payments/{payment}/simulate',[PaymentController::class, 'simulate']);
+    Route::get('/payments/my', [PaymentController::class, 'myPayments']);
+    Route::get('/payments/{payment}/qrcode', [PaymentController::class, 'getQrCode']);
+    Route::post('/payments/{payment}/check', [PaymentController::class, 'checkStatus']);
+    Route::post('/payments/{payment}/simulate', [PaymentController::class, 'simulate']);
 
     Route::get('/rents/active', [PropertyRentController::class, 'activeRents']);
 });
