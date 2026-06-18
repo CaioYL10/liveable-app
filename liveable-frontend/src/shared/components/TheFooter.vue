@@ -11,21 +11,25 @@ import { PhGlobe, PhInstagramLogo, PhFacebookLogo, PhXLogo } from '@phosphor-ico
 
       <div class="destinations">
         <div class="destination-group">
-          <a href="">Ilhabela, SP</a>
-          <a href="">Trancoso, BA</a>
-          <a href="">Búzios, RJ</a>
+          <a href="https://pt.wikipedia.org/wiki/Ilhabela" target="_blank"> Ilhabela, SP </a>
+          <a href="https://pt.wikipedia.org/wiki/Trancoso_(Porto_Seguro)" target="_blank">
+            Trancoso, BA
+          </a>
+          <a href="https://pt.wikipedia.org/wiki/Arma%C3%A7%C3%A3o_dos_B%C3%BAzios" target="_blank">
+            Búzios, RJ
+          </a>
         </div>
 
         <div class="destination-group">
-          <a href="">Ibiza, Espanha</a>
-          <a href="">Positano, Itália</a>
-          <a href="">Santorini, Grécia</a>
+          <a href="https://pt.wikipedia.org/wiki/Ibiza" target="_blank"> Ibiza, Espanha </a>
+          <a href="https://pt.wikipedia.org/wiki/Positano" target="_blank"> Positano, Itália </a>
+          <a href="https://pt.wikipedia.org/wiki/Santorini" target="_blank"> Santorini, Grécia </a>
         </div>
 
         <div class="destination-group">
-          <a href="">Tóquio, Japão</a>
-          <a href="">Lisboa, Portugal</a>
-          <a href="">Nova York, EUA</a>
+          <a href="https://pt.wikipedia.org/wiki/T%C3%B3quio" target="_blank"> Tóquio, Japão </a>
+          <a href="https://pt.wikipedia.org/wiki/Lisboa" target="_blank"> Lisboa, Portugal </a>
+          <a href="https://pt.wikipedia.org/wiki/Nova_Iorque" target="_blank"> Nova York, EUA </a>
         </div>
       </div>
     </div>
@@ -33,9 +37,15 @@ import { PhGlobe, PhInstagramLogo, PhFacebookLogo, PhXLogo } from '@phosphor-ico
     <div class="baixo">
       <div class="baixo-group-1">
         <p>&copy; 2026 Liveable, inc</p>
-        <a href="">Privacidade</a>
-        <a href="">Termos</a>
-        <a href="">Informações</a>
+        <a href="/Liveable_Termos_Politica_Privacidade.docx" download
+          >Privacidade</a
+        >
+        <a href="/Liveable_Termos_Politica_Privacidade.docx" download
+          >Termos</a
+        >
+        <a href="/Liveable_Termos_Politica_Privacidade.docx" download
+          >Informações</a
+        >
       </div>
 
       <div class="baixo-group-2">
@@ -45,12 +55,6 @@ import { PhGlobe, PhInstagramLogo, PhFacebookLogo, PhXLogo } from '@phosphor-ico
         </div>
 
         <p>R$ BLR</p>
-
-        <div>
-          <PhInstagramLogo :size="20" />
-          <PhFacebookLogo :size="20" />
-          <PhXLogo :size="20" />
-        </div>
       </div>
     </div>
   </div>

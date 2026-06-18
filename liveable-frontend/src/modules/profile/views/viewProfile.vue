@@ -221,6 +221,7 @@ h1::after {
   cursor: pointer;
   transition: background 0.15s;
   text-align: left;
+  margin-top: 0.4rem;
 }
 .menu-item:hover {
   background: var(--color-overlay);
