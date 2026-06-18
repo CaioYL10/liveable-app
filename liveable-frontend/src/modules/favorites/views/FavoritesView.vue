@@ -81,6 +81,7 @@ onMounted(async () => {
   gap: 2rem;
   font-family: 'Poppins', sans-serif;
   padding: 2rem 0;
+  color: var(--color-black-text);
 }
 
 .favorites-header {

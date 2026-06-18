@@ -21,10 +21,17 @@ return new class extends Migration {
             $table->string('twitter')->nullable();
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();
+            $table->rememberToken();
             $table->boolean('share_socials')->default(true);
             $table->timestamps();
         });
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
     }
+
     public function down()
     {
         Schema::dropIfExists('users');

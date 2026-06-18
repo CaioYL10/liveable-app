@@ -95,7 +95,7 @@ export default {
 
 <style scoped>
 .review-card {
-  background: #ffffff;
+  background: var(--color-bg-secondary);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   padding: 20px;
@@ -105,6 +105,7 @@ export default {
   transition: box-shadow 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+  color: var(--color-primary-text);
 }
 
 .review-card:hover {
@@ -153,7 +154,7 @@ export default {
 .review-card__author-name {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-black-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -204,7 +205,7 @@ export default {
 .review-card__text {
   font-size: 13.5px;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--color-black-text);
   margin: 0;
   overflow: hidden;
   display: -webkit-box;

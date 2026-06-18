@@ -126,6 +126,7 @@ function verTodas() {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  color: var(--color-black-text);
 }
 
 .button-circle {

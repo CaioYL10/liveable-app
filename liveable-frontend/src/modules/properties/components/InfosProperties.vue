@@ -100,6 +100,7 @@ const tipoFormatado = computed(() => {
   align-items: center;
   padding: 10px 0;
   font-family: 'Poppins', sans-serif;
+  color: var(--color-black-text);
 }
 
 .barra-pesquisa {
@@ -123,6 +124,7 @@ const tipoFormatado = computed(() => {
   min-height: 96px;
   box-sizing: border-box;
   gap: 6px;
+  background: var(--color-bg-secondary);
 }
 
 .card-opcao {
@@ -145,6 +147,7 @@ const tipoFormatado = computed(() => {
     opacity 0.15s,
     transform 0.2s;
   min-height: 72px;
+  background: var(--color-bg);
 }
 
 .card-opcao:hover {
@@ -172,6 +175,7 @@ const tipoFormatado = computed(() => {
   font-size: 1.3rem;
   min-width: 0;
   width: 100%;
+  background: var(--color-bg);
 }
 
 .grupo-texto i {
@@ -187,7 +191,7 @@ const tipoFormatado = computed(() => {
 .titulo {
   font-size: 13px;
   font-weight: 500;
-  color: #a0a0a8;
+  color: var(--color-black-text);
   white-space: nowrap;
   letter-spacing: 0.01em;
 }
@@ -195,7 +199,7 @@ const tipoFormatado = computed(() => {
 .texto {
   font-size: 20px;
   font-weight: 700;
-  color: #111118;
+  color: var(--color-black-text);
   letter-spacing: -0.02em;
 
   overflow: hidden;
@@ -221,7 +225,7 @@ const tipoFormatado = computed(() => {
   flex: 0 0 auto;
   padding: 14px 30px;
   cursor: default;
-  background: #ffffff;
+  background: var(--color-bg);
 }
 
 .card-preco:hover {
@@ -238,12 +242,13 @@ const tipoFormatado = computed(() => {
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  color: var(--color-black-text);
 }
 
 .preco {
   font-size: 22px;
   font-weight: 800;
-  color: #111118;
+  color: var(--color-black-text);
   letter-spacing: -0.03em;
   line-height: 1.1;
 }

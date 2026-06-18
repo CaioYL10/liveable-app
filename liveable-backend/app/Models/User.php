@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use app\Notifications\ResetPasswordNotification;
+use App\Notifications\ResetPasswordNotification;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use HasFactory;
     use HasApiTokens;
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -52,7 +54,7 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $url = "http://localhost:5173/reset-password?token={$token}&email={$this->email}";
-
-        $this->notify(new ResetPasswordNotification($url));
+        $userName = $this->name;
+        $this->notify(new ResetPasswordNotification($url, $userName));
     }
 }

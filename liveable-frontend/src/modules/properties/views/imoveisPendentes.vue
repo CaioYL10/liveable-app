@@ -230,12 +230,12 @@ function tempoRestante(expiresAt: string) {
   margin: 0;
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--color-black-text, #1a1a2e);
   display: flex;
   align-items: center;
   gap: 5px;
   position: relative;
   align-self: flex-start;
+  color: var(--color-black-text);
 }
 
 .pendentes-section__title span:first-of-type {
@@ -281,6 +281,7 @@ function tempoRestante(expiresAt: string) {
   font-size: 14px;
   opacity: 0.6;
   margin: 0;
+  color: var(--color-black-text);
 }
 .estado.erro {
   color: #dc2626;

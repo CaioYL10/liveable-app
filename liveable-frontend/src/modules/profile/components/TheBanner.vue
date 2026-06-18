@@ -302,6 +302,7 @@ async function salvar() {
   width: 100%;
   height: auto;
   margin-top: 4.8rem;
+  color: var(--color-primary-text);
 }
 
 .inform-texts .title {

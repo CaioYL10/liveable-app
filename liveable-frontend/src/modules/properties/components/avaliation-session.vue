@@ -346,11 +346,11 @@ onMounted(() => {
   font-family: 'Poppins', sans-serif;
   position: relative;
   margin-top: 3rem;
+  color: var(--color-black-text);
 }
 
 .reviews-section__status {
   font-size: 14px;
-  color: #9ca3af;
   margin: 0;
   text-align: center;
   padding: 24px 0;
@@ -378,7 +378,6 @@ onMounted(() => {
 .reviews-section__title {
   font-size: 20px;
   font-weight: 700;
-  color: #1a1a2e;
   margin: 0;
   position: relative;
 }
@@ -455,7 +454,7 @@ h2::after {
 /* ── Barra de resumo ── */
 .reviews-summary {
   display: flex;
-  background: #ffffff;
+  background: var(--color-bg-secondary);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   padding: 0 8px;
@@ -491,6 +490,7 @@ h2::after {
 .reviews-summary__icon svg {
   width: 22px;
   height: 22px;
+  color: var(--color-black-text);
 }
 .reviews-summary__divider {
   width: 1px;
@@ -508,11 +508,13 @@ h2::after {
   font-size: 12px;
   color: #9ca3af;
   white-space: nowrap;
+  color: var(--color-black-text);
 }
 .reviews-summary__value {
   font-size: 16px;
   font-weight: 700;
   color: #1a1a2e;
+  color: var(--color-black-text);
 }
 .reviews-summary__value small {
   font-size: 12px;
@@ -562,7 +564,7 @@ h2::after {
   height: 100%;
   width: 100%;
   max-width: 520px;
-  background-color: #f8f9fb;
+  background-color: var(--color-bg-secondary);
   overflow-y: auto;
   box-sizing: border-box;
   padding: 2rem;
@@ -571,7 +573,7 @@ h2::after {
   gap: 2rem;
   box-shadow: var(--shadow-sm);
   font-family: 'Poppins', sans-serif;
-  color: #1a1a2e;
+  color: var(--color-primary-text);
 }
 
 .drawer-enter-active,

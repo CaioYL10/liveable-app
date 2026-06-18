@@ -378,13 +378,13 @@ function goToFavs() { router.push('/favoritos') }
   margin-top: 15px;
   padding: 1.2rem 1.5rem;
   min-width: 170px;
-  background-color: #fff;
+  background-color: var(--color-bg-secondary);
   box-shadow: var(--shadow-sm, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
   display: flex;
   flex-direction: column;
   gap: 12px;
   border-radius: 16px;
-  color: var(--color-black-text, #333);
+  color: var(--color-primary-text);
   cursor: default;
   text-align: left;
 }

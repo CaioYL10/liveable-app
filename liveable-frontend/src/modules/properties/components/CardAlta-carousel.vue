@@ -133,6 +133,7 @@ function verTodas() {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  color: var(--color-black-text);
 }
 
 .button-circle {
@@ -194,6 +195,7 @@ p span { color: var(--color-primary); }
   text-align: center;
   opacity: 0.4;
   font-size: 0.9rem;
+  color: var(--color-black-text);
 }
 
 .mySwiper {

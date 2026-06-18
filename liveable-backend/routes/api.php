@@ -36,7 +36,22 @@ Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback']);
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
 Route::post('/reset-password',  [PasswordResetController::class, 'resetPassword']);
+Route::get('/testar-email', function () {
+    // Busca o primeiro usuário qualquer que já existe no seu banco local
+    $user = User::first();
 
+    if (!$user) {
+        return 'Nenhum usuário encontrado no banco para testar. Crie pelo menos um no phpMyAdmin.';
+    }
+
+    // Cria dados fictícios para o teste
+    $urlFake = 'http://localhost:5173/redefinir-senha?token=token_de_teste_123&email=' . urlencode($user->email);
+
+    // Dispara a notificação diretamente usando a classe que você já criou
+    $user->notify(new ResetPasswordNotification($urlFake, $user->name));
+
+    return 'E-mail de teste disparado com sucesso para: ' . $user->email;
+});
 // Autenticadas
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -85,3 +100,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/rents/active', [PropertyRentController::class, 'activeRents']);
 });
+

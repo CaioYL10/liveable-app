@@ -34,7 +34,6 @@ async function login() {
 }
 
 const loginWithGoogle = () => {
-  // Adicionado o '/redirect' no final da URL para bater certinho com a sua rota do Laravel
   window.location.href = "http://127.0.0.1:8000/api/auth/google/redirect";
 };
 </script>
@@ -118,11 +117,6 @@ const loginWithGoogle = () => {
       <a @click="router.push('/esqueci-senha')">Esqueceu sua senha?</a>
     </div>
 
-    <div class="save-informations-text">
-      <input type="checkbox" />
-      <p>Salvar informações de login!</p>
-    </div>
-
     <button class="input-large button" @click="login">Entrar</button>
 
     <div class="divisoria">
@@ -152,6 +146,7 @@ const loginWithGoogle = () => {
   font-family: 'Poppins', sans-serif;
   justify-content: center;
   gap: 2vw;
+  color: var(--color-black-text);
 }
 
 .logo {
@@ -210,6 +205,8 @@ button {
 
 .input-password a {
   align-self: flex-end;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .save-informations-text {

@@ -29,6 +29,7 @@ import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfi
   gap: 2rem;
   font-family: 'Poppins', sans-serif;
   padding: 2rem 0;
+  color: var(--color-black-text);
 }
 
 .organization-header {
@@ -64,6 +65,7 @@ p {
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0;
+  color: var(--color-black-text);
 }
 
 p span {

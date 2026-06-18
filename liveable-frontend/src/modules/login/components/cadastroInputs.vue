@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+const router = useRouter()
 
 const nome = ref<string>('')
 const sobrenome = ref<string>('')
@@ -53,12 +55,16 @@ function loginComFacebook() {
 function loginComTwitter() {
   window.location.href = 'http://localhost:8000/api/auth/twitter/redirect'
 }
+
+function goToEntrar() {
+  router.push('/baselogin')
+}
 </script>
 
 <template>
   <div class="container">
     <h1>Criar uma conta!</h1>
-    <h2>Já tem uma conta? <span>Entrar</span></h2>
+    <h2>Já tem uma conta? <span @click="goToEntrar()">Entrar</span></h2>
 
     <div class="inputs-name">
       <input class="input-large input" type="text" placeholder="Nome" v-model="nome" />
@@ -100,6 +106,7 @@ function loginComTwitter() {
   font-family: 'Poppins', sans-serif;
   justify-content: center;
   gap: 2vw;
+  color: var(--color-black-text);
 }
 
 .logo {

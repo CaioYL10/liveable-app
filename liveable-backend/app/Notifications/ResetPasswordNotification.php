@@ -11,12 +11,16 @@ class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
+    public $url;
+    public $userName;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($url, $userName)
     {
-        //
+        $this->url = $url;
+        $this->userName = $userName;
     }
 
     /**
@@ -32,7 +36,7 @@ class ResetPasswordNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Redefinição de Senha')
-            ->greeting('Olá!')
+            ->greeting("Olá, $this->userName !")
             ->line('Você solicitou a redefinição de sua senha.')
             ->action('Redefinir Senha', $this->url)
             ->line('O link expira em 60 minutos.')
