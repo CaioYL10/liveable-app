@@ -351,7 +351,7 @@ function limpar(): void {
   font-size: 22px;
   font-weight: 700;
   margin: 0 0 2px;
-  color: #111;
+  color: var(--color-black-text);
 }
 
 .subtitulo {

@@ -396,12 +396,13 @@ h2::after {
   align-items: center;
   gap: 14px;
   position: relative;
+  background: var(--color-bg-secondary);
 }
 
 .admin__stat svg {
   width: 28px;
   height: 28px;
-  color: #1a2fa8;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -441,6 +442,7 @@ h2::after {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: var(--color-bg-secondary);
 }
 
 .admin__card-head {
@@ -477,7 +479,7 @@ h2::after {
   padding: 0.7rem 1rem;
   font-family: 'Poppins', sans-serif;
   font-size: 0.88rem;
-  color: var(--color-black-text, #1a1a2e);
+  color: var(--color-perm-black-text, #1a1a2e);
   background: #f8f9fb;
   outline: none;
   transition: border-color 0.18s;
