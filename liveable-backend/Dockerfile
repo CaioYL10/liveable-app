@@ -1,26 +1,27 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 
-# Instala pacotes do sistema e extensões para o PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip \
     unzip \
     git \
-    && docker-php-ext-install pdo pdo_pgsql
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copia o Composer oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copia os arquivos do Laravel para o container
 COPY . .
 
-# Instala as dependências do Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN chmod -R 777 storage bootstrap/cache
 
-# Expõe a porta usada pelo Render
+RUN composer install --no-dev --no-scripts --optimize-autoloader \
+    && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 10000
 
-# Executa o servidor do Laravel na porta exigida pelo Renders
-CMD php artisan serve --host=0.0.0.0 --port=10000
+ENTRYPOINT ["entrypoint.sh"]
