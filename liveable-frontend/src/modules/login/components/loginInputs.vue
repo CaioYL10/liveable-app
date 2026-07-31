@@ -13,7 +13,7 @@ function goToCadastro() {
 }
 
 async function login() {
-  const response = await fetch('http://127.0.0.1:8000/api/login', {
+  const response = await fetch('https://liveable-app.onrender.com/api/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ async function login() {
 }
 
 const loginWithGoogle = () => {
-  window.location.href = "http://127.0.0.1:8000/api/auth/google/redirect";
+  window.location.href = "https://liveable-app.onrender.com/api/auth/google/redirect";
 };
 </script>
 

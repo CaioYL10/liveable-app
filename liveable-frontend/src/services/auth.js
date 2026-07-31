@@ -27,7 +27,7 @@ export async function getUser() {
     throw new Error('Token não encontrado')
   }
 
-  const response = await fetch('http://127.0.0.1:8000/api/user', {
+  const response = await fetch('https://liveable-app.onrender.com/api/user', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

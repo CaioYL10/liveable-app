@@ -13,7 +13,7 @@ interface PaymentData {
 const props = defineProps<{ payment: PaymentData }>()
 const emit = defineEmits<{ close: []; paid: [] }>()
 
-const BASE = 'http://127.0.0.1:8000/api'
+const BASE = 'https://liveable-app.onrender.com/api'
 const token = () => localStorage.getItem('token') ?? ''
 const headers = () => ({ Authorization: `Bearer ${token()}`, Accept: 'application/json' })
 

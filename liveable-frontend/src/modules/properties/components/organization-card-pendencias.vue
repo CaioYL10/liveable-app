@@ -8,7 +8,7 @@ const erro = ref<string | null>(null)
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/my-properties/pending-rents', {
+    const response = await fetch('https://liveable-app.onrender.com/api/my-properties/pending-rents', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
@@ -32,7 +32,7 @@ async function handleReject(rentId: number) {
 
 async function updateStatus(rentId: number, confirmed: boolean) {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/rents/${rentId}/status`, {
+    const response = await fetch(`https://liveable-app.onrender.com/api/rents/${rentId}/status`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

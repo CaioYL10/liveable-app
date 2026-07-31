@@ -12,4 +12,5 @@ echo "Rodando migrations..."
 php artisan migrate --force
 
 echo "Iniciando servidor..."
+php artisan storage:link
 php artisan serve --host=0.0.0.0 --port=10000

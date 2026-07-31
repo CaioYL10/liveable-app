@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import ProfileBioSkeleton from './ProfileBioSkeleton.vue'
 
-const BASE = 'http://127.0.0.1:8000/api'
+const BASE = 'https://liveable-app.onrender.com/api'
 
 const bio = ref('')
 const salvando = ref(false)

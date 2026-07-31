@@ -26,7 +26,7 @@ onMounted(async () => {
   }
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/favorites', {
+    const res = await fetch('https://liveable-app.onrender.com/api/favorites', {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',

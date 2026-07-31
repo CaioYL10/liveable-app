@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import ProfileInfosSkeleton from './ProfileInfosSkeleton.vue'
 
-const BASE = 'http://127.0.0.1:8000/api'
+const BASE = 'https://liveable-app.onrender.com/api'
 
 const form = ref({ name: '', email: '', phone: '' })
 const salvando = ref(false)

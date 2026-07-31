@@ -15,7 +15,7 @@ export function useReservas() {
     erro.value = null
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/properties/${propertyId}/rent`, {
+      const response = await fetch(`https://liveable-app.onrender.com/api/properties/${propertyId}/rent`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

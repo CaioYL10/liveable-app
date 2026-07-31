@@ -8,7 +8,7 @@ import 'swiper/css/pagination'
 
 import ReviewCard from './avaliation-card.vue'
 
-const BASE_URL = 'http://127.0.0.1:8000/api'
+const BASE_URL = 'https://liveable-app.onrender.com/api'
 
 interface Review {
   id: number

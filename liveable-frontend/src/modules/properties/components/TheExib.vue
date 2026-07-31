@@ -67,8 +67,8 @@ onMounted(async () => {
 
   try {
     const [resProperty, resMe] = await Promise.all([
-      fetch(`http://127.0.0.1:8000/api/property/${propertyId}`, { headers }),
-      token ? fetch(`http://127.0.0.1:8000/api/user`, { headers }) : null,
+      fetch(`https://liveable-app.onrender.com/api/property/${propertyId}`, { headers }),
+      token ? fetch(`https://liveable-app.onrender.com/api/user`, { headers }) : null,
     ])
 
     const dataProperty = await resProperty.json()
@@ -105,7 +105,7 @@ async function aoSalvar() {
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (token) headers['Authorization'] = `Bearer ${token}`
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/property/${propertyId}`, { headers })
+    const res = await fetch(`https://liveable-app.onrender.com/api/property/${propertyId}`, { headers })
     const data = await res.json()
     property.value = data.Propriedade
   } catch (e) {
@@ -117,7 +117,7 @@ async function deletarImovel() {
   deletando.value = true
   const token = localStorage.getItem('token')
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/property/delete/${propertyId}`, {
+    const res = await fetch(`https://liveable-app.onrender.com/api/property/delete/${propertyId}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
@@ -245,7 +245,7 @@ function handleSolicitar() {
                         property.user.profile_picture.startsWith('http://') ||
                         property.user.profile_picture.startsWith('https://')
                           ? property.user.profile_picture
-                          : `http://127.0.0.1:8000/storage/${property.user.profile_picture}`
+                          : `https://liveable-app.onrender.com/storage/${property.user.profile_picture}`
                       }')`,
                     }
                   : {}

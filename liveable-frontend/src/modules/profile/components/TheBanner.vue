@@ -34,7 +34,7 @@ const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)]
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/user', {
+    const res = await fetch('https://liveable-app.onrender.com/api/user', {
       headers: {
         Authorization: `Bearer ${getToken()}`,
         Accept: 'application/json',
@@ -55,14 +55,14 @@ const profilePicture = computed(() => {
     if (foto.startsWith('http://') || foto.startsWith('https://')) {
       return foto
     }
-    return `http://127.0.0.1:8000/storage/${foto}`
+    return `https://liveable-app.onrender.com/storage/${foto}`
   }
   return randomAvatar
 })
 
 const bannerAtual = computed(() => {
   if (novoBannerPreview.value) return novoBannerPreview.value
-  if (user.value?.banner) return `http://127.0.0.1:8000/storage/${user.value.banner}`
+  if (user.value?.banner) return `https://liveable-app.onrender.com/storage/${user.value.banner}`
   return randomBanner
 })
 
@@ -90,7 +90,7 @@ async function onBannerSelecionado(e: Event) {
   formData.append('banner', file)
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/user/banner', {
+    const res = await fetch('https://liveable-app.onrender.com/api/user/banner', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${getToken()}`,
@@ -112,7 +112,7 @@ async function salvar() {
     const formData = new FormData()
     formData.append('profile_picture', novaFotoFile.value)
 
-    const res = await fetch('http://127.0.0.1:8000/api/user/photo', {
+    const res = await fetch('https://liveable-app.onrender.com/api/user/photo', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${getToken()}`,

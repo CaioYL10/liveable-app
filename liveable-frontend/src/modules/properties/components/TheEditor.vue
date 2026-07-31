@@ -64,7 +64,7 @@ watch(
     erro.value = null
     sucesso.value = false
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/property/${props.propertyId}`, {
+      const res = await fetch(`https://liveable-app.onrender.com/api/property/${props.propertyId}`, {
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -154,7 +154,7 @@ async function salvar() {
   if (tiposAtivos.value.includes('mes')) body.pricePerMonth = Number(form.value.pricePerMonth)
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/property/update/${props.propertyId}`, {
+    const res = await fetch(`https://liveable-app.onrender.com/api/property/update/${props.propertyId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

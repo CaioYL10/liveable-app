@@ -29,12 +29,12 @@ const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)]
 function resolveImage(value: string | null | undefined, fallback: string): string {
   if (!value) return fallback
   if (value.startsWith('http://') || value.startsWith('https://')) return value
-  return `http://127.0.0.1:8000/storage/${value}`
+  return `https://liveable-app.onrender.com/storage/${value}`
 }
 
 onMounted(async () => {
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/user/${userId}`, {
+    const res = await fetch(`https://liveable-app.onrender.com/api/user/${userId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         Accept: 'application/json',

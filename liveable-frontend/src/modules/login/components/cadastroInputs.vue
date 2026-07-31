@@ -10,7 +10,7 @@ const senha = ref<string>('')
 
 async function enviarCadastro() {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/register', {
+    const response = await fetch('https://liveable-app.onrender.com/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

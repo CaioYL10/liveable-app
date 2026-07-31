@@ -111,7 +111,7 @@ async function salvarImovel() {
     if (imagem.value) formData.append('images[]', imagem.value)
 
     const token = getToken()
-    const response = await fetch('http://127.0.0.1:8000/api/property/store', {
+    const response = await fetch('https://liveable-app.onrender.com/api/property/store', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

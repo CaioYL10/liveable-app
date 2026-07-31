@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import ProfileSocialLinksSkeleton from './ProfileSocialLinksSkeleton.vue'
 
-const BASE = 'http://127.0.0.1:8000/api'
+const BASE = 'https://liveable-app.onrender.com/api'
 
 const compartilhar = ref(true)
 const links = ref({ twitter: '', instagram: '', facebook: '' })

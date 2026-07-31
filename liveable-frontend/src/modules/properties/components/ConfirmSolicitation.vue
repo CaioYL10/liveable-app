@@ -37,7 +37,7 @@ const carregandoProperty = ref(false)
 async function buscarDadosProperty() {
   carregandoProperty.value = true
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/property/${propertyId}`)
+    const response = await fetch(`https://liveable-app.onrender.com/api/property/${propertyId}`)
     const data = await response.json()
 
     if (response.ok) {
@@ -66,7 +66,7 @@ const carregandoReservaUsuario = ref(false)
 async function verificarReservaUsuario() {
   carregandoReservaUsuario.value = true
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/properties/${propertyId}/my-rent`, {
+    const response = await fetch(`https://liveable-app.onrender.com/api/properties/${propertyId}/my-rent`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
     const data = await response.json()
@@ -124,7 +124,7 @@ async function reservar() {
   sucessoReserva.value = false
 
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/properties/${propertyId}/rent`, {
+    const response = await fetch(`https://liveable-app.onrender.com/api/properties/${propertyId}/rent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -41,7 +41,7 @@ const properties = ref<Property[]>([])
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/properties')
+    const response = await fetch('https://liveable-app.onrender.com/api/properties')
     const data = await response.json()
     properties.value = data
   } catch (error) {

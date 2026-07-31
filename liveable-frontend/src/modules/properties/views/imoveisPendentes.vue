@@ -4,7 +4,7 @@ import PendingRentCard from '@/modules/properties/components/Card-imoveis-penden
 import ActiveRentCard from '@/modules/properties/components/ActiveRentCard.vue'
 import PixPaymentModal from '@/modules/properties/components/PixPaymentModal.vue'
 
-const BASE = 'http://127.0.0.1:8000/api'
+const BASE = 'https://liveable-app.onrender.com/api'
 const token = () => localStorage.getItem('token') ?? ''
 const headers = () => ({
   Authorization: `Bearer ${token()}`,

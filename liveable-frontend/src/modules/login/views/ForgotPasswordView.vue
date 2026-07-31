@@ -12,7 +12,7 @@ async function enviar() {
   mensagem.value = ''
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/forgot-password', {
+    const res = await fetch('https://liveable-app.onrender.com/api/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ email: email.value }),

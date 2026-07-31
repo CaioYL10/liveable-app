@@ -120,7 +120,7 @@ const toggleMenu = () => { menuAberto.value = !menuAberto.value }
 
 async function handleLogout() {
   try {
-    await fetch('http://127.0.0.1:8000/api/logout', {
+    await fetch('https://liveable-app.onrender.com/api/logout', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${getToken()}`,

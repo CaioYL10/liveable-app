@@ -21,7 +21,7 @@ onMounted(async () => {
   try {
     const token = getToken()
 
-    const res = await fetch('http://127.0.0.1:8000/api/my-properties', {
+    const res = await fetch('https://liveable-app.onrender.com/api/my-properties', {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
