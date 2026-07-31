@@ -22,5 +22,5 @@ RUN composer install --no-dev --optimize-autoloader
 # Expõe a porta usada pelo Render
 EXPOSE 10000
 
-# Executa o servidor do Laravel na porta exigida pelo Render
+# Executa o servidor do Laravel na porta exigida pelo Renders
 CMD php artisan serve --host=0.0.0.0 --port=10000
