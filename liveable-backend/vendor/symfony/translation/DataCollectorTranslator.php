@@ -12,32 +12,35 @@
 namespace Symfony\Component\Translation;
 
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
-use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author Abdellatif Ait boudad <a.aitboudad@gmail.com>
  */
-final class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, WarmableInterface, ResetInterface
+class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, WarmableInterface
 {
     public const MESSAGE_DEFINED = 0;
     public const MESSAGE_MISSING = 1;
     public const MESSAGE_EQUALS_FALLBACK = 2;
 
+    private TranslatorInterface $translator;
     private array $messages = [];
 
-    public function __construct(
-        private TranslatorInterface&TranslatorBagInterface&LocaleAwareInterface $translator,
-    ) {
-    }
-
-    public function reset(): void
+    /**
+     * @param TranslatorInterface&TranslatorBagInterface&LocaleAwareInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->messages = [];
+        if (!$translator instanceof TranslatorBagInterface || !$translator instanceof LocaleAwareInterface) {
+            throw new InvalidArgumentException(sprintf('The Translator "%s" must implement TranslatorInterface, TranslatorBagInterface and LocaleAwareInterface.', get_debug_type($translator)));
+        }
+
+        $this->translator = $translator;
     }
 
-    public function trans(?string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+    public function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         $trans = $this->translator->trans($id = (string) $id, $parameters, $domain, $locale);
         $this->collectMessage($locale, $domain, $id, $trans, $parameters);
@@ -55,7 +58,7 @@ final class DataCollectorTranslator implements TranslatorInterface, TranslatorBa
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue(?string $locale = null): MessageCatalogueInterface
+    public function getCatalogue(string $locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);
     }
@@ -65,28 +68,22 @@ final class DataCollectorTranslator implements TranslatorInterface, TranslatorBa
         return $this->translator->getCatalogues();
     }
 
-    public function warmUp(string $cacheDir, ?string $buildDir = null): array
+    public function warmUp(string $cacheDir, string $buildDir = null): array
     {
         if ($this->translator instanceof WarmableInterface) {
-            return $this->translator->warmUp($cacheDir, $buildDir);
+            return (array) $this->translator->warmUp($cacheDir, $buildDir);
         }
 
         return [];
     }
 
+    /**
+     * Gets the fallback locales.
+     */
     public function getFallbackLocales(): array
     {
         if ($this->translator instanceof Translator || method_exists($this->translator, 'getFallbackLocales')) {
             return $this->translator->getFallbackLocales();
-        }
-
-        return [];
-    }
-
-    public function getGlobalParameters(): array
-    {
-        if ($this->translator instanceof Translator || method_exists($this->translator, 'getGlobalParameters')) {
-            return $this->translator->getGlobalParameters();
         }
 
         return [];
