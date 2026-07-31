@@ -1,16 +1,18 @@
 #!/bin/sh
 set -e
 
-echo "1. Deletando caches físicos de inicialização do Laravel..."
+echo "1. Deletando caches físicos e autoloaders antigos..."
 rm -rf bootstrap/cache/*.php
+rm -rf storage/framework/views/*
+rm -rf storage/framework/cache/*
 
-echo "2. Regenerando autoloader do Composer sem scripts..."
+echo "2. Reconstruindo o Autoload do Composer..."
 composer dump-autoload --optimize --no-scripts --ignore-platform-reqs
 
-echo "3. Limpando configurações e caches do Artisan..."
+echo "3. Forçando limpeza de configuração do Laravel..."
 php -d display_errors=Off artisan config:clear || true
-php -d display_errors=Off artisan route:clear || true
 php -d display_errors=Off artisan cache:clear || true
+php -d display_errors=Off artisan view:clear || true
 
 echo "4. Rodando migrations no Supabase..."
 php -d display_errors=Off artisan migrate --force
