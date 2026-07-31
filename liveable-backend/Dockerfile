@@ -22,8 +22,8 @@ RUN mkdir -p bootstrap/cache storage \
     && chmod -R 777 storage bootstrap/cache
 
 # Instala dependências sem rodar scripts automáticos do Laravel
-# e remove qualquer cache de bootstrap que possa ter vindo do repositório
-RUN composer install --no-dev --no-scripts --optimize-autoloader \
+# e remove qualquer cache antigo de bootstrap
+RUN composer install --no-dev --no-scripts \
     && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
 
 # Copia e prepara o script de entrada
@@ -33,5 +33,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Expõe a porta usada pelo Render
 EXPOSE 10000
 
-# Usa o script de entrada em vez de rodar o serve direto
+# Usa o script de entrada para inicializar a aplicação
 ENTRYPOINT ["entrypoint.sh"]
