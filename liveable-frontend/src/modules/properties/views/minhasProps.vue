@@ -26,9 +26,9 @@ import { exibir, exibirConfirm } from '@/modules/properties/composables/useConfi
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.5rem;
   font-family: 'Poppins', sans-serif;
-  padding: 2rem 0;
+  padding: 1.2rem 0;
   color: var(--color-black-text);
 }
 

@@ -12,20 +12,16 @@ const headers = () => ({
   'Content-Type': 'application/json',
 })
 
-// ── Pendentes (dono aceitar/recusar) ─────────────────────────
 const reservasPendentes = ref<any[]>([])
 const carregandoPendentes = ref(true)
 const erroPendentes = ref<string | null>(null)
 
-// ── Aguardando pagamento (solicitador pagar) ─────────────────
 const pagamentosPendentes = ref<any[]>([])
 const carregandoPagamentos = ref(true)
 
-// ── Reservas ativas (pagas) ──────────────────────────────────
 const reservasAtivas = ref<any[]>([])
 const carregandoAtivas = ref(true)
 
-// ── Modal PIX ───────────────────────────────────────────────
 const pagamentoSelecionado = ref<any>(null)
 
 onMounted(async () => {
@@ -218,6 +214,7 @@ function tempoRestante(expiresAt: string) {
   flex-direction: column;
   gap: 40px;
   font-family: 'Poppins', sans-serif;
+  margin-top: 2vh;
 }
 
 .pendentes-section {

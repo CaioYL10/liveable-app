@@ -14,9 +14,6 @@ function setTheme(t: 'light' | 'dark') {
   document.documentElement.setAttribute('data-theme', t)
   localStorage.setItem('theme', t)
 }
-
-// Exporta para uso nos filhos via provide (opcional)
-// provide('theme', { theme, setTheme })
 </script>
 
 <template>

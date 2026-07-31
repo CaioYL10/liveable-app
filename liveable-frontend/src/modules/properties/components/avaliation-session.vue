@@ -573,7 +573,7 @@ h2::after {
   gap: 2rem;
   box-shadow: var(--shadow-sm);
   font-family: 'Poppins', sans-serif;
-  color: var(--color-primary-text);
+  color: var(--color-black-text);
 }
 
 .drawer-enter-active,

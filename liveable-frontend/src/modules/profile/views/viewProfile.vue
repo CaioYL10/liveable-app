@@ -118,7 +118,7 @@ function closeOnOutside(e: MouseEvent) {
 .page {
   width: 100%;
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 1.2rem 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   background: var(--color-bg, #f4f6fb);

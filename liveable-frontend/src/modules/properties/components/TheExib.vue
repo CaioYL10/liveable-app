@@ -305,6 +305,7 @@ function handleSolicitar() {
   flex-direction: column;
   font-family: 'Poppins', sans-serif;
   gap: 20px;
+  margin-top: 2vh;
 }
 
 .home-title {
@@ -697,6 +698,7 @@ function handleSolicitar() {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-top: 2vh;
 }
 
 .skeleton-title {
