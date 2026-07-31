@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Silencia os avisos de depreciação do PHP 8.4 para não quebrar a inicialização
+RUN echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini
+
 # Copia o Composer oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
