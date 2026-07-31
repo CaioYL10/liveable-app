@@ -5,7 +5,7 @@ echo "1. Deletando caches físicos de inicialização do Laravel..."
 rm -rf bootstrap/cache/*.php
 
 echo "2. Regenerando autoloader do Composer sem scripts..."
-composer dump-autoload --optimize --no-scripts
+composer dump-autoload --optimize --no-scripts --ignore-platform-reqs
 
 echo "3. Limpando configurações e caches do Artisan..."
 php -d display_errors=Off artisan config:clear || true
