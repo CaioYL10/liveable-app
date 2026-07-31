@@ -1,4 +1,4 @@
-FROM php:8.4-cli
+FROM php:8.3-cli
 
 # Instala pacotes do sistema e extensões para PostgreSQL e MySQL
 RUN apt-get update && apt-get install -y \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Silencia os avisos de depreciação do PHP 8.4 para não quebrar a inicialização
+# Silencia avisos do PHP
 RUN echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini
 
 # Copia o Composer oficial
@@ -24,7 +24,7 @@ COPY . .
 RUN mkdir -p bootstrap/cache storage \
     && chmod -R 777 storage bootstrap/cache
 
-# Instala dependências limpando o cache para forçar os pacotes corretos
+# Instala dependências limpando o cache
 RUN composer install --no-dev --no-scripts --optimize-autoloader --no-cache \
     && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
 
