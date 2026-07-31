@@ -21,9 +21,8 @@ COPY . .
 RUN mkdir -p bootstrap/cache storage \
     && chmod -R 777 storage bootstrap/cache
 
-# Instala dependências sem rodar scripts automáticos do Laravel
-# e remove qualquer cache antigo de bootstrap
-RUN composer install --no-dev --no-scripts \
+# Instala dependências limpando o cache para forçar os pacotes corretos
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-cache \
     && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
 
 # Copia e prepara o script de entrada
