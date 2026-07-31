@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Silencia avisos de depreciação do PHP
+# Silencia os avisos de depreciação do PHP 8.4
 RUN echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini
 
 # Copia o Composer oficial
@@ -24,16 +24,17 @@ COPY . .
 RUN mkdir -p bootstrap/cache storage \
     && chmod -R 777 storage bootstrap/cache
 
-# Instala dependências ignorando travas rígidas de versão do PHP no lock file
+# Instala dependências e FORÇA a instalação do Carbon v3 no container
 RUN composer install --no-dev --no-scripts --optimize-autoloader --no-cache --ignore-platform-reqs \
+    && composer require nesbot/carbon:^3.0 --no-scripts --ignore-platform-reqs \
     && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
 
 # Copia e prepara o script de entrada
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expõe a porta do Render
+# Expõe a porta usada pelo Render
 EXPOSE 10000
 
-# Executa o container
+# Usa o script de entrada para inicializar a aplicação
 ENTRYPOINT ["entrypoint.sh"]
