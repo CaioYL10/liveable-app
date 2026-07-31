@@ -12,7 +12,6 @@ composer dump-autoload --optimize --no-scripts --ignore-platform-reqs
 echo "3. Forçando limpeza de configuração do Laravel..."
 php -d display_errors=Off artisan config:clear || true
 php -d display_errors=Off artisan cache:clear || true
-php -d display_errors=Off artisan view:clear || true
 
 echo "4. Rodando migrations no Supabase..."
 php -d display_errors=Off artisan migrate --force

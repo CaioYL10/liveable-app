@@ -24,9 +24,10 @@ COPY . .
 RUN mkdir -p bootstrap/cache storage \
     && chmod -R 777 storage bootstrap/cache
 
-# Instala dependências e FORÇA a instalação do Carbon v3 no container
+# Instala dependências, remove a pasta do Carbon 2 antiga e instala o Carbon 3 obrigatoriamente
 RUN composer install --no-dev --no-scripts --optimize-autoloader --no-cache --ignore-platform-reqs \
-    && composer require nesbot/carbon:^3.0 --no-scripts --ignore-platform-reqs \
+    && rm -rf vendor/nesbot/carbon \
+    && composer require nesbot/carbon:^3.0 --update-with-dependencies --no-scripts --ignore-platform-reqs \
     && rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php
 
 # Copia e prepara o script de entrada
